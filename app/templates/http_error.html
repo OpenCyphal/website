@@ -1,0 +1,36 @@
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+        <style>
+            html {
+                display: table;
+                margin: auto;
+            }
+            body {
+                display: table-cell;
+                vertical-align: middle;
+                text-transform: uppercase;
+            }
+            html, body {
+                height: 100%;
+                background: black;
+                color: red;
+                text-align: center;
+                font-family: 'Press Start 2P', monospace;
+                font-size: 12px;
+            }
+            h1 { font-size: 4em; }
+            h2 { font-size: 3em; }
+            h3 { font-size: 2em; }
+            a { color: inherit; }
+        </style>
+        {% include "base/analytics.html" %}
+        <title>{{ error_description }}</title>
+    </head>
+    <body>
+        <h1>ERROR</h1>
+        <h2>{{ error_description }}</h2>
+        <h3><a href="/">PROCEED TO THE HOME PAGE</a></h3>
+        <p>SORRY :(</p>
+    </body>
+</html>

@@ -1,0 +1,138 @@
+/*
+ * Main.
+ * UAVCAN logo color: #007cc3
+ */
+html {
+    width: 90%;
+    margin: auto;
+    font-size: 16px;
+    color: black;
+    background: white;
+    font-family: 'Roboto Slab', sans-serif;
+    line-height: 1.5em;
+    font-weight: 400;
+}
+@media all and (min-width: 1200px) {
+    html {
+        font-size: 18px;
+        width: 80%;
+    }
+}
+@media all and (min-width: 1900px) {
+    html {
+        width: 70%;
+    }
+}
+
+/*
+ * Header.
+ */
+header {
+    text-align: center;
+}
+header > img {
+    width: 80%;
+    max-width: 400px;
+    margin: auto;
+    display: block;
+    padding: 2em;
+}
+.nav {
+    padding: 0;
+    margin: 0;
+}
+.nav li {
+    display: inline-block;
+    padding: 0.3em 0.6em;
+    font-size: 1.1em;
+}
+@media only screen and (max-width: 500px) {
+    .nav li {
+        display: block;     /* Stack them. */
+    }
+}
+@media all and (min-width: 1000px) {
+    .nav li {
+        padding: 0.5em 1em 0.25em 1em;
+    }
+}
+
+/*
+ * Body & Elements.
+ */
+body {
+    font-size: 100%;
+
+    /* Proper overflow handling */
+    overflow-wrap: break-word;
+    word-wrap: break-word;                  /* synonym for overflow-wrap */
+    /*word-break: break-all;*/              /* this is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-word;                 /* instead use this non-standard one */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+h1 { font-size: 1.6em; font-weight: 700; margin-top: 1.5em; }
+h2 { font-size: 1.0em; font-weight: 700; }
+h3 { font-size: 1.0em; font-style: italic; }
+a {
+    text-decoration: underline;
+    color: inherit;
+    font-weight: 700;
+}
+a.no-decoration {
+    text-decoration: none;
+}
+ul {
+    padding: 0 0 0 1.5em;
+}
+li {
+    padding-bottom: 0.25em;
+}
+table.feed * {
+    font-size: 1rem;
+}
+table.feed td {
+    vertical-align: top;
+    padding-bottom: 0.5em;
+    line-height: 1.25em;
+}
+table.feed tr:last-child td {
+    padding-bottom: 0em;
+}
+.feed .timestamp {
+    color: #777;
+    padding-right: 0.5em;
+    word-break: keep-all;
+    white-space: nowrap;
+}
+.feed a {
+    font-weight: inherit;
+}
+
+/*
+ * Footer.
+ */
+footer {
+    text-align: center;
+    font-size: 0.8em;
+    line-height: 1.5em;
+    font-weight: 300;
+    color: #777;
+    padding-top: 4em;
+    padding-bottom: 1em;
+}
+footer a {
+    font-weight: inherit;
+}
+footer p {
+    margin: 0;
+}
+footer a img {
+    padding: 0.5em;
+}
+footer span {
+    word-break: keep-all;
+    white-space: nowrap;
+}

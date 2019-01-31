@@ -1,0 +1,158 @@
+<html>
+{% include "base/head.html" %}
+<body>
+    <header>
+        <img src="/static/images/logo.svg">
+        <ul class="nav">
+            <li>
+                <i class="far fa-file-pdf"></i>
+                <a href="/specification" target="_blank">Specification</a>
+            </li>
+            <li>
+                <i class="far fa-comments"></i>
+                <a href="https://forum.uavcan.org" target="_blank">Forum</a>
+            </li>
+            <li>
+                <i class="fab fa-github"></i>
+                <a href="https://github.com/UAVCAN" target="_blank">GitHub</a>
+            </li>
+        </ul>
+    </header>
+
+    <h1>What is UAVCAN?</h1>
+    <p>
+        <abbr title="Uncomplicated Application-level Vehicular Communication And Networking; pronounced 'you-aye-wee-can'">UAVCAN</abbr>
+        is an open lightweight protocol designed for reliable communication in
+        aerospace and robotic applications over robust vehicular networks such as CAN bus or Ethernet.
+    </p>
+    <p>
+        It is created to address the challenge of deterministic on-board data exchange between
+        systems and components of next-generation intelligent vehicles:
+        manned and unmanned aircraft, spacecraft, robots, and cars.
+    </p>
+    <p>
+        UAVCAN is a standard open to everyone, and it will always remain this way.
+        No licensing or approval of any kind is necessary for its implementation, distribution, or use.
+    </p>
+    <h2>Features</h2>
+    <ul>
+        <li>
+            Democratic network &ndash; no bus master, no single point of failure.
+        </li>
+        <li>
+            Publish/subscribe and request/response (RPC) exchange semantics.
+        </li>
+        <li>
+            Efficient exchange of large data structures with automatic decomposition and reassembly.
+        </li>
+        <li>
+            Lightweight, deterministic, easy to implement, and easy to validate.
+        </li>
+        <li>
+            Suitable for deeply embedded, resource constrained, hard real-time systems.
+        </li>
+        <li>
+            Usable with different transport protocols.
+        </li>
+        <li>
+            Supports dual and triply modular redundant transports.
+        </li>
+        <li>
+            Supports high-precision network-wide time synchronization.
+        </li>
+        <li>
+            High-quality open source reference implementations are freely available under the MIT license.
+        </li>
+    </ul>
+
+    <h1>How do I use UAVCAN?</h1>
+    <p>
+        First, read the official
+        <a href="/specification" target="_blank">UAVCAN specification</a> document
+        and familiarize yourself with the
+        <a href="https://github.com/UAVCAN/dsdl">regulated DSDL repository</a>.
+        If you have questions or feedback, bring them to the
+        <a href="https://forum.uavcan.org">discussion forum</a>.
+    </p>
+    <p>
+        Pick one of the free open source implementations (MIT licensed) for use in your application:
+    </p>
+    <ul>
+        <li>
+            <a href="https://github.com/UAVCAN/libuavcan">Libuavcan</a> &mdash;
+            full-featured, highly robust implementation in C++11 for embedded systems and GNU/Linux.
+        </li>
+        <li>
+            <a href="https://github.com/UAVCAN/libcanard">Libcanard</a> &mdash;
+            lightweight implementation in C99 for deeply embedded systems.
+        </li>
+        <li>
+            <a href="https://github.com/UAVCAN/pyuavcan">Pyuavcan</a> &mdash;
+            general-purpose, easy to use Python implementation for high level operating systems
+            (MS Windows, GNU/Linux, Mac OS, etc.).
+        </li>
+        <li>
+            <a href="https://github.com/UAVCAN/uavcan.rs">uavcan.rs</a> &mdash;
+            highly robust no-std multipurpose implementation in the Rust programming language.
+        </li>
+    </ul>
+    <p>
+        None of the implementations suit your needs? Write your own!
+        UAVCAN is a very simple protocol; an experienced developer can easily create a custom implementation
+        from scratch to address the unique needs of their application.
+    </p>
+    <p>
+        The open source tools will help you design, develop, and maintain your UAVCAN-based application:
+    </p>
+    <ul>
+        <li>
+            <a href="https://github.com/UAVCAN/libuavcan">Yukon</a> &mdash;
+            a web-based GUI tool for observing, debugging, and interacting with a UAVCAN bus.
+        </li>
+        <li>
+            <a href="https://github.com/UAVCAN/pydsdl">PyDSDL</a> &mdash;
+            a DSDL parser implemented in Python.
+        </li>
+        <li>
+            <a href="https://github.com/UAVCAN/dsdl_parser.rs">dsdl_parser.rs</a> &mdash;
+            a DSDL parser implemented in Rust.
+        </li>
+    </ul>
+    <p>
+        The <a href="http://old.uavcan.org/">old version of the website</a> is still available
+        for historical reasons, but it will be taken down eventually.
+        It contains an older, pre-release edition of the specification and documentation entries that are now obsolete.
+    </p>
+
+{% if forum_feed_entries %}
+    <h1>Recent discussions</h1>
+    <table class="feed">
+    {% for e in forum_feed_entries %}
+        <tr>
+            <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
+            <td>{{ e.text | safe }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <p>
+        <a href="https://forum.uavcan.org/signup">Join the forum to start a new discussion</a>.
+        Also, feel free to participate in the
+        <a href="https://forum.uavcan.org/t/weekly-dev-call/173">weekly dev call</a>.
+    </p>
+{% endif %}
+
+{% if development_feed_entries %}
+    <h1>Recent development activity</h1>
+    <table class="feed">
+    {% for e in development_feed_entries %}
+        <tr>
+            <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
+            <td>{{ e.text | safe }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endif %}
+
+    {% include "base/footer.html" %}
+</body>
+</html>
