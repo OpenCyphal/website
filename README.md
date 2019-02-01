@@ -26,7 +26,7 @@ cd $WORKTREE && git --work-tree=$WORKTREE --git-dir=$GITDIR submodule update --i
 
 chmod 777 -R $WORKTREE
 
-sudo service apache2 reload
+sudo systemctl reload apache2
 ```
 
 In order to use push-to-deploy, add a new remote to your copy of the git repository
