@@ -9,6 +9,10 @@ from .. import app
 from . import cache
 
 
+_UPDATE_INTERVAL = 600
+_CACHE_LIFETIME = 3600 * 24 * 7
+
+
 class Entry:
     def __init__(self, text, timestamp, is_important):
         self.text = str(text)
@@ -101,7 +105,9 @@ class Entry:
 
 def get():
     response = cache.get('https://api.github.com/orgs/UAVCAN/events',
-                         headers={'Accept': 'application/vnd.github.v3+json'}) or b'[]'
+                         headers={'Accept': 'application/vnd.github.v3+json'},
+                         background_update_interval=_UPDATE_INTERVAL,
+                         cache_expiration_timeout=_CACHE_LIFETIME) or b'[]'
     data = json.loads(response.decode())
     if data:
         entries = []

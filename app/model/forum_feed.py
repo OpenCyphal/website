@@ -9,7 +9,10 @@ from .. import app
 from . import cache
 
 
-FORUM_URL = 'https://forum.uavcan.org'
+_FORUM_URL = 'https://forum.uavcan.org'
+
+_UPDATE_INTERVAL = 60
+_CACHE_LIFETIME = 3600 * 24
 
 
 class Entry:
@@ -23,12 +26,14 @@ class Entry:
     def new(d: dict):
         return Entry(title=d['title'],
                      num_posts=d['posts_count'],
-                     url=FORUM_URL + '/t/' + str(d['id']),
+                     url=_FORUM_URL + '/t/' + str(d['id']),
                      timestamp=datetime.datetime.strptime(d['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
 
 
 def get():
-    response = cache.get(FORUM_URL + '/latest.json') or b'{}'
+    response = cache.get(_FORUM_URL + '/latest.json',
+                         background_update_interval=_UPDATE_INTERVAL,
+                         cache_expiration_timeout=_CACHE_LIFETIME) or b'{}'
     data = json.loads(response.decode())
     if data:
         entries = []

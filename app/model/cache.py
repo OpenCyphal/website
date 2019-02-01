@@ -10,27 +10,31 @@ from . import expiring_storage
 from .. import app
 
 
-_DATA_EXPIRATION_TIMEOUT = 3600 * 24 * 7        # Should be very long
-_UPDATE_INTERVAL = 300.0                        # Should be between one minute and a half of the expiration timeout
-
-
-def get(url, headers=None):
+def get(url,
+        background_update_interval,
+        cache_expiration_timeout,
+        headers=None):
     """
     Returns None if such URL is not (yet) cached.
-    Cached entries will be removed after some (long) period of inactivity.
+    Cached entries will be removed after the specified period of inactivity.
+    The timing parameters should not change between calls;
+    otherwise, their actual values may vary unpredictably within the supplied ranges.
     """
+    if background_update_interval >= cache_expiration_timeout:
+        raise ValueError('The background update interval must be lower than the data expiration timeout')
+
     # First, decide if it is time to launch a background update yet.
     # Due to the race condition, we may accidentally start multiple updates concurrently, but this is fine.
     lock_key = 'lock-' + url
     if not expiring_storage.read(lock_key):
-        expiring_storage.write(lock_key, True, timeout=_UPDATE_INTERVAL)
+        expiring_storage.write(lock_key, True, timeout=float(background_update_interval))
         if os.fork() == 0:
-            _do_background_update(url, headers)
+            _do_background_update(url, headers, cache_expiration_timeout)
 
     return expiring_storage.read(url)
 
 
-def _do_background_update(url, headers):
+def _do_background_update(url, headers, cache_expiration_timeout):
     app.logger.info('Initiating background update from %r with headers %r', url, headers)
 
     started_at = time.monotonic()
@@ -41,4 +45,4 @@ def _do_background_update(url, headers):
                     url,
                     time.monotonic() - started_at)
 
-    expiring_storage.write(url, data, timeout=_DATA_EXPIRATION_TIMEOUT)
+    expiring_storage.write(url, data, timeout=float(cache_expiration_timeout))
