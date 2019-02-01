@@ -43,7 +43,3 @@ def get():
                 pass
 
         return entries
-
-
-def _render_url(text: str, target: str) -> str:
-    return '<a href="%s">%s</a>' % (target, text)
