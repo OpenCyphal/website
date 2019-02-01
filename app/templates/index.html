@@ -147,7 +147,11 @@
     {% for e in development_feed_entries %}
         <tr>
             <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
-            <td>{{ e.text | safe }}</td>
+            <td>
+        {% if e.is_important %}<strong>{% endif %}
+                {{ e.text | safe }}
+        {% if e.is_important %}</strong>{% endif %}
+            </td>
         </tr>
     {% endfor %}
     </table>
