@@ -3,27 +3,25 @@
 # Author: Pavel Kirienko <pavel.kirienko@zubax.com>
 #
 
+import os
 import sys
 import time
 import datetime
 from flask import Flask, g
-from raven.contrib.flask import Sentry
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 app = Flask(__name__.split('.')[0])
 app.config.from_object('config')
 
 # Error tracking infrastructure
-# if not app.config.get('DEBUG', False):
-#     sentry = Sentry(app,
-#                     dsn='https://ec37fc78d7144ee39e3a31f53ede70da:42da6bdb53fe4884b8540b46d23e8640@sentry.io/187341',
-#                     logging=True,
-#                     level=logging.ERROR)
-# else:
-#     print('WARNING: SENTRY NOT INITIALIZED', file=sys.stderr)
-#     sentry = None
+if not os.environ.get('DEBUG', ''):
+    sentry_sdk.init(dsn="https://cf30bf083a464dcfb81e523979ead040@sentry.io/1384470",
+                    integrations=[FlaskIntegration()])
+else:
+    print('WARNING: SENTRY NOT INITIALIZED', file=sys.stderr)
 
 app.config['CURRENT_YEAR'] = datetime.datetime.now().year
-
 
 from app import view
 

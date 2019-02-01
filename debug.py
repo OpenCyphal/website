@@ -4,6 +4,7 @@ import sys
 import logging
 import os
 
+os.environ['DEBUG'] = '1'
 
 LOG_FORMAT = '%(asctime)s %(levelname)-8s %(name)s: %(message)s'
 log_level = logging.DEBUG if 'debug' in sys.argv else logging.INFO
