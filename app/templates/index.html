@@ -130,7 +130,7 @@
     {% for e in forum_feed_entries %}
         <tr>
             <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
-            <td>{{ e.text | safe }}</td>
+            <td><a href="{{ e.url }}">{{ e.title | safe }}</a> ({{ e.num_posts }} posts)</td>
         </tr>
     {% endfor %}
     </table>

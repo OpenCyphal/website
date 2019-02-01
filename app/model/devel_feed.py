@@ -70,7 +70,6 @@ class Entry:
                     repo,
                 ])
             elif d['payload']['ref_type'] in ('repository',):
-                is_important = True
                 text = ' '.join([
                     actor,
                     'created a new repository',

@@ -15,6 +15,7 @@ TITLE = 'UAVCAN - a lightweight protocol designed for reliable communication ' \
         'in aerospace and robotic applications over robust vehicular networks'
 
 
+# noinspection PyBroadException
 @app.route('/')
 def _index():
     try:

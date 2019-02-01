@@ -13,20 +13,18 @@ FORUM_URL = 'https://forum.uavcan.org'
 
 
 class Entry:
-    def __init__(self, text, timestamp):
-        self.text = str(text)
+    def __init__(self, title, num_posts, url, timestamp):
+        self.title = str(title)
+        self.num_posts = int(num_posts)
+        self.url = str(url)
         self.timestamp = timestamp
 
     @staticmethod
     def new(d: dict):
-        timestamp = datetime.datetime.strptime(d['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
-
-        text = '%s (%d posts)' % (
-            _render_url(d['title'], FORUM_URL + '/t/' + str(d['id'])),
-            d['posts_count'],
-        )
-
-        return Entry(text=text, timestamp=timestamp)
+        return Entry(title=d['title'],
+                     num_posts=d['posts_count'],
+                     url=FORUM_URL + '/t/' + str(d['id']),
+                     timestamp=datetime.datetime.strptime(d['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
 
 
 def get():
