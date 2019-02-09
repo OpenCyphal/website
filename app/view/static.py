@@ -50,3 +50,9 @@ def _favicon():
 def _favicon_152():
     return send_from_directory(os.path.join(app.root_path, 'static', 'images'), 'favicon-152.png',
                                mimetype='image/png')
+
+
+@app.route('/favicon-192.png')
+def _favicon_192():
+    return send_from_directory(os.path.join(app.root_path, 'static', 'images'), 'favicon-192.png',
+                               mimetype='image/png')
