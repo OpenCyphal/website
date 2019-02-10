@@ -14,20 +14,38 @@ _FORUM_URL = 'https://forum.uavcan.org'
 _UPDATE_INTERVAL = 60
 _CACHE_LIFETIME = 3600 * 24
 
+_IMAGE_SIDE = 128
+
 
 class Entry:
-    def __init__(self, title, num_posts, url, timestamp):
+    def __init__(self, title, num_posts, url, image_url, timestamp):
         self.title = str(title)
         self.num_posts = int(num_posts)
         self.url = str(url)
+        self.image_url = image_url
         self.timestamp = timestamp
 
     @staticmethod
-    def new(d: dict):
-        return Entry(title=d['title'],
-                     num_posts=d['posts_count'],
-                     url=_FORUM_URL + '/t/' + str(d['id']),
-                     timestamp=datetime.datetime.strptime(d['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
+    def new(topic: dict, user_id_lookup: dict):
+        image_url = topic.get('image_url')
+        if not image_url:
+            try:
+                # Avatar lookup as a fall-back
+                user = user_id_lookup[topic['posters'][0]['user_id']]
+                avatar_url_template = user['avatar_template']
+                image_url = avatar_url_template.replace('{size}', str(_IMAGE_SIDE))
+            except KeyError:
+                image_url = None
+
+        if image_url and '://' not in image_url:
+            # Some URLs may be full-formed, some may be relative; we have to unify
+            image_url = _FORUM_URL + '/' + image_url
+
+        return Entry(title=topic['title'],
+                     num_posts=topic['posts_count'],
+                     url=_FORUM_URL + '/t/' + str(topic['id']),
+                     image_url=image_url,
+                     timestamp=datetime.datetime.strptime(topic['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
 
 
 def get():
@@ -36,11 +54,12 @@ def get():
                          cache_expiration_timeout=_CACHE_LIFETIME) or b'{}'
     data = json.loads(response.decode())
     if data:
+        user_id_lookup = {u['id']: u for u in data['users']}
         entries = []
         for topic in data['topic_list']['topics']:
             # noinspection PyBroadException
             try:
-                e = Entry.new(topic)
+                e = Entry.new(topic, user_id_lookup)
                 if e:
                     entries.append(e)
             except Exception:

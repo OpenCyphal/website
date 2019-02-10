@@ -2,7 +2,7 @@
 {% include "base/head.html" %}
 <body>
     <header>
-        <img src="/static/images/logo.svg">
+        <img src="/static/images/logo.svg" alt="UAVCAN Logo">
         <ul class="nav">
             <li>
                 <i class="far fa-file-pdf"></i>
@@ -129,8 +129,20 @@
     <table class="feed">
     {% for e in forum_feed_entries %}
         <tr>
-            <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
-            <td><a href="{{ e.url }}">{{ e.title | safe }}</a> ({{ e.num_posts }} posts)</td>
+            <td>
+                <a href="{{ e.url }}">
+                    <img class="thumbnail" alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}">
+                </a>
+            </td>
+            <td>
+                <div>
+                    <a href="{{ e.url }}">{{ e.title | safe }}</a>
+                </div>
+                <div class="meta" title="{{ e.timestamp }}">
+                    <span>{{ e.timestamp.strftime('%b %d') }}</span>
+                    <span>{{ e.num_posts }} posts</span>
+                </div>
+            </td>
         </tr>
     {% endfor %}
     </table>
@@ -146,11 +158,20 @@
     <table class="feed">
     {% for e in development_feed_entries %}
         <tr>
-            <td class="timestamp" title="{{ e.timestamp }}">{{ e.timestamp.strftime('%b %d') }}</td>
             <td>
+                <a href="{{ e.target_url or '#' }}">
+                    <img class="thumbnail" alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}">
+                </a>
+            </td>
+            <td>
+                <div>
         {% if e.is_important %}<strong>{% endif %}
-                {{ e.text | safe }}
+                    {{ e.text | safe }}
         {% if e.is_important %}</strong>{% endif %}
+                </div>
+                <div class="meta" title="{{ e.timestamp }}">
+                    <span>{{ e.timestamp.strftime('%b %d') }}</span>
+                </div>
             </td>
         </tr>
     {% endfor %}

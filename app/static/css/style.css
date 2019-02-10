@@ -35,7 +35,7 @@ header > img {
     max-width: 400px;
     margin: auto;
     display: block;
-    padding: 2em;
+    padding: 1em;
 }
 .nav {
     padding: 0;
@@ -90,20 +90,29 @@ ul {
 li {
     padding-bottom: 0.25em;
 }
-table.feed * {
-    font-size: 1rem;
+table.feed {
+    border-spacing: 0;  /* this is necessary to remove phantom padding */
 }
 table.feed td {
-    vertical-align: top;
-    padding-bottom: 0.5em;
+    font-size: 1rem;
+    vertical-align: middle;
+    padding: 0.25em 0;
     line-height: 1.25em;
 }
 table.feed tr:last-child td {
     padding-bottom: 0em;
 }
-.feed .timestamp {
-    color: #777;
-    padding-right: 0.5em;
+.feed img.thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-right: 0.5em;
+}
+.feed .meta {
+    color: #888;
+}
+.feed .meta > span {
+    margin-right: 1em;
     word-break: keep-all;
     white-space: nowrap;
 }
@@ -119,7 +128,7 @@ footer {
     font-size: 0.8em;
     line-height: 1.5em;
     font-weight: 300;
-    color: #777;
+    color: #888;
     padding-top: 4em;
     padding-bottom: 1em;
 }

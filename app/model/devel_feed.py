@@ -14,14 +14,26 @@ _CACHE_LIFETIME = 3600 * 24 * 7
 
 
 class Entry:
-    def __init__(self, text, timestamp, is_important):
+    def __init__(self, text, target_url, image_url, timestamp, is_important):
         self.text = str(text)
+        self.image_url = image_url
+        self.target_url = target_url
         self.timestamp = timestamp
         self.is_important = bool(is_important)
 
     @staticmethod
     def new(d: dict):
         is_important = False
+
+        try:
+            image_url = d['actor']['avatar_url']
+        except KeyError:
+            image_url = None
+
+        try:
+            target_url = _prepare_url(d['repo']['url'])     # Default
+        except KeyError:
+            target_url = None
 
         if d['type'] == 'WatchEvent':
             text = ' '.join([
@@ -31,6 +43,7 @@ class Entry:
             ])
 
         elif d['type'] == 'PullRequestEvent' and d['payload']['action'] in ('opened', 'closed', 'reopened'):
+            target_url = _prepare_url(d['payload']['pull_request']['html_url'])
             text = ' '.join([
                 _render_url(d['actor']['login'], d['actor']['url']),
                 d['payload']['action'],
@@ -43,6 +56,7 @@ class Entry:
             ])
 
         elif d['type'] == 'IssuesEvent' and d['payload']['action'] in ('opened', 'closed', 'reopened'):
+            target_url = _prepare_url(d['payload']['issue']['html_url'])
             text = ' '.join([
                 _render_url(d['actor']['login'], d['actor']['url']),
                 d['payload']['action'],
@@ -83,6 +97,7 @@ class Entry:
                 raise ValueError('Unexpected create event type: %r' % d['payload']['ref_type'])
 
         elif d['type'] == 'ReleaseEvent' and d['payload']['action'] == 'published':
+            target_url = _prepare_url(d['payload']['release']['html_url'])
             is_important = True
             text = ' '.join([
                 _render_url(d['actor']['login'], d['actor']['url']),
@@ -98,7 +113,13 @@ class Entry:
         else:
             return
 
+        if not target_url:
+            # Fallback
+            target_url = _prepare_url(d['actor']['url'])
+
         return Entry(text=text,
+                     target_url=target_url,
+                     image_url=image_url,
                      timestamp=_strptime(d['created_at']),
                      is_important=is_important)
 
@@ -124,9 +145,11 @@ def get():
         return entries
 
 
+def _prepare_url(u: str) -> str:
+    return u.replace('api.', '').replace('/repos/', '/').replace('/users/', '/')
+
 def _render_url(text: str, target: str) -> str:
-    target = target.replace('api.', '').replace('/repos/', '/').replace('/users/', '/')
-    return '<a href="%s">%s</a>' % (target, text)
+    return '<a href="%s">%s</a>' % (_prepare_url(target), text)
 
 
 def _strptime(s):
