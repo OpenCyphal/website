@@ -30,6 +30,7 @@ def get(url,
         expiring_storage.write(lock_key, True, timeout=float(background_update_interval))
         if os.fork() == 0:
             _do_background_update(url, headers, cache_expiration_timeout)
+            exit(0)
 
     return expiring_storage.read(url)
 
