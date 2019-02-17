@@ -124,8 +124,8 @@
         It contains an older, pre-release edition of the specification and documentation entries that are now obsolete.
     </p>
 
+{% set fallback_image = '/static/images/logo-square.svg' %}
 {% if forum_feed_entries %}
-    {% set fallback_image = '/static/images/logo-square.svg' %}
     <h1>Recent discussions</h1>
     <table class="feed">
     {% for e in forum_feed_entries %}
