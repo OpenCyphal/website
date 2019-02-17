@@ -125,13 +125,16 @@
     </p>
 
 {% if forum_feed_entries %}
+    {% set fallback_image = '/static/images/logo-square.svg' %}
     <h1>Recent discussions</h1>
     <table class="feed">
     {% for e in forum_feed_entries %}
         <tr>
             <td>
                 <a href="{{ e.url }}">
-                    <img class="thumbnail" alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}">
+                    <img class="thumbnail"
+                         alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
+                         onerror="this.src='/static/images/logo-square.svg'">
                 </a>
             </td>
             <td>
@@ -160,7 +163,9 @@
         <tr>
             <td>
                 <a href="{{ e.target_url or '#' }}">
-                    <img class="thumbnail" alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}">
+                    <img class="thumbnail"
+                         alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
+                         onerror="this.src='{{ fallback_image }}'">
                 </a>
             </td>
             <td>
