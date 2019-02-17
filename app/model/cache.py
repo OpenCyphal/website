@@ -3,9 +3,9 @@
 # Author: Pavel Kirienko <pavel.kirienko@zubax.com>
 #
 
-import os
 import time
 import urllib.request
+import threading
 from . import expiring_storage
 from .. import app
 
@@ -28,9 +28,8 @@ def get(url,
     lock_key = 'lock-' + url
     if not expiring_storage.read(lock_key):
         expiring_storage.write(lock_key, True, timeout=float(background_update_interval))
-        if os.fork() == 0:
-            _do_background_update(url, headers, cache_expiration_timeout)
-            exit(0)
+        threading.Thread(target=lambda: _do_background_update(url, headers, cache_expiration_timeout),
+                         daemon=False).start()
 
     return expiring_storage.read(url)
 
@@ -41,9 +40,10 @@ def _do_background_update(url, headers, cache_expiration_timeout):
     started_at = time.monotonic()
     r = urllib.request.Request(url, headers=headers or {})
     data = urllib.request.urlopen(r).read()
-    app.logger.info('Loaded %.1f KiB from %r in %.3f seconds',
+
+    expiring_storage.write(url, data, timeout=float(cache_expiration_timeout))
+
+    app.logger.info('Background update OK: saved %.1f KiB from %r in %.3f seconds',
                     len(data) / 1024,
                     url,
                     time.monotonic() - started_at)
-
-    expiring_storage.write(url, data, timeout=float(cache_expiration_timeout))
