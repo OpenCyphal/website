@@ -32,10 +32,16 @@ header {
 }
 header > img {
     width: 80%;
-    max-width: 400px;
+    max-width: 450px;
     margin: auto;
     display: block;
-    padding: 1em;
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+}
+header h1 {
+    margin-top: 0;
+    margin-bottom: 1em;
+    font-weight: 400;
 }
 .nav {
     padding: 0;
