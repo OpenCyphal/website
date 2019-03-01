@@ -48,7 +48,10 @@ class Entry:
                      timestamp=datetime.datetime.strptime(topic['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
 
 
-def get():
+def get(max_items):
+    max_items = int(max_items)
+    assert max_items > 0
+
     response = cache.get(_FORUM_URL + '/latest.json',
                          background_update_interval=_UPDATE_INTERVAL,
                          cache_expiration_timeout=_CACHE_LIFETIME) or b'{}'
@@ -66,4 +69,4 @@ def get():
                 app.logger.exception('Could not process entry')
                 pass
 
-        return entries
+        return list(sorted(entries, key=lambda x: x.timestamp, reverse=True))[:max_items]

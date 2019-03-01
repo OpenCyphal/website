@@ -14,16 +14,18 @@ _CACHE_LIFETIME = 3600 * 24 * 7
 
 
 class Entry:
-    def __init__(self, text, target_url, image_url, timestamp, is_important):
+    def __init__(self, text, target_url, image_url, timestamp, is_important, is_high_priority):
         self.text = str(text)
         self.image_url = image_url
         self.target_url = target_url
         self.timestamp = timestamp
         self.is_important = bool(is_important)
+        self.is_high_priority = bool(is_high_priority)
 
     @staticmethod
     def new(d: dict):
         is_important = False
+        is_high_priority = True
 
         try:
             image_url = d['actor']['avatar_url']
@@ -110,6 +112,43 @@ class Entry:
                 _render_url(d['repo']['name'], d['repo']['url']),
             ])
 
+        elif d['type'] == 'PullRequestReviewCommentEvent' and d['payload']['action'] == 'created':
+            is_high_priority = False
+            target_url = _prepare_url(d['payload']['comment']['html_url'])
+            text = ' '.join([
+                _render_url(d['actor']['login'], d['actor']['url']),
+                'commented on a pull request',
+                '&ldquo;' +
+                _render_url(d['payload']['pull_request']['title'], d['payload']['pull_request']['html_url']) +
+                '&rdquo;',
+                'at',
+                _render_url(d['repo']['name'], d['repo']['url']),
+            ])
+
+        elif d['type'] == 'IssueCommentEvent' and d['payload']['action'] == 'created':
+            is_high_priority = False
+            target_url = _prepare_url(d['payload']['comment']['html_url'])
+            text = ' '.join([
+                _render_url(d['actor']['login'], d['actor']['url']),
+                'commented on an issue',
+                '&ldquo;' +
+                _render_url(d['payload']['issue']['title'], d['payload']['issue']['html_url']) +
+                '&rdquo;',
+                'at',
+                _render_url(d['repo']['name'], d['repo']['url']),
+            ])
+
+        elif d['type'] == 'PushEvent':
+            is_high_priority = False
+            text = ' '.join([
+                _render_url(d['actor']['login'], d['actor']['url']),
+                'pushed',
+                str(len(d['payload']['commits'])),
+                'commits to',
+                _render_url(d['repo']['name'], d['repo']['url']),
+            ])
+            timestamp = _strptime(d['created_at'])
+
         else:
             return
 
@@ -121,10 +160,14 @@ class Entry:
                      target_url=target_url,
                      image_url=image_url,
                      timestamp=_strptime(d['created_at']),
-                     is_important=is_important)
+                     is_important=is_important,
+                     is_high_priority=is_high_priority)
 
 
-def get():
+def get(max_items):
+    max_items = int(max_items)
+    assert max_items > 0
+
     response = cache.get('https://api.github.com/orgs/UAVCAN/events',
                          headers={'Accept': 'application/vnd.github.v3+json'},
                          background_update_interval=_UPDATE_INTERVAL,
@@ -142,11 +185,17 @@ def get():
             except Exception:
                 app.logger.exception('Could not process event entry')
 
+        # Crop out the requested number of most important items and then sort them by timestamp
+        entries = list(sorted(entries, key=lambda e: e.is_high_priority, reverse=True))
+        entries = entries[:max_items]
+        entries = list(sorted(entries, key=lambda x: x.timestamp, reverse=True))
+
         return entries
 
 
 def _prepare_url(u: str) -> str:
     return u.replace('api.', '').replace('/repos/', '/').replace('/users/', '/')
+
 
 def _render_url(text: str, target: str) -> str:
     return '<a href="%s">%s</a>' % (_prepare_url(target), text)

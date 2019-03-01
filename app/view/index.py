@@ -19,13 +19,13 @@ TITLE = 'UAVCAN - a lightweight protocol designed for reliable communication ' \
 @app.route('/')
 def _index():
     try:
-        development_feed_entries = _crop_feed(devel_feed.get())
+        development_feed_entries = devel_feed.get(max_items=FEED_LENGTH)
     except Exception:
         development_feed_entries = None
         app.logger.exception('Devel feed error')
 
     try:
-        forum_feed_entries = _crop_feed(forum_feed.get())
+        forum_feed_entries = forum_feed.get(max_items=FEED_LENGTH)
     except Exception:
         forum_feed_entries = None
         app.logger.exception('Forum feed error')
@@ -34,7 +34,3 @@ def _index():
                            title=TITLE,
                            development_feed_entries=development_feed_entries,
                            forum_feed_entries=forum_feed_entries)
-
-
-def _crop_feed(f):
-    return list(sorted(f or [], key=lambda x: x.timestamp, reverse=True))[:FEED_LENGTH]
