@@ -1,6 +1,11 @@
 /*
  * Main.
- * UAVCAN logo color: #00ccff
+ * UAVCAN logo color: #1700b3
+ * Other colors:
+ *      #0003ee
+ *      #00dac6
+ *      #007e87
+ *      #b00036
  */
 html {
     width: 90%;
@@ -36,7 +41,7 @@ header > img {
     margin: auto;
     display: block;
     padding-top: 1em;
-    padding-bottom: 0.5em;
+    padding-bottom: 1em;
 }
 header h1 {
     margin-top: 0;
