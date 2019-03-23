@@ -11,10 +11,12 @@ from . import cache
 
 _UPDATE_INTERVAL = 600
 _CACHE_LIFETIME = 3600 * 24 * 7
+_NUM_PAGES_TO_POLL = 3
 
 
 class Entry:
-    def __init__(self, text, target_url, image_url, timestamp, is_important, is_high_priority):
+    def __init__(self, event_id, text, target_url, image_url, timestamp, is_important, is_high_priority):
+        self.id = str(event_id)
         self.text = str(text)
         self.image_url = image_url
         self.target_url = target_url
@@ -147,7 +149,6 @@ class Entry:
                 'commits to',
                 _render_url(d['repo']['name'], d['repo']['url']),
             ])
-            timestamp = _strptime(d['created_at'])
 
         else:
             return
@@ -156,7 +157,8 @@ class Entry:
             # Fallback
             target_url = _prepare_url(d['actor']['url'])
 
-        return Entry(text=text,
+        return Entry(event_id=d['id'],
+                     text=text,
                      target_url=target_url,
                      image_url=image_url,
                      timestamp=_strptime(d['created_at']),
@@ -168,19 +170,24 @@ def get(max_items):
     max_items = int(max_items)
     assert max_items > 0
 
-    response = cache.get('https://api.github.com/orgs/UAVCAN/events',
-                         headers={'Accept': 'application/vnd.github.v3+json'},
-                         background_update_interval=_UPDATE_INTERVAL,
-                         cache_expiration_timeout=_CACHE_LIFETIME) or b'[]'
-    data = json.loads(response.decode())
+    data = []
+    for page_index in range(_NUM_PAGES_TO_POLL):
+        response = cache.get('https://api.github.com/orgs/UAVCAN/events?page=%r' % (page_index + 1),
+                             headers={'Accept': 'application/vnd.github.v3+json'},
+                             background_update_interval=_UPDATE_INTERVAL,
+                             cache_expiration_timeout=_CACHE_LIFETIME) or b'[]'
+        data += json.loads(response.decode())
+
     if data:
+        known_ids = set()
         entries = []
         for event in data:
             # noinspection PyBroadException
             try:
                 e = Entry.new(event)
                 # Do not add similar entries one after another
-                if e and (len(entries) == 0 or e.text != entries[-1].text):
+                if e and e.id not in known_ids and (len(entries) == 0 or e.text != entries[-1].text):
+                    known_ids.add(e.id)
                     entries.append(e)
             except Exception:
                 app.logger.exception('Could not process event entry')
