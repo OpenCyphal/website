@@ -150,14 +150,14 @@
             </td>
             <td>
                 <div>
+                    {% if e.pinned %}<strong>{% endif %}
                     <a href="{{ e.url }}">{{ e.title | safe }}</a>
+                    {% if e.pinned %}</strong>{% endif %}
                 </div>
                 <div class="meta" title="{{ e.timestamp }}{% if e.pinned %} (pinned){% endif %}">
-                    {% if e.pinned -%}
-                        <span><i class="fas fa-thumbtack"></i></span>
-                    {%- endif %}
                     <span>{{ e.timestamp.strftime('%b %d') }}</span>
                     <span>{{ e.num_posts }} posts</span>
+                    {% if e.pinned -%}<span><i class="fas fa-thumbtack"></i></span>{%- endif %}
                 </div>
             </td>
         </tr>
