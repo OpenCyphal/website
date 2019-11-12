@@ -13,24 +13,21 @@
             }
             html, body {
                 height: 100%;
-                background: black;
-                color: red;
-                text-align: center;
+                background: #1700b3;
+                color: #fff;
                 font-family: 'Press Start 2P', monospace;
-                font-size: 12px;
+                font-size: 24px;
+                font-weight: bold;
             }
-            h1 { font-size: 4em; }
-            h2 { font-size: 3em; }
-            h3 { font-size: 2em; }
             a { color: inherit; }
         </style>
         {% include "base/analytics.html" %}
         <title>{{ error_description }}</title>
     </head>
     <body>
-        <h1>ERROR</h1>
-        <h2>{{ error_description }}</h2>
-        <h3><a href="/">PROCEED TO THE HOME PAGE</a></h3>
-        <p>SORRY :(</p>
+        <p>FATAL ERROR</p>
+        <p>{{ error_description }}</p>
+        <p><a href="/">PROCEED TO THE HOME PAGE</a></p>
+        <p>SORRY COLON LEFT PARENTHESIS</p>
     </body>
 </html>
