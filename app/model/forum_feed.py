@@ -18,12 +18,13 @@ _IMAGE_SIDE = 128
 
 
 class Entry:
-    def __init__(self, title, num_posts, url, image_url, timestamp):
+    def __init__(self, title, num_posts, url, image_url, timestamp, pinned):
         self.title = str(title)
         self.num_posts = int(num_posts)
         self.url = str(url)
         self.image_url = image_url
         self.timestamp = timestamp
+        self.pinned = bool(pinned)
 
     @staticmethod
     def new(topic: dict, user_id_lookup: dict):
@@ -41,11 +42,14 @@ class Entry:
             # Some URLs may be full-formed, some may be relative; we have to unify
             image_url = _FORUM_URL + '/' + image_url
 
-        return Entry(title=topic['title'],
-                     num_posts=topic['posts_count'],
-                     url=_FORUM_URL + '/t/' + str(topic['id']),
-                     image_url=image_url,
-                     timestamp=datetime.datetime.strptime(topic['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
+        return Entry(
+            title=topic['title'],
+            num_posts=topic['posts_count'],
+            url=_FORUM_URL + '/t/' + str(topic['id']),
+            image_url=image_url,
+            timestamp=datetime.datetime.strptime(topic['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'),
+            pinned=topic.get('pinned') or topic.get('pinned_globally'),
+        )
 
 
 def get(max_items):
@@ -69,4 +73,6 @@ def get(max_items):
                 app.logger.exception('Could not process entry')
                 pass
 
-        return list(sorted(entries, key=lambda x: x.timestamp, reverse=True))[:max_items]
+        entries = sorted(entries, key=lambda x: x.timestamp, reverse=True)
+        entries = sorted(entries, key=lambda x: x.pinned, reverse=True)
+        return list(entries)[:max_items]

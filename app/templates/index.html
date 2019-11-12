@@ -137,7 +137,7 @@
 
 {% set fallback_image = '/static/images/logo-square.svg' %}
 {% if forum_feed_entries %}
-    <h1>Recent discussions</h1>
+    <h1>Discussions and publications</h1>
     <table class="feed">
     {% for e in forum_feed_entries %}
         <tr>
@@ -152,7 +152,10 @@
                 <div>
                     <a href="{{ e.url }}">{{ e.title | safe }}</a>
                 </div>
-                <div class="meta" title="{{ e.timestamp }}">
+                <div class="meta" title="{{ e.timestamp }}{% if e.pinned %} (pinned){% endif %}">
+                    {% if e.pinned -%}
+                        <span><i class="fas fa-thumbtack"></i></span>
+                    {%- endif %}
                     <span>{{ e.timestamp.strftime('%b %d') }}</span>
                     <span>{{ e.num_posts }} posts</span>
                 </div>
