@@ -10,16 +10,12 @@
 html {
     width: 90%;
     margin: auto;
-    font-size: 16px;
     color: black;
     background: white;
-    font-family: 'Roboto Slab', sans-serif;
-    line-height: 1.5em;
-    font-weight: 400;
+    font-family: sans-serif;
 }
 @media all and (min-width: 1200px) {
     html {
-        font-size: 18px;
         width: 80%;
     }
 }
@@ -46,7 +42,7 @@ header > img {
 header h1 {
     margin-top: 0;
     margin-bottom: 1em;
-    font-weight: 400;
+    font-weight: normal;
 }
 .nav {
     padding: 0;
@@ -84,13 +80,13 @@ body {
     -webkit-hyphens: auto;
     hyphens: auto;
 }
-h1 { font-size: 1.6em; font-weight: 700; margin-top: 1.5em; }
-h2 { font-size: 1.0em; font-weight: 700; }
+h1 { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
+h2 { font-size: 1.0em; font-weight: bolder; }
 h3 { font-size: 1.0em; font-style: italic; }
 a {
     text-decoration: underline;
     color: inherit;
-    font-weight: 700;
+    font-weight: bolder;
 }
 a.no-decoration {
     text-decoration: none;
@@ -138,7 +134,7 @@ footer {
     text-align: center;
     font-size: 0.8em;
     line-height: 1.5em;
-    font-weight: 300;
+    font-weight: lighter;
     color: #888;
     padding-top: 4em;
     padding-bottom: 1em;
