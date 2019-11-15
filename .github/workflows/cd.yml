@@ -23,7 +23,7 @@ jobs:
         privatekey: ${{ secrets.SSH_KEY }}
         debug: false
         command: |
-          if [ -d $TARGET_DIR ]; then rm -rf $TARGET_DIR; fi
+          if [ -d $TARGET_DIR ]; then find $TARGET_DIR -type f -exec rm '{}' \; ; fi
     - name: Copy repository to AWS web server
       uses: appleboy/scp-action@master
       with:
