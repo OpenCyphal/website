@@ -12,7 +12,7 @@ from flask import send_from_directory, send_file, abort, redirect, render_templa
 # These are used to keep old links posted around the web functional.
 # The wildcards are not case-sensitive.
 _COMPATIBILITY_REDIRECT_WILDCARDS = {
-    '/specification/[0-9].*':            '/specification',
+    '/specification/*':                  '/specification',  # Old website, also non-existent PDF versions.
     '/hardware_design_recommendations*': '/specification',
     '/implementations*':                 '/',
     '/gui_tool*':                        '/',
