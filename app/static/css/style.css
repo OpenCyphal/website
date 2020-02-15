@@ -110,8 +110,8 @@ table.feed tr:last-child td {
     padding-bottom: 0em;
 }
 .feed img.thumbnail {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     margin-right: 0.5em;
 }
