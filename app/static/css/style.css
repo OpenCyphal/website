@@ -97,6 +97,19 @@ ul {
 li {
     padding-bottom: 0.25em;
 }
+div.scroll-x {
+    overflow-x: auto;
+}
+table.reference {
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+table.reference thead td {
+    border-bottom: #888 solid 1px;
+}
+table.reference td {
+    padding: 0.25em;
+}
 table.feed {
     border-spacing: 0;  /* this is necessary to remove phantom padding */
 }
