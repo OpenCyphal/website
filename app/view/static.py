@@ -11,13 +11,20 @@ from flask import send_from_directory, send_file, abort, redirect, render_templa
 
 # These are used to keep old links posted around the web functional.
 # The wildcards are not case-sensitive.
+# First match wins.
 _COMPATIBILITY_REDIRECT_WILDCARDS = {
     '/specification/*':                  '/specification',  # Old website, also non-existent PDF versions.
     '/hardware_design_recommendations*': '/specification',
+    '/uavcan_specification*':            '/specification',
     '/implementations*':                 '/',
     '/gui_tool*':                        '/',
     '/contact*':                         '/',
     '/uavcan*':                          '/',
+    '/example*':                         '/',
+    # Old links to the implementations
+    '/*libuavcan*': 'https://github.com/UAVCAN/libuavcan',
+    '/*libcanard*': 'https://github.com/UAVCAN/libcanard',
+    '/*pyuavcan*':  'https://github.com/UAVCAN/pyuavcan',
 }
 
 
