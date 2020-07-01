@@ -3,7 +3,7 @@
 # Author: Pavel Kirienko <pavel.kirienko@zubax.com>
 #
 
-from werkzeug.contrib.cache import FileSystemCache
+from cachelib import FileSystemCache
 from .. import app
 
 _cache = FileSystemCache('/tmp/' + app.root_path)
