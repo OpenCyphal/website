@@ -7,7 +7,7 @@ from .. import app
 from flask import redirect
 
 
-_GUIDE_URL = 'https://forum.uavcan.org/t/uavcan-v1-crash-course/778'
+_GUIDE_URL = 'https://forum.uavcan.org/t/778'
 
 
 @app.route('/guide/')
