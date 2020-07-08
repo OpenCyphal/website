@@ -144,22 +144,15 @@ table.feed tr:last-child td {
 .adopters-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 .adopters-entry {
     margin: 15px;
     flex-grow: 1;
     flex-shrink: 1;
-    height: 40px;
-    max-width: 160px;
-}
-@media only screen and (max-width: 500px) {
-    .adopters-entry {
-        height: 30px;
-        width: 100%;    /* Stack them all into a single column. */
-        max-width: unset;
-    }
+    height: 2rem;
+    max-width: 8rem;
 }
 .adopters-entry img {
     object-fit: contain;
