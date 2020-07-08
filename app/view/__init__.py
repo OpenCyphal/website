@@ -1,1 +1,1 @@
-from . import index, static, specification, guide
+from . import index, static, specification, guide, adopters

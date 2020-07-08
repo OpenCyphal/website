@@ -94,3 +94,5 @@ ENV/
 .settings
 .project
 .pydevproject
+!**/.idea/dictionaries
+!**/.idea/dictionaries/*

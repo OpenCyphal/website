@@ -171,6 +171,21 @@
         >reference UAVCAN</a> in scientific or technical publications.
     </p>
 
+{% if adopters %}
+    <h1>Featured adopters</h1>
+    <div class="adopters-container">
+    {% for a in adopters %}
+        <div class="adopters-entry">
+            <a href="{{ a.website_url }}" target="_blank">
+                <img src="/adopters/logo/{{ a.logo_file_name }}"
+                     alt="{{ a.name }}"
+                     title="{{ a.name }}">
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
 {% set fallback_image = '/static/images/logo-square.svg' %}
 {% if forum_feed_entries %}
     <h1>Discussions and publications</h1>
