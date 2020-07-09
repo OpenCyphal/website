@@ -91,7 +91,7 @@
     <h1>How do I use UAVCAN?</h1>
     <p>
         First, read the <a href="https://uavcan.org/guide" target="_blank">Guide</a>.
-        To learn the technical implementation details, read the <a href="/specification" target="_blank">Specification</a>.
+        To learn the technical details, read the <a href="/specification" target="_blank">Specification</a>.
         Familiarize yourself with the <a href="https://github.com/UAVCAN/dsdl">regulated DSDL repository</a>.
         If you have questions or feedback, bring them to the <a href="https://forum.uavcan.org">forum</a>.
     </p>
@@ -102,7 +102,7 @@
         <table class="reference">
             <thead>
             <tr>
-                <td>Name</td>
+                <td>Library</td>
                 <td>Transports</td>
                 <td>Language</td>
                 <td>Applications</td>
@@ -171,6 +171,21 @@
         >reference UAVCAN</a> in scientific or technical publications.
     </p>
 
+{% if adopters %}
+    <h1>Featured adopters</h1>
+    <div class="adopters-container">
+    {% for a in adopters %}
+        <div class="adopters-entry">
+            <a href="{{ a.website_url }}" target="_blank">
+                <img src="/adopters/logo/{{ a.logo_file_name }}"
+                     alt="{{ a.name }}"
+                     title="{{ a.name }}">
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+
 {% set fallback_image = '/static/images/logo-square.svg' %}
 {% if forum_feed_entries %}
     <h1>Discussions and publications</h1>
@@ -199,11 +214,6 @@
         </tr>
     {% endfor %}
     </table>
-    <p>
-        <a href="https://forum.uavcan.org/signup">Join the forum to start a new discussion</a>.
-        Also, feel free to participate in the
-        <a href="https://forum.uavcan.org/t/weekly-dev-call/173">weekly dev call</a>.
-    </p>
 {% endif %}
 
 {% if development_feed_entries %}

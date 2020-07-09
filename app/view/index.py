@@ -4,7 +4,7 @@
 #
 
 from .. import app
-from ..model import devel_feed, forum_feed
+from ..model import devel_feed, forum_feed, adopters
 from flask import render_template
 
 
@@ -30,7 +30,10 @@ def _index():
         forum_feed_entries = None
         app.logger.exception('Forum feed error')
 
+    adopter_list = adopters.get_list()
+
     return render_template('index.html',
                            title=TITLE,
                            development_feed_entries=development_feed_entries,
-                           forum_feed_entries=forum_feed_entries)
+                           forum_feed_entries=forum_feed_entries,
+                           adopters=adopter_list)

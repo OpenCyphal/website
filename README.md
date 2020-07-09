@@ -2,6 +2,8 @@
 
 Sources of the [uavcan.org](https://uavcan.org) website.
 
+If you want your company to be listed on the front page, please follow the instructions under `adopters/`.
+
 ## Running locally
 
 A GNU/Linux-based OS is required.
