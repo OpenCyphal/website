@@ -40,7 +40,7 @@ header h1 {
 /*
  * Body & Elements.
  */
-body {
+p {
     font-size: 100%;
 
     /* Proper overflow handling */
@@ -73,16 +73,16 @@ li {
 div.scroll-x {
     overflow-x: auto;
 }
+
+/*
+ * Implementations table
+ */
 table.reference {
     border-collapse: collapse;
     white-space: nowrap;
 }
-table.reference thead td {
-    border-bottom: #888 solid 1px;
-}
-table.reference td {
-    padding: 0.25em;
-}
+
+
 table.feed {
     border-spacing: 0;  /* this is necessary to remove phantom padding */
 }
@@ -113,6 +113,7 @@ table.feed tr:last-child td {
 .feed a {
     font-weight: inherit;
 }
+
 /* Adopters flex-box. */
 .adopters-container {
     display: flex;

@@ -92,40 +92,42 @@
     <p>
         Pick one of the free open source implementations (MIT licensed) for use in your application:
     </p>
-        <table class="table table-borderless table-sm">
+      <div class="table-responsive">
+        <table class="table table-borderless table-sm reference">
             <thead class="thead-light">
-            <tr>
-                <th>Library</th>
-                <th>Transports</th>
-                <th>Language</th>
-                <th>Applications</th>
-                <th>Status</th>
-            </tr>
+              <tr>
+                <th scope="col">Library</th>
+                <th scope="col">Transports</th>
+                <th scope="col">Language</th>
+                <th scope="col">Applications</th>
+                <th scope="col">Status</th>
+              </tr>
             </thead>
             <tbody>
-            <tr>
+              <tr>
                 <td><a href="https://github.com/UAVCAN/libcanard">Libcanard</a></td>
                 <td>UAVCAN/CAN</td>
                 <td>C11</td>
                 <td>Embedded</td>
                 <td>Released</td>
-            </tr>
-            <tr>
+              </tr>
+              <tr>
                 <td><a href="https://github.com/UAVCAN/pyuavcan">Pyuavcan</a></td>
                 <td>Any</td>
                 <td>Python</td>
                 <td>HMI, scripting</td>
                 <td>Released</td>
-            </tr>
-            <tr>
+              </tr>
+              <tr>
                 <td><a href="https://github.com/UAVCAN/libuavcan">Libuavcan</a></td>
                 <td>Any</td>
                 <td>C++11</td>
                 <td>Embedded</td>
                 <td>Work-in-progress</td>
-            </tr>
+              </tr>
             </tbody>
         </table>
+      </div>
     <p>
         None of the implementations suit your needs? Write your own!
         UAVCAN is a very simple protocol; an experienced developer can easily create a custom implementation
