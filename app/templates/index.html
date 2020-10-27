@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-md-8">
 
-    <div id="uavcanInAction" class="carousel slide" data-ride="carousel">
+    <div id="uavcanInAction" class="carousel slide" data-ride="carousel" data-interval="8000">
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img class="d-block w-100" src="/static/images/futaba.jpg" alt="First slide">
@@ -15,7 +15,10 @@
           <img class="d-block w-100" src="/static/images/nxp.jpg" alt="Third slide">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="/static/images/earthrise.jpg" alt="Fourth slide">
+          <img class="d-block w-100" src="/static/images/revolve-1.jpg" alt="Fourth slide">
+        </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" src="/static/images/earthrise.jpg" alt="Fifth slide">
         </div>
       </div>
       <a class="carousel-control-prev" href="#uavcanInAction" role="button" data-slide="prev">
@@ -171,11 +174,13 @@
 
 {% set fallback_image = '/static/images/logo-square.svg' %}
 </div>
+
+<!-- Recent Publications card -->
 <div class="col-md-4">
 {% if forum_feed_entries %}
     <div class="card">
-      <div class="card-header">
-        <h2>Discussions and publications</h2>
+      <div class="card-header text-light bg-info">
+        <h2>Recent Publications</h2>
       </div>
       <div class="card-body container">
       {% for e in forum_feed_entries %}
@@ -202,26 +207,34 @@
     </div>
 {% endif %}
 
+<div><br></div>
+
+<!-- Recent Developments card -->
 {% if development_feed_entries %}
-    <h1>Development activity</h1>
-    {% for e in development_feed_entries %}
-    <div class="row">
-        <div class="col-2">
+    <div class="card">
+      <div class="card-header text-light bg-info">
+        <h2>Recent Developments</h2>
+      </div>
+      <div class="card-body container">
+      {% for e in development_feed_entries %}
+        <div class="row">
+          <div class="col-3 text-align-center p-2">
                 <a href="{{ e.target_url or '#' }}">
                     <img class="img-fluid rounded"
                          alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
                          onerror="this.src='{{ fallback_image }}'">
                 </a>
-        </div>
-        <div class="col-10">
+          </div>
+          <div class="col-9">
                 {% if e.is_important %}<strong>{% endif %}
                     <span><small>{{ e.text | safe }}</small></span>
                 {% if e.is_important %}</strong>{% endif %}
                     <span><small>{{ e.timestamp.strftime('%b %d') }}</small></span>
+          </div>
         </div>
+      {% endfor %}
     </div>
-    {% endfor %}
 {% endif %}
-{% endblock %}
   </div>
 </div>
+{% endblock %}

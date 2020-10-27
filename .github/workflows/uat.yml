@@ -3,6 +3,7 @@ name: CD-preview
 on:
   push:
     branches:
+      - uat
       - bootstrap
 
 jobs:
@@ -11,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SOURCE_DIR: ".,!.git,!.github"
-      TARGET_DIR: "/var/www/preview.uavcan.org"
+      TARGET_DIR: "/var/www/uat.uavcan.org"
 
     steps:
     - name: Retrieve repository
