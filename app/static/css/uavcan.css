@@ -82,7 +82,6 @@ table.reference {
     white-space: nowrap;
 }
 
-
 table.feed {
     border-spacing: 0;  /* this is necessary to remove phantom padding */
 }
