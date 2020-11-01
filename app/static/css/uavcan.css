@@ -8,12 +8,14 @@
  *      #b00036
  */
 
+/*
 html {
     margin: auto;
     color: black;
     background: white;
     font-family: sans-serif;
 }
+*/
 
 
 /*
@@ -34,112 +36,36 @@ header > img {
 header h1 {
     margin-top: 0;
     margin-bottom: 1em;
+    font-size: 1.6em;
     font-weight: normal;
 }
 
 /*
  * Body & Elements.
  */
-p {
-    font-size: 100%;
-
-    /* Proper overflow handling */
-    overflow-wrap: break-word;
-    word-wrap: break-word;                  /* synonym for overflow-wrap */
-    /*word-break: break-all;*/              /* this is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-word;                 /* instead use this non-standard one */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-}
 h1 { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
 h2 { font-size: 1.0em; font-weight: bolder; }
 h3 { font-size: 1.0em; font-style: italic; }
-a.decoration {
-    text-decoration: underline;
-    color: inherit;
-    font-weight: bolder;
-}
-a.no-decoration {
-    text-decoration: none;
-}
-ul {
-    padding: 0 0 0 1.5em;
-}
-li {
-    padding-bottom: 0.25em;
-}
-div.scroll-x {
-    overflow-x: auto;
-}
 
-/*
- * Implementations table
- */
+/** Implementations table **/
 table.reference {
     border-collapse: collapse;
     white-space: nowrap;
 }
 
-table.feed {
-    border-spacing: 0;  /* this is necessary to remove phantom padding */
+/** Feed cards **/
+div.card-header h2 {
+    font-size: 1.0em;
+    font-weight: bolder;
 }
-table.feed td {
-    font-size: 1rem;
-    vertical-align: middle;
-    padding: 0.25em 0;
-    line-height: 1.25em;
+div.thumbnail {
+    width: 4.5rem;
+    overflow: hidden;
 }
-table.feed tr:last-child td {
-    padding-bottom: 0em;
-}
-.feed img.thumbnail {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    margin-right: 0.5em;
-}
-.feed .meta {
-    color: #888;
-    font-size: smaller;
-}
-.feed .meta > span {
-    margin-right: 1em;
-    word-break: keep-all;
-    white-space: nowrap;
-}
-.feed a {
-    font-weight: inherit;
+div.thumbnail a img {
+    height: 3.5rem;
 }
 
-/* Adopters flex-box. */
-.adopters-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;
-}
-.adopters-entry {
-    margin: 15px;
-    flex-grow: 1;
-    flex-shrink: 1;
-    height: 2rem;
-    max-width: 8rem;
-}
-.adopters-entry img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-}
-@media (pointer:fine) {
-    .adopters-entry img {
-        filter: contrast(50%);
-    }
-}
-.adopters-entry img:hover {
-    filter: none;
-}
 
 /*
  * Footer.

@@ -158,85 +158,97 @@
         >reference UAVCAN</a> in scientific or technical publications.
     </p>
 
+<!-- Featured Adopters -->
 {% if adopters %}
-    <h1>Featured adopters</h1>
-    <div class="row justify-content-around">
-    {% for a in adopters %}
-        <div class="col-3 p-4">
-            <a href="{{ a.website_url }}" target="_blank">
-                <img src="/adopters/logo/{{ a.logo_file_name }}"
-                     alt="{{ a.name }}"
-                     title="{{ a.name }}"
-                     class="img-fluid">
-            </a>
-        </div>
-    {% endfor %}
+  <h1>Featured adopters</h1>
+  <div class="row justify-content-around">
+  {% for a in adopters %}
+    <div class="col-3 p-4">
+      <a href="{{ a.website_url }}" target="_blank">
+        <img src="/adopters/logo/{{ a.logo_file_name }}"
+             alt="{{ a.name }}"
+           title="{{ a.name }}"
+           class="img-fluid">
+      </a>
     </div>
+  {% endfor %}
+  </div>
 {% endif %}
 
 {% set fallback_image = '/static/images/logo-square.svg' %}
 </div>
 
-<!-- Recent Publications card -->
+
 <div class="col-md-4">
+
+<!-- Recent Publications card -->
 {% if forum_feed_entries %}
-    <div class="card">
-      <div class="card-header text-light bg-info">
-        <h2>Recent Publications</h2>
-      </div>
-      <div class="card-body container">
-      {% for e in forum_feed_entries %}
-           <div class="row py-1 align-items-center">
-              <div class="col-3 text-align-center p-2">
-                <a href="{{ e.url }}">
-                    <img class="img-fluid rounded"
-                         alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
-                         onerror="this.src='/static/images/logo-square.svg'">
-                </a>
-              </div>
-              <div class="col-9">
-                    {% if e.pinned %}<strong>{% endif %}
-                    <a href="{{ e.url }}"><small>{{ e.title | safe }}</small></a>
-                    {% if e.pinned %}</strong>{% endif %}
-                    <br>
-                    <span><small>{{ e.timestamp.strftime('%b %d') }}</small></span>
-                    <span><small>{{ e.num_posts }} posts</small></span>
-                    {% if e.pinned -%}<span><small><i class="fas fa-thumbtack"></i></small></span>{%- endif %}
-              </div>
-           </div>
-      {% endfor %}
-      </div>
+  <div class="card">
+    <div class="card-header text-light bg-info">
+      <h2 class="mb-0">Recent Publications</h2>
     </div>
+    <div class="card-body py-2 px-3">
+    {% for e in forum_feed_entries %}
+       <div class="row my-3">
+         <div class="thumbnail col-auto">
+           <a href="{{ e.url }}">
+             <img class="rounded"
+                  alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
+                  onerror="this.src='/static/images/logo-square.svg'">
+           </a>
+         </div>
+         <div class="col">
+           {% if e.pinned %}
+             <a href="{{ e.url }}"><small class="font-weight-bolder">{{ e.title | safe }}</small></a>
+           {% else %}
+             <a href="{{ e.url }}"><small>{{ e.title | safe }}</small></a>
+           {% endif %}
+             <br>
+             <small>
+               {{ e.timestamp.strftime('%b %d') }}&ensp;
+               {{ e.num_posts }} posts&nbsp;
+               {% if e.pinned -%}<span><small><i class="fas fa-thumbtack"></i></small></span>{%- endif %}
+             </small>
+         </div>
+       </div>
+     {% endfor %}
+    </div>
+  </div>
 {% endif %}
 
-<div><br></div>
+<br>
 
 <!-- Recent Development card -->
 {% if development_feed_entries %}
-    <div class="card">
-      <div class="card-header text-light bg-info">
-        <h2>Recent Development</h2>
-      </div>
-      <div class="card-body container">
-      {% for e in development_feed_entries %}
-        <div class="row">
-          <div class="col-3 text-align-center p-2">
-                <a href="{{ e.target_url or '#' }}">
-                    <img class="img-fluid rounded"
-                         alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
-                         onerror="this.src='{{ fallback_image }}'">
-                </a>
-          </div>
-          <div class="col-9">
-                {% if e.is_important %}<strong>{% endif %}
-                    <span><small>{{ e.text | safe }}</small></span>
-                {% if e.is_important %}</strong>{% endif %}
-                    <span><small>{{ e.timestamp.strftime('%b %d') }}</small></span>
-          </div>
-        </div>
-      {% endfor %}
+  <div class="card">
+    <div class="card-header text-light bg-info">
+      <h2 class="mb-0">Recent Development</h2>
     </div>
-{% endif %}
+    <div class="card-body py-2 px-3">
+    {% for e in development_feed_entries %}
+      <div class="row my-3">
+        <div class="thumbnail col-auto">
+          <a href="{{ e.target_url or '#' }}">
+            <img class="rounded"
+                 alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
+                 onerror="this.src='{{ fallback_image }}'">
+          </a>
+        </div>
+        <div class="col">
+          {% if e.is_important %}
+            <small class="font-weight-bolder">{{ e.text | safe }}</small>
+          {% else %}
+            <small>{{ e.text | safe }}</small>
+          {% endif %}
+            <br>
+            <small>{{ e.timestamp.strftime('%b %d') }}</small>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
   </div>
+{% endif %}
+
+
 </div>
 {% endblock %}
