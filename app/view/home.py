@@ -32,7 +32,7 @@ def _index():
 
     adopter_list = adopters.get_list()
 
-    return render_template('index.html',
+    return render_template('home.html',
                            title=TITLE,
                            development_feed_entries=development_feed_entries,
                            forum_feed_entries=forum_feed_entries,
