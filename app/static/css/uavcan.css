@@ -1,29 +1,13 @@
 /*
  * Main.
- * UAVCAN logo color: #1700b3
- * Other colors:
- *      #0003ee
- *      #00dac6
- *      #007e87
- *      #b00036
  */
-
-/*
-html {
-    margin: auto;
-    color: black;
-    background: white;
-    font-family: sans-serif;
-}
-*/
-
 
 /*
  * Header.
  */
 header {
     text-align: center;
-    background-color: #f0f6fe;
+    background-color: var(--uavcan-header-bg-color);
 }
 header > img {
     width: 80%;
@@ -43,9 +27,11 @@ header h1 {
 /*
  * Body & Elements.
  */
-h1 { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
-h2 { font-size: 1.0em; font-weight: bolder; }
-h3 { font-size: 1.0em; font-style: italic; }
+h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
+h2   { font-size: 1.0em; font-weight: bolder; }
+h3   { font-size: 1.0em; font-style: italic; }
+body { color: var(--uavcan-body-text-color, inherit); }
+a    { color: var(--uavcan-link-text-color, inherit); }
 
 /** Implementations table **/
 table.reference {
@@ -54,9 +40,13 @@ table.reference {
 }
 
 /** Feed cards **/
-div.card-header h2 {
+.feed-header {
+    background-color: var(--uavcan-feed-card-h2-bg-color, inherit);
+}
+.feed-header h2 {
     font-size: 1.0em;
     font-weight: bolder;
+    color: var(--uavcan-feed-card-h2-text-color, inherit);
 }
 div.thumbnail {
     width: 4.5rem;
@@ -73,12 +63,12 @@ div.card small {
 /** Navbar heading **/
 @media screen and (max-width: 992px) {
     .navbar-header {
-        background-color: #f0f6fe;
+        background-color: var(--uavcan-header-bg-color, inherit);
         margin-bottom: 1rem;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         border-bottom-style: solid;
-        border-color: rgba(0,0,0,.1);
+        border-color: var(--uavcan-hr-color, inherit);
         border-width: 1px;
     }
 }
@@ -91,7 +81,7 @@ footer {
     font-size: 0.8em;
     line-height: 1.5em;
     font-weight: lighter;
-    color: #888;
+    color: var(--uavcan-footer-text-color, inherit);
     padding-top: 4em;
     padding-bottom: 1em;
 }

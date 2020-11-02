@@ -1,0 +1,30 @@
+/*
+ * Color palette for UAVCAN web site
+ */
+
+:root {
+    /** UAVCAN color palette **/
+    --uavcan-blue:  #0003EE;
+    --uavcan-navy:  #1700B3;        /* UAVCAN logo color */
+    --uavcan-teal:  #00DAC6;
+    --uavcan-cyan:  #007E87;
+    --uavcan-red:   #B00036;
+    --uavcan-black: #000000;
+
+    /** Other colors **/
+    --uavcan-pale-blue:  #F0F6FE;
+    --uavcan-gray:       #888888;
+    --uavcan-black-10pc: rgb(0 0 0 / 0.1);
+
+    /* Element colors */
+    --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
+    --uavcan-body-text-color:         var(--uavcan-black);       /* Default text color */
+    --uavcan-link-text-color:         var(--uavcan-blue);        /* Hyperlink color */
+    --uavcan-ref-thead-text-color:    var(--light, inherit);
+    --uavcan-ref-thead-bg-color:      var(--uavcan-cyan);
+    --uavcan-feed-card-h2-text-color: var(--light, inherit);     /* Feed card heading text color */
+    --uavcan-feed-card-h2-bg-color:   var(--uavcan-cyan);        /* Feed card heading background color */
+    --uavcan-hr-color:                var(--uavcan-black-10pc);  /* Horizontal rule color */
+    --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
+}
+
