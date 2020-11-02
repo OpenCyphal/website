@@ -65,6 +65,10 @@ div.thumbnail {
 div.thumbnail a img {
     height: 3.5rem;
 }
+div.card small {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
 
 /** Navbar heading **/
 @media screen and (max-width: 992px) {
