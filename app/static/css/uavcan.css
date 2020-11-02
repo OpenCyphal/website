@@ -66,6 +66,18 @@ div.thumbnail a img {
     height: 3.5rem;
 }
 
+/** Navbar heading **/
+@media screen and (max-width: 992px) {
+    .navbar-header {
+        background-color: #f0f6fe;
+        margin-bottom: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom-style: solid;
+        border-color: rgba(0,0,0,.1);
+        border-width: 1px;
+    }
+}
 
 /*
  * Footer.
