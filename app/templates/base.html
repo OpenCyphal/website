@@ -41,59 +41,24 @@
     </header>
     {% endblock %}
 
-    <!-- Side Navigation Bar -->
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-2 navbar-header sticky-top">
-          <nav class="navbar navbar-expand-lg navbar-light bg-transparent px-1">
-            <span class="d-block d-lg-none">
-              <img src="/static/images/logo.svg" alt="UAVCAN Logo">
-            </span>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebar-nav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="sidebar-nav">
-              <ul class="navbar-nav flex-column">
-                <li class="nav-item">
-                  <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="https://forum.uavcan.org/t/the-uavcan-guide/778">UAVCAN Guide</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/specification">UAVCAN Specification</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/consortium">Consortium</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/conformant-products">Conformant Products</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="https://forum.uavcan.org">Forum</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="https://github.com/UAVCAN">GitHub</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="https://legacy.uavcan.org/">Legacy v0</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <hr class="d-none d-lg-block"> 
+
+        <!-- Side Navigation Bar -->
+        <div class="col-lg-2 navbar-header">
+          {% include "sidebar.html" %}
         </div>
 
         <!-- Content -->
         <div class="col-lg-10" style="left-border: 1px">
-           {% block content %}{% endblock %}
+          {% block content %}{% endblock %}
         </div>
       </div>
     </div>
 
     <!-- Footer block -->
     <div class="container-fluid">
-        {% block footer %}{% include "base/footer.html" %}{% endblock %}
+      {% block footer %}{% include "base/footer.html" %}{% endblock %}
     </div>
 
     <!-- JQuery and Bootstrap scripts -->
@@ -102,5 +67,6 @@
 
     <!-- Google Analytics scripts -->
     {% include "base/analytics.html" %}
+
 </body>
 </html>

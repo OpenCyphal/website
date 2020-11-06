@@ -32,6 +32,45 @@ h2   { font-size: 1.0em; font-weight: bolder; }
 h3   { font-size: 1.0em; font-style: italic; }
 body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
+i    { width: 20px; text-align: center }
+
+/** Navbar heading **/
+@media screen and (max-width: 992px) {
+    .navbar-header {
+        background-color: var(--uavcan-header-bg-color, inherit);
+        margin-bottom: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom-style: solid;
+        border-color: var(--uavcan-hr-color, inherit);
+        border-width: 1px;
+    }
+}
+
+.navbar-uavcan {
+    background-color: transparent;
+}
+.navbar-uavcan .navbar-nav {
+    width: 100%;
+}
+.navbar-uavcan .navbar-toggler {
+    border-color: var(--uavcan-sidebar-text-color, inherit);
+}
+.navbar-uavcan .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-uavcan .navbar-nav .nav-item .nav-link {
+    color: var(--uavcan-sidebar-text-color, inherit);
+}
+.navbar-uavcan .navbar-nav .nav-item .empty-icon {
+    width: 18px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.navbar-uavcan .navbar-nav .active > .nav-link {
+    color: var(--uavcan-sidebar-active-color, inherit)!important;
+}
+
 
 /** Implementations table **/
 table.reference {
@@ -58,19 +97,6 @@ div.thumbnail a img {
 div.card small {
     overflow-wrap: break-word;
     word-break: break-word;
-}
-
-/** Navbar heading **/
-@media screen and (max-width: 992px) {
-    .navbar-header {
-        background-color: var(--uavcan-header-bg-color, inherit);
-        margin-bottom: 1rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom-style: solid;
-        border-color: var(--uavcan-hr-color, inherit);
-        border-width: 1px;
-    }
 }
 
 /*
