@@ -1,4 +1,4 @@
-name: CD-preview
+name: uat-deployment
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: deploy to production
+    name: deploy to uat
     runs-on: ubuntu-latest
     env:
       SOURCE_DIR: ".,!.git,!.github"
