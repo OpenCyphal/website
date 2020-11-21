@@ -13,14 +13,13 @@ from flask import send_from_directory, send_file, abort, redirect, render_templa
 # The wildcards are not case-sensitive.
 # First match wins.
 _COMPATIBILITY_REDIRECT_WILDCARDS = {
-    '/specification/*':                  '/specification',  # Old website, also non-existent PDF versions.
-    '/hardware_design_recommendations*': '/specification',
-    '/uavcan_specification*':            '/specification',
+    '*hardware_design_recommendations*': 'https://forum.uavcan.org/t/removal-of-the-physical-layer-specification/895',
+    '*specification*':                   '/specification',  # Old website, also non-existent PDF versions.
     '/implementations*':                 '/',
-    '/gui_tool*':                        '/',
     '/contact*':                         '/',
     '/uavcan*':                          '/',
-    '/example*':                         '/',
+    '/gui_tool*':                        'https://forum.uavcan.org/c/app/yukon/14',
+    '/example*':                         'https://forum.uavcan.org/t/libcanard-examples-starters-tutorials/935',
     # Old links to the implementations
     '/*libuavcan*': 'https://github.com/UAVCAN/libuavcan',
     '/*libcanard*': 'https://github.com/UAVCAN/libcanard',
