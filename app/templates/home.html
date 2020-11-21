@@ -225,58 +225,55 @@
     {%- endfor %}
     </div>
   {% endif %}
-
-{% set fallback_image = '/static/images/logo-square.svg' %}
 </div>
 
-
 <div class="col-md-4">
-
-<!-- Recent Publications card -->
-{% if forum_feed_entries %}
+  {%- set fallback_image = '/static/images/logo-square.svg' %}
+  <!-- Recent Publications card -->
+  {%- if forum_feed_entries %}
   <div class="card">
     <div class="card-header feed-header">
-      <h2 class="mb-0">Recent Publications</h2>
+      <h2 class="mb-0">Discussions and publications</h2>
     </div>
     <div class="card-body py-2 px-3">
-    {% for e in forum_feed_entries %}
-       <div class="row my-3">
-         <div class="thumbnail col-auto">
-           <a href="{{ e.url }}">
-             <img class="rounded"
-                  alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
-                  onerror="this.src='/static/images/logo-square.svg'">
-           </a>
-         </div>
-         <div class="col">
-           {% if e.pinned %}
-             <a href="{{ e.url }}"><small class="font-weight-bolder">{{ e.title | safe }}</small></a>
-           {% else %}
-             <a href="{{ e.url }}"><small>{{ e.title | safe }}</small></a>
-           {% endif %}
-             <br>
-             <small>
-               {{ e.timestamp.strftime('%b %d') }}&ensp;
-               {{ e.num_posts }} posts&nbsp;
-               {% if e.pinned -%}<span><small><i class="fas fa-thumbtack"></i></small></span>{%- endif %}
-             </small>
-         </div>
-       </div>
-     {% endfor %}
+      {%- for e in forum_feed_entries %}
+      <div class="row my-3">
+        <div class="thumbnail col-auto">
+          <a href="{{ e.url }}">
+            <img class="rounded"
+                 alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
+                 onerror="this.src='/static/images/logo-square.svg'">
+          </a>
+        </div>
+        <div class="col">
+          {%- if e.pinned %}
+          <a href="{{ e.url }}"><small class="font-weight-bolder">{{ e.title | safe }}</small></a>
+          {%- else %}
+          <a href="{{ e.url }}"><small>{{ e.title | safe }}</small></a>
+          {%- endif %}
+          <br>
+          <small>
+            {{ e.timestamp.strftime('%b %d') }}&ensp;
+            {{ e.num_posts }} posts
+            {%- if e.pinned %}
+              <span><small><i class="fas fa-thumbtack"></i></small></span>
+            {%- endif %}
+          </small>
+        </div>
+      </div>
+      {%- endfor %}
     </div>
   </div>
-{% endif %}
-
-<br>
-
-<!-- Recent Development card -->
-{% if development_feed_entries %}
+  {%- endif %}
+  <br>
+  <!-- Recent Development card -->
+  {%- if development_feed_entries %}
   <div class="card">
     <div class="card-header feed-header">
-      <h2 class="mb-0">Recent Development</h2>
+      <h2 class="mb-0">Development activity</h2>
     </div>
     <div class="card-body py-2 px-3">
-    {% for e in development_feed_entries %}
+      {%- for e in development_feed_entries %}
       <div class="row my-3 flex-nowrap">
         <div class="thumbnail col-auto">
           <a href="{{ e.target_url or '#' }}">
@@ -286,19 +283,20 @@
           </a>
         </div>
         <div class="col">
-          {% if e.is_important %}
-            <small class="font-weight-bolder">{{ e.text | safe }}</small>
-          {% else %}
-            <small>{{ e.text | safe }}</small>
-          {% endif %}
-            <br>
-            <small>{{ e.timestamp.strftime('%b %d') }}</small>
+          {%- if e.is_important %}
+          <small class="font-weight-bolder">{{ e.text | safe }}</small>
+          {%- else %}
+          <small>{{ e.text | safe }}</small>
+          {%- endif %}
+          <br>
+          <small>{{ e.timestamp.strftime('%b %d') }}</small>
         </div>
       </div>
-    {% endfor %}
+      {%- endfor %}
     </div>
   </div>
-{% endif %}
+  {%- endif %}
+</div>
 
 </div>
 {% endblock %}
