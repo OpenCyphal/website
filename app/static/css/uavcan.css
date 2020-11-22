@@ -33,6 +33,13 @@ h3   { font-size: 1.0em; font-style: italic; }
 body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
+code {
+    color: var(--uavcan-body-text-color);
+    white-space: nowrap;
+    overflow-x: auto;
+    display: inline-block;
+    max-width: 100%;
+}
 
 /** Navbar heading **/
 @media screen and (max-width: 992px) {

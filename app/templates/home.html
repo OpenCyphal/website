@@ -209,6 +209,8 @@
       The definitions of such interfaces focus solely on the needs of the application and delegate
       impertinent lower-level details to the protocol
       (network state machines, distributed state management, data serialization, etc.).
+      UAVCAN provides a specialized domain-specific language for this purpose:
+      <abbr title="Data Structure Description Language">DSDL</abbr>.
     </p>
     <p>
       <i class="fas fa-shield-alt"></i>
@@ -216,13 +218,115 @@
       UAVCAN is a decentralized peer-to-peer network with built-in support for modular redundancy.
       Under certain reasonable assumptions,
       the protocol is compatible with unreliable networks where packet loss is possible due to short-term
-      destructive environmental influences (e.g., electromagnetic interference or faulty connector).
+      destructive environmental influences.
     </p>
     <p>
       <i class="fas fa-cogs"></i>
       <b>Determinism:</b>
       UAVCAN is designed to satisfy the requirements of real-time deterministic embedded systems.
       The resource ceiling (time, memory) is always trivially predictable and provable.
+    </p>
+    <p>
+      To meet these values, UAVCAN makes reasonable assumptions about the system.
+      The first such assumption is that the
+      <a href="https://en.wikipedia.org/wiki/Network_calculus">service curve</a>
+      of the underlying transport network is well-characterized,
+      and the probability of packet loss in the absence of adverse influences from the outside environment
+      (e.g., electromagnetic interference or faulty connector) is zero.
+      The latter means that losses cannot arise as a result of processes occurring within the network,
+      such as a queue overflow, but short-term disturbances caused by external factors such as electromagnetic
+      interference may occur.
+      Packet losses caused by such external disturbances are
+      <a href="https://forum.uavcan.org/t/idempotent-interfaces-and-deterministic-data-loss-mitigation/643"
+      >mitigated by tunable duplication of transfers</a>.
+      This assumption is valid for deterministic on-board networks.
+    </p>
+    <p>
+      UAVCAN is nearly stateless &mdash;
+      the protocol is designed to drastically minimize the shared state compared to prior art technologies.
+      As a result, the state space of the distributed system is reduced;
+      its analysis, implementation, and testing are simplified.
+      Participants of the distributed system make virtually no assumptions about the state of their collaborators.
+      Traditional pub-sub frameworks define an explicit subscription establishment procedure where the subscriber
+      informs the publisher of its interest in specific data (SOME/IP, DDS, virtually all MQ*, etc.),
+      whereas in UAVCAN the publisher blindly sends messages to the network,
+      allowing interested agents to accept or ignore them.
+    </p>
+    <p>
+      The latter circumstance would have hampered scalability if not for the extensive reliance on
+      hardware packet filtering and pattern matching.
+      Other commonly used protocols (with notable exclusion of AFDX, ARINC 664) typically overlook the fact
+      that modern high-speed networking hardware provides powerful means of automatic traffic policing
+      (e.g., Ethernet NICs, switches, CAN controllers, etc).
+      Reasonable exploitation of this fact
+      <a href="https://forum.uavcan.org/t/alternative-transport-protocols-in-uavcan/324">enables
+      radical simplification</a>
+      of the transport layer.
+    </p>
+    <p>
+      The absence of explicitly synchronized states between collaborators
+      (between a publisher and a subscriber or between an RPC client and its server)
+      allows a newly joined network participant to start performing its tasks immediately,
+      without any mandatory registration procedures, service discovery, etc.
+      This is important when analyzing failure scenarios where a critical device is briefly shut down
+      and then reconnected to the network
+      (e.g., due to a power surge, lightning strike, software or hardware defect, etc.).
+    </p>
+    <p>
+      Another assumption is that the distributed computing system is typically configured statically.
+      First, the configuration of vehicular systems is rarely subject to radical changes in the field,
+      which allows UAVCAN to avoid the complexity and failure case analysis of dynamic reconfiguration in most cases.
+      This, however, does not mean that dynamic field reconfiguration (e.g., plug-and-play devices) is not supported
+      (it is useful in research and some limited subset of production systems),
+      but it means that dynamic reconfiguration capabilities belong to the optional parts of the protocol
+      which can be omitted to simplify the validation and verification of safety-critical applications.
+    </p>
+    <p>
+      Second, UAVCAN always provides a well-defined guaranteed resource ceiling for any part of the system
+      at the design stage.
+      Data types defined using the previously mentioned DSDL language always have an upper limit on the size
+      of any variable-length data field,
+      which means that the worst-case data transfer latency, worst-case (de-)serialization time,
+      and, in general, the worst-case processing time can be determined statically.
+    </p>
+    <p>
+      <code>
+        <span style="color: var(--uavcan-cyan);">
+        # A generic displacement amplitude spectrum representation. Documentation is omitted for brevity.<br>
+        </span>
+        <b>uavcan.si.unit.frequency.Scalar.1.0</b> frequency_step<br>
+        <b>float32[<=1024]</b> peak_abs_amplitude  <span style="color: var(--uavcan-cyan);"># [meter]</span><br>
+        <span style="color: var(--uavcan-cyan);">
+        # Observe that the array length is bounded. It is not possible to define an unbounded data type.<br>
+        </span>
+        <b>@assert</b> _offset_.max == 8 * (4 + 1 + 1024 * 4)
+        <span style="color: var(--uavcan-cyan);">
+        # Validate the layout.<br>
+        </span>
+      </code>
+    </p>
+    <p>
+      At the transport layer, bounded resource utilization and timely data processing are facilitated by
+      explicit upper bounds on all protocol resources.
+      For instance, the maximum number of publish-subscribe channels in the system is limited
+      (the limit, however, is expected to be sufficient for any application), as well as the number of nodes.
+      The specification discusses different approaches to implementing the transport layer
+      with an assessment of their asymptotic complexity.
+    </p>
+    <p>
+      At the application layer, the user defines custom network services and data types
+      (using the DSDL domain-specific language)
+      for use in pub-sub or RPC links.
+      For common tasks (like diagnostics, file transfer, logging, configuration management, etc.)
+      there is no need to design custom network services because the corresponding definitions are
+      provided by the standard library of UAVCAN services.
+    </p>
+    <p>
+      UAVCAN is also intended to serve as a foundation for narrowly specialized
+      domain-specific application-layer standards
+      (like standard USB classes, CANopen profiles, DDS FACE, etc.).
+      One such example is the <em>DS-015 UAVCAN Drone Standard</em> created by the Dronecode Foundation
+      to standardize a UAVCAN-based application layer for unmanned aerial vehicles.
     </p>
     <p class="text-center">
       <img src="/static/images/scope_of_uavcan.svg" style="width: 750px; max-width: 100%;" alt="Scope of UAVCAN">
