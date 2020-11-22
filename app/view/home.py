@@ -11,8 +11,7 @@ from flask import render_template
 FEED_LENGTH = 20
 
 
-TITLE = 'UAVCAN - a lightweight protocol designed for reliable communication ' \
-        'in aerospace and robotic applications over robust vehicular networks'
+TITLE = 'Uncomplicated Application-layer Vehicular Computing And Networking'
 
 
 # noinspection PyBroadException

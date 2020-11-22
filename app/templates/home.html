@@ -38,9 +38,9 @@
     <!-- ---------------------------------------------------------------------------------------------------------- -->
     <h1>What is UAVCAN?</h1>
     <p>
-      UAVCAN is an open lightweight protocol designed for reliable intravehicular communication in
-      aerospace and robotic applications over CAN bus, Ethernet, and other robust transports.
-      It is created to address the challenge of deterministic on-board data exchange between
+      UAVCAN is an open standard for real-time intravehicular distributed computing and communication based on
+      modern networking standards (Ethernet, CAN FD, etc.).
+      It is created to address the challenge of deterministic computing and data distribution between
       systems and components of next-generation intelligent vehicles:
       manned and unmanned aircraft, spacecraft, robots, and cars.
     </p>
@@ -84,7 +84,7 @@
     <!-- ---------------------------------------------------------------------------------------------------------- -->
     <h1>How do I use UAVCAN?</h1>
     <p>
-      First, read the <a href="https://uavcan.org/guide" target="_blank">Guide</a>.
+      First, read the <a href="/guide" target="_blank">Guide</a>.
       To learn the technical details, read the <a href="/specification" target="_blank">Specification</a>.
       Familiarize yourself with the
       <a href="https://github.com/UAVCAN/public_regulated_data_types">regulated DSDL repository</a>.
@@ -150,6 +150,9 @@
       </li>
     </ul>
     <p>
+      Also, third-party solutions may be found <a href="https://github.com/search?q=uavcan">on GitHub</a>.
+    </p>
+    <p>
       Please <a href="https://forum.uavcan.org/t/referencing-the-uavcan-project-in-publications/766" target="_blank"
       >reference UAVCAN</a> in scientific or technical publications.
     </p>
@@ -157,27 +160,58 @@
     <!-- ---------------------------------------------------------------------------------------------------------- -->
     <h1>Why does one need UAVCAN?</h1>
     <p>
-      ...
+      Modern vehicles are becoming increasingly more complex as they implement advanced
+      autonomy and safety capabilities.
+      Most of the complexity is concentrated around the on-board software which largely defines the
+      functional capabilities of the vehicle, yielding the concept of <q>software-defined vehicle</q>.
+      This is especially true for unmanned transport.
     </p>
     <p>
+      Holistic approaches to the design of the on-board vehicular intelligence (or any sophisticated system in general)
+      are complicated by the limitations of the human mind, so <em>distribution</em> is applied widely,
+      where the resulting complex system is composed of subsystems and components
+      whose lesser complexity is hidden behind well-defined abstract interfaces.
+      However, while distributed computing is not a new concept, its application for vehicular intelligence
+      is hampered by the requirements of functional safety and determinism.
+    </p>
+    <p>
+      The high intrinsic complexity of existing distributed computing technologies is due to a wide range of
+      supported usage scenarios and types of interaction,
+      only a small part of which is relevant for the application area of ​​interest to us.
+      We propose that this statement is true even for specialized prior art technologies (like DDS or SOME/IP).
+      A careful rethinking of the basic principles and core requirements to the data distribution platform
+      allowed us to achieve a more balanced trade-off between its intrinsic complexity
+      (and, as a result, the cost of verification and validation)
+      and its ability to express powerful abstractions
+      (and, therefore, allowing the designer to implement more complex behaviors cheaply).
+    </p>
+    <p>
+      UAVCAN is a response to the unmet demand for a distributed computing technology that would allow the designer
+      to hide the complexity of the components of the on-board intelligence behind well-formalized network services
+      while not compromising on functional safety and the costs of verification and validation.
+      Its design rests on the following core values:
+    </p>
+    <p>
+      <i class="fas fa-head-side-virus"></i>
       <b>Simplicity</b> is paramount for high-integrity and safety-critical systems as it reduces the verification
       and validation efforts.
       The complexity of UAVCAN scales together with its application: trivial components (nodes) of the distributed
-      computing system may implement the protocol in less than a thousand lines of code from scratch
-      (a hundred if one of our open-source libraries are used).
+      computing system may implement the protocol in less than a thousand lines of code from scratch.
       The only mandatory application-level function that shall be supported by all implementations is the
       Heartbeat message;
       the broader spectrum of optional protocol capabilities remains at the disposal of the implementer if needed.
     </p>
     <p>
+      <i class="fas fa-cubes"></i>
       <b>High-level abstractions:</b>
-      UAVCAN allows the designer to construct abstract robust interfaces between components of the distributed
+      UAVCAN allows the designer to construct robust service-oriented interfaces between components of the distributed
       computing system, taking into account the real-time constraints.
       The definitions of such interfaces focus solely on the needs of the application and delegate
       impertinent lower-level details to the protocol
       (network state machines, distributed state management, data serialization, etc.).
     </p>
     <p>
+      <i class="fas fa-shield-alt"></i>
       <b>Fault-tolerance:</b>
       UAVCAN is a decentralized peer-to-peer network with built-in support for modular redundancy.
       Under certain reasonable assumptions,
@@ -185,6 +219,7 @@
       destructive environmental influences (e.g., electromagnetic interference or faulty connector).
     </p>
     <p>
+      <i class="fas fa-cogs"></i>
       <b>Determinism:</b>
       UAVCAN is designed to satisfy the requirements of real-time deterministic embedded systems.
       The resource ceiling (time, memory) is always trivially predictable and provable.
@@ -213,6 +248,9 @@
         Directly influence the future of the technology.
       </li>
     </ul>
+    <p>
+      <a href="/consortium">Learn more and apply to become a member</a>.
+    </p>
   {% if adopters %}
     <h2>Featured adopters and members of the Consortium</h2>
     <div class="row justify-content-around">
