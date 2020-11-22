@@ -9,9 +9,9 @@ from .. import app
 from . import cache
 
 
-_UPDATE_INTERVAL = 600
+_UPDATE_INTERVAL = 20 * 60
 _CACHE_LIFETIME = 3600 * 24 * 7
-_NUM_PAGES_TO_POLL = 3
+_NUM_PAGES_TO_POLL = 5
 
 
 class Entry:

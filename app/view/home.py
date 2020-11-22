@@ -8,7 +8,7 @@ from ..model import devel_feed, forum_feed, adopters
 from flask import render_template
 
 
-FEED_LENGTH = 15
+FEED_LENGTH = 20
 
 
 TITLE = 'UAVCAN - a lightweight protocol designed for reliable communication ' \
