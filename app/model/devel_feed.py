@@ -40,6 +40,7 @@ class Entry:
             target_url = None
 
         if d['type'] == 'WatchEvent':
+            is_high_priority = False
             text = ' '.join([
                 _render_url(d['actor']['login'], d['actor']['url']),
                 'starred',
@@ -82,6 +83,7 @@ class Entry:
         elif d['type'] == 'CreateEvent':
             actor = _render_url(d['actor']['login'], d['actor']['url'])
             repo = _render_url(d['repo']['name'], d['repo']['url'])
+            is_important = d['payload']['ref_type'] == 'tag'
             if d['payload']['ref_type'] in ('branch', 'tag'):
                 text = ' '.join([
                     actor,
