@@ -27,10 +27,20 @@ header h1 {
 /*
  * Body & Elements.
  */
+body {
+    color: var(--uavcan-body-text-color, inherit);
+    /* Proper overflow handling */
+    overflow-wrap: break-word;
+    word-wrap: break-word;     /* synonym for overflow-wrap */
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
 h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
 h2   { font-size: 1.2em; font-weight: bolder; }
 h3   { font-size: 1.0em; font-style: italic; }
-body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
 code {
@@ -45,6 +55,9 @@ code {
 .table-sm td,
 .table-sm th {
     padding: .3rem 1rem;
+}
+.dense {
+    line-height: 1.25;
 }
 
 /** Navbar heading **/
@@ -106,10 +119,6 @@ div.thumbnail {
 }
 div.thumbnail a img {
     height: 3.5rem;
-}
-div.card small {
-    overflow-wrap: break-word;
-    word-break: break-word;
 }
 
 /** Adopters flex-box. */

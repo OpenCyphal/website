@@ -365,7 +365,7 @@
   {%- set fallback_image = '/static/images/logo-square.svg' %}
   <!-- Recent Publications card -->
   {%- if forum_feed_entries %}
-  <div class="card">
+  <div class="card dense">
     <div class="card-header feed-header">
       <h2 class="mb-0">Discussions and publications</h2>
     </div>
@@ -381,16 +381,16 @@
         </div>
         <div class="col">
           {%- if e.pinned %}
-          <a href="{{ e.url }}"><small class="font-weight-bolder">{{ e.title | safe }}</small></a>
+          <a href="{{ e.url }}"><span class="font-weight-bolder">{{ e.title | safe }}</span></a>
           {%- else %}
-          <a href="{{ e.url }}"><small>{{ e.title | safe }}</small></a>
+          <a href="{{ e.url }}">{{ e.title | safe }}</a>
           {%- endif %}
           <br>
           <small>
             {{ e.timestamp.strftime('%b %d') }}&ensp;
             {{ e.num_posts }} posts
             {%- if e.pinned %}
-              <span><small><i class="fas fa-thumbtack"></i></small></span>
+              <span><i class="fas fa-thumbtack"></i></span>
             {%- endif %}
           </small>
         </div>
@@ -402,7 +402,7 @@
   <br>
   <!-- Recent Development card -->
   {%- if development_feed_entries %}
-  <div class="card">
+  <div class="card dense">
     <div class="card-header feed-header">
       <h2 class="mb-0">Development activity</h2>
     </div>
@@ -418,9 +418,9 @@
         </div>
         <div class="col">
           {%- if e.is_important %}
-          <small class="font-weight-bolder">{{ e.text | safe }}</small>
+          <span class="font-weight-bolder">{{ e.text | safe }}</span>
           {%- else %}
-          <small>{{ e.text | safe }}</small>
+          {{ e.text | safe }}
           {%- endif %}
           <br>
           <small>{{ e.timestamp.strftime('%b %d') }}</small>
@@ -433,7 +433,7 @@
   <br>
   <!-- Adopters card -->
   {%- if adopters %}
-  <div class="card">
+  <div class="card dense">
     <div class="card-header feed-header">
       <h2 class="mb-0">Featured adopters & UAVCAN Consortium members</h2>
     </div>
