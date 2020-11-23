@@ -28,7 +28,7 @@ header h1 {
  * Body & Elements.
  */
 h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
-h2   { font-size: 1.0em; font-weight: bolder; }
+h2   { font-size: 1.2em; font-weight: bolder; }
 h3   { font-size: 1.0em; font-style: italic; }
 body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
@@ -39,6 +39,12 @@ code {
     overflow-x: auto;
     display: inline-block;
     max-width: 100%;
+}
+.table-responsive { width: unset; }
+.table { width: unset; }
+.table-sm td,
+.table-sm th {
+    padding: .3rem 1rem;
 }
 
 /** Navbar heading **/
