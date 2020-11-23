@@ -356,19 +356,16 @@
   <a href="/consortium">Learn more and apply to become a member</a>.
 </p>
 {% if adopters %}
-  <h2>Featured adopters and members of the Consortium</h2>
-  <div class="row justify-content-around">
-  {%- for a in adopters %}
-    <div class="col-3 p-4">
-      <a href="{{ a.website_url }}" target="_blank">
-        <img src="/adopters/logo/{{ a.logo_file_name }}"
-             alt="{{ a.name }}"
-           title="{{ a.name }}"
-           class="img-fluid">
-      </a>
-    </div>
-  {%- endfor %}
+<h2>Featured adopters and members of the Consortium</h2>
+<div class="adopters-container">
+{% for a in adopters %}
+  <div class="adopters-entry">
+    <a href="{{ a.website_url }}" target="_blank">
+      <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+    </a>
   </div>
+{% endfor %}
+</div>
 {% endif %}
 </div>
 
