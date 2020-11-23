@@ -171,14 +171,14 @@
   where the resulting complex system is composed of subsystems and components
   whose lesser complexity is hidden behind well-defined abstract interfaces.
   However, while distributed computing is not a new concept, its application for vehicular intelligence
-  is hampered by the requirements of functional safety and determinism.
+  may be hindered by the requirements of functional safety and determinism.
 </p>
 <p>
   The high intrinsic complexity of existing distributed computing technologies is due to a wide range of
   supported usage scenarios and types of interaction,
   only a small part of which is relevant for the application area of ​​interest to us.
   We propose that this statement is true even for specialized prior art technologies (like DDS, ROS, SOME/IP).
-  A careful rethinking of the basic principles and core requirements to the data distribution platform
+  Careful rethinking of the basic principles and core requirements to the data distribution platform
   allowed us to achieve a more balanced trade-off between its intrinsic complexity
   (and, as a result, the cost of verification and validation)
   and its ability to express powerful abstractions
@@ -194,7 +194,7 @@
   <i class="fas fa-head-side-virus"></i>
   <b>Simplicity</b> is paramount for high-integrity and safety-critical systems as it reduces the verification
   and validation efforts.
-  The complexity of UAVCAN scales together with its application: trivial components (nodes) of the distributed
+  The complexity of UAVCAN scales together with its application: unsophisticated components (nodes) of the distributed
   computing system may implement the protocol in less than a thousand lines of code from scratch.
   The only mandatory application-level function that shall be supported by all implementations is the
   Heartbeat message;
@@ -204,7 +204,7 @@
   <i class="fas fa-cubes"></i>
   <b>High-level abstractions:</b>
   UAVCAN allows the designer to construct robust service-oriented interfaces between components of the distributed
-  computing system, taking into account the real-time constraints.
+  computing system, taking into account fault-tolerance and real-time constraints.
   The definitions of such interfaces focus solely on the needs of the application and delegate
   impertinent lower-level details to the protocol
   (network state machines, distributed state management, data serialization, etc.).
@@ -241,7 +241,7 @@
   This assumption is valid for deterministic on-board networks.
 </p>
 <p>
-  UAVCAN is nearly stateless &mdash;
+  UAVCAN is nearly <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a> &mdash;
   the protocol is designed to drastically minimize the shared state compared to prior art technologies.
   As a result, the state space of the distributed system is reduced;
   its analysis, implementation, and testing are simplified.
@@ -254,7 +254,7 @@
 <p>
   The latter circumstance would have hampered scalability if not for the extensive reliance on
   hardware packet filtering and pattern matching.
-  Other commonly used protocols (with notable exclusion of AFDX, ARINC 664) typically overlook the fact
+  Other commonly used protocols (with notable exclusion of AFDX, ARINC 664) often overlook the fact
   that modern high-speed networking hardware provides powerful means of automatic traffic policing
   (e.g., Ethernet NICs, switches, CAN controllers, etc).
   Reasonable exploitation of this fact
@@ -287,6 +287,7 @@
   of any variable-length data field,
   which means that the worst-case data transfer latency, worst-case (de-)serialization time,
   and, in general, the worst-case processing time can be determined statically.
+  A practical example is shown below:
 </p>
 <p>
   <code>
@@ -308,17 +309,16 @@
   At the transport layer, bounded resource utilization and timely data processing are facilitated by
   explicit upper bounds on all protocol resources.
   For instance, the maximum number of publish-subscribe channels in the system is limited
-  (the limit, however, is expected to be sufficient for any application), as well as the number of nodes.
+  (the limit, however, is expected to be sufficient for any application), as well as the number of network nodes.
   The specification discusses different approaches to implementing the transport layer
   with an assessment of their asymptotic complexity.
 </p>
 <p>
   At the application layer, the user defines custom network services and data types
-  (using the DSDL domain-specific language)
-  for use in pub-sub or RPC links.
+  (using the DSDL domain-specific language) for use in pub-sub or RPC links.
   For common tasks (like diagnostics, file transfer, logging, configuration management, etc.)
   there is no need to design custom network services because the corresponding definitions are
-  provided by the standard library of UAVCAN services.
+  provided by the standard library of network services.
 </p>
 <p>
   UAVCAN is also intended to serve as a foundation for narrowly specialized
@@ -333,9 +333,6 @@
 
 <!-- -------------------------------------------------------------------------------------------------------------- -->
 <h1 id="who">Who is behind UAVCAN?</h1>
-<img src="/static/images/uavcan-conformance-mark.svg" width="160" height="160" class="img-fluid float-right p-3"
-     alt="UAVCAN Conformance Mark"
-     title="UAVCAN Conformance Mark">
 <p>
   The UAVCAN Consortium is a non-profit organization established to support, promote, and standardize
   the technology and expand the UAVCAN ecosystem.
