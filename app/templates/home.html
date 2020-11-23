@@ -64,7 +64,7 @@
     and facilitates <b>service-oriented design</b>.
   </li>
   <li>
-    <b>Lightweight</b> — implementable from scratch in ca. 1000 lines of code; cheap to verify and validate.
+    <b>Lightweight</b> — implementable from scratch in ca. 1000 logical lines of code; cheap to verify and validate.
   </li>
   <li>
     <b>Peer-to-peer network</b> — no bus master, no single point of failure.
@@ -177,7 +177,7 @@
   The high intrinsic complexity of existing distributed computing technologies is due to a wide range of
   supported usage scenarios and types of interaction,
   only a small part of which is relevant for the application area of ​​interest to us.
-  We propose that this statement is true even for specialized prior art technologies (like DDS or SOME/IP).
+  We propose that this statement is true even for specialized prior art technologies (like DDS, ROS, SOME/IP).
   A careful rethinking of the basic principles and core requirements to the data distribution platform
   allowed us to achieve a more balanced trade-off between its intrinsic complexity
   (and, as a result, the cost of verification and validation)
@@ -333,6 +333,9 @@
 
 <!-- -------------------------------------------------------------------------------------------------------------- -->
 <h1 id="who">Who is behind UAVCAN?</h1>
+<img src="/static/images/uavcan-conformance-mark.svg" width="160" height="160" class="img-fluid float-right p-3"
+     alt="UAVCAN Conformance Mark"
+     title="UAVCAN Conformance Mark">
 <p>
   The UAVCAN Consortium is a non-profit organization established to support, promote, and standardize
   the technology and expand the UAVCAN ecosystem.
@@ -346,7 +349,7 @@
   </li>
   <li>
     Include vendor-specific or domain-specific data types and network service definitions to the official
-    <a href="https://github.com/UAVCAN/public_regulated_data_types">public regulated data types</a> repository.
+    public regulated data types repository.
   </li>
   <li>
     Directly influence the future of the technology.
@@ -355,18 +358,6 @@
 <p>
   <a href="/consortium">Learn more and apply to become a member</a>.
 </p>
-{% if adopters %}
-<h2>Featured adopters and members of the Consortium</h2>
-<div class="adopters-container">
-{% for a in adopters %}
-  <div class="adopters-entry">
-    <a href="{{ a.website_url }}" target="_blank">
-      <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
-    </a>
-  </div>
-{% endfor %}
-</div>
-{% endif %}
 </div>
 
 <!-- -------------------------------------------------------------------------------------------------------------- -->
@@ -436,6 +427,26 @@
         </div>
       </div>
       {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+  <br>
+  <!-- Adopters card -->
+  {%- if adopters %}
+  <div class="card">
+    <div class="card-header feed-header">
+      <h2 class="mb-0">Featured adopters & UAVCAN Consortium members</h2>
+    </div>
+    <div class="card-body py-2 px-3">
+      <div class="adopters-container">
+      {% for a in adopters %}
+        <div class="adopters-entry">
+          <a href="{{ a.website_url }}" target="_blank">
+            <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+          </a>
+        </div>
+      {% endfor %}
+      </div>
     </div>
   </div>
   {%- endif %}

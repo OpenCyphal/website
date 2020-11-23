@@ -29,7 +29,7 @@ def _index():
         forum_feed_entries = None
         app.logger.exception('Forum feed error')
 
-    adopter_list = adopters.get_list()
+    adopter_list = list(adopters.get_list())
 
     return render_template('home.html',
                            title=TITLE,
