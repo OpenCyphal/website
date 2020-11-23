@@ -15,12 +15,11 @@
     --uavcan-pale-blue:  #F0F6FE;
     --uavcan-gray:       #888888;
     --uavcan-black-10pc: rgb(0 0 0 / 0.1);
-    --uavcan-black-60pc: rgb(0 0 0 / 0.6);
 
     /* Element colors */
     --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
     --uavcan-body-text-color:         var(--uavcan-black);       /* Default text color */
-    --uavcan-sidebar-text-color:      var(--uavcan-black-60pc);  /* Sidebar navigation text color */
+    --uavcan-sidebar-text-color:      var(--uavcan-black);       /* Sidebar navigation text color */
     --uavcan-sidebar-active-color:    var(--uavcan-black);       /* Sidebar active page text color */
     --uavcan-link-text-color:         var(--uavcan-navy);        /* Hyperlink color */
     --uavcan-ref-thead-text-color:    var(--light, inherit);
