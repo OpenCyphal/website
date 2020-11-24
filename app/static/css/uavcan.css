@@ -30,6 +30,7 @@ header h1 {
 h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
 h2   { font-size: 1.0em; font-weight: bolder; }
 h3   { font-size: 1.0em; font-style: italic; }
+h5   { font-size: 1.3em; font-weight: normal; margin-bottom: 1.0em; }
 body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
