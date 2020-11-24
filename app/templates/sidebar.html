@@ -14,11 +14,12 @@
       <div class="flex-fill">
         <ul class="navbar-nav flex-column">
           <li class="nav-item d-flex align-items-center{% if active == 'home' %} active{% endif %}">
-            <a class="nav-link mr-auto" href="/">Home</a><div class="empty-icon"></div>
+            <a class="nav-link mr-auto" href="/">Home</a>
+            <a class="nav-link" href="/"><i class="fas fa-home"></i></a>
           </li>
           <li class="nav-item d-flex align-items-center">
-            <a class="nav-link mr-auto" href="https://uavcan.org/guide/">Guide</a>
-            <a class="nav-link" href="https://uavcan.org/guide/"><i class="fas fa-graduation-cap"></i></a>
+            <a class="nav-link mr-auto" href="/guide">Guide</a>
+            <a class="nav-link" href="/guide"><i class="fas fa-graduation-cap"></i></a>
           </li>
           <li class="nav-item d-flex align-items-center">
             <a class="nav-link mr-auto" href="/specification">Specification</a>
@@ -26,7 +27,8 @@
           </li>
           {% if active == 'consortium' %}
           <li class="nav-item active">
-            <a class="nav-link mr-auto" href="/consortium">Consortium</a><div class="empty-icon"></div>
+            <a class="nav-link mr-auto" href="/consortium">Consortium</a>
+            <!-- TODO: add Consortium icon: <i class="fas fa-users"></i> -->
             <ul class="sub-menu" style="list-style-type: none; padding-inline-start: 5%">
               <li class="nav-item">
                 <a class="nav-link" href="/consortium#mission"><small>Mission</small></a>
@@ -37,18 +39,17 @@
               <li class="nav-item">
                 <a class="nav-link" href="/consortium#member-profiles"><small>Member profiles</small></a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/consortium#branding-guidelines"><small>Branding guidelines</small></a>
-              </li>
             </ul>
           </li>
           {% else %}
           <li class="nav-item d-flex align-items-center">
-            <a class="nav-link mr-auto" href="/consortium">Consortium</a><div class="empty-icon"></div>
+            <a class="nav-link mr-auto" href="/consortium">Consortium</a>
+            <a class="nav-link" href="/consortium"><i class="fas fa-users"></i></a>
           </li>
           {% endif %}
           <li class="nav-item d-flex align-items-center{% if active == 'conformant' %} active{% endif %}">
-            <a class="nav-link mr-auto" href="/conformant-products">Conformant Products</a><div class="empty-icon"></div>
+            <a class="nav-link mr-auto" href="/conformant-products">Conformant products</a>
+            <a class="nav-link" href="/conformant-products"><i class="fas fa-certificate"></i></a>
           </li>
           <li class="nav-item d-flex align-items-center">
             <a class="nav-link mr-auto" href="https://forum.uavcan.org">Forum</a>
@@ -60,7 +61,7 @@
           </li>
           <li class="nav-item d-flex align-items-center">
             <a class="nav-link mr-auto" href="https://legacy.uavcan.org/">Legacy v0</a>
-            <a class="nav-link" href="https://legacy.uavcan.org/"><i class="fas fa-external-link-alt"></i></a>
+            <a class="nav-link" href="https://legacy.uavcan.org/"><i class="fas fa-history"></i></a>
           </li>
         </ul>
       </div>

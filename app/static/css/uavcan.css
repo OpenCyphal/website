@@ -27,11 +27,21 @@ header h1 {
 /*
  * Body & Elements.
  */
+body {
+    color: var(--uavcan-body-text-color, inherit);
+    /* Proper overflow handling */
+    overflow-wrap: break-word;
+    word-wrap: break-word;     /* synonym for overflow-wrap */
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
 h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
-h2   { font-size: 1.0em; font-weight: bolder; }
+h2   { font-size: 1.2em; font-weight: bolder; }
 h3   { font-size: 1.0em; font-style: italic; }
 h5   { font-size: 1.3em; font-weight: normal; margin-bottom: 1.0em; }
-body { color: var(--uavcan-body-text-color, inherit); }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
 code {
@@ -40,6 +50,15 @@ code {
     overflow-x: auto;
     display: inline-block;
     max-width: 100%;
+}
+.table-responsive { width: unset; }
+.table { width: unset; }
+.table-sm td,
+.table-sm th {
+    padding: .3rem 1rem;
+}
+.dense {
+    line-height: 1.25;
 }
 
 /** Navbar heading **/
@@ -102,9 +121,33 @@ div.thumbnail {
 div.thumbnail a img {
     height: 3.5rem;
 }
-div.card small {
-    overflow-wrap: break-word;
-    word-break: break-word;
+
+/** Adopters flex-box. */
+.adopters-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.adopters-entry {
+    margin: 15px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 2rem;
+    max-width: 8rem;
+}
+.adopters-entry img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+@media (pointer:fine) {
+    .adopters-entry img {
+        filter: contrast(50%);
+    }
+}
+.adopters-entry img:hover {
+    filter: none;
 }
 
 /*
