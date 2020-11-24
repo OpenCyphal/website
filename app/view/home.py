@@ -16,6 +16,7 @@ TITLE = 'Uncomplicated Application-layer Vehicular Computing And Networking'
 
 # noinspection PyBroadException
 @app.route('/')
+@app.route('/home')
 def _index():
     try:
         development_feed_entries = devel_feed.get(max_items=FEED_LENGTH)

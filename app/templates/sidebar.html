@@ -13,10 +13,30 @@
     <div class="d-flex flex-fill">
       <div class="flex-fill">
         <ul class="navbar-nav flex-column">
-          <li class="nav-item d-flex align-items-center{% if active == 'home' %} active{% endif %}">
+          {% if active == 'home' %}
+          <li class="nav-item active">
+            <a class="nav-link mr-auto" href="/">Home</a>
+            <ul class="sub-menu" style="list-style-type: none; padding-inline-start: 5%">
+              <li class="nav-item">
+                <a class="nav-link" href="/home#what"><small>What is UAVCAN?</small></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/home#how"><small>How do I use UAVCAN?</small></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/home#why"><small>Why do I need UAVCAN?</small></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/home#who"><small>Who is behind UAVCAN?</small></a>
+              </li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item d-flex align-items-center">
             <a class="nav-link mr-auto" href="/">Home</a>
             <a class="nav-link" href="/"><i class="fas fa-home"></i></a>
           </li>
+          {% endif %}
           <li class="nav-item d-flex align-items-center">
             <a class="nav-link mr-auto" href="/guide">Guide</a>
             <a class="nav-link" href="/guide"><i class="fas fa-graduation-cap"></i></a>
