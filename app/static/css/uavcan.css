@@ -61,6 +61,30 @@ code {
     line-height: 1.25;
 }
 
+/** Carousel */
+.carousel {
+    /* TODO: not sure if this is the correct way. */
+    /* TODO: the objective is to improve the view on small screens, like mobiles in portrait orientation. */
+    margin-left:  -15px;
+    margin-right: -15px;
+}
+.carousel-caption {
+    bottom: 0;                      /* Stick to the very bottom */
+    text-shadow: 0 0 1px #000, 0 0 1px #000, 0 0 2px #000, 0 0 2px #000;
+    line-height: 1.2;
+    padding-left:  0.5em;
+    padding-right: 0.5em;
+    hyphens: none;
+}
+.carousel-caption > *       { margin-bottom: .3rem; }
+.carousel-caption .credits  { font-size: small; }
+.carousel-item img          { filter: brightness(70%); }
+@media all and (min-width: 992px) {
+    /* If the medium is large, tint only the caption instead of the whole image. */
+    .carousel-item img { filter: none; }
+    .carousel-caption  { background: rgba(0, 0, 0, 0.5); }
+}
+
 /** Navbar heading **/
 @media screen and (max-width: 992px) {
     .navbar-header {
