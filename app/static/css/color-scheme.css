@@ -4,15 +4,15 @@
 
 :root {
     /** UAVCAN color palette **/
-    --uavcan-blue:  #0003EE;
-    --uavcan-navy:  #1700B3;        /* UAVCAN logo color */
-    --uavcan-teal:  #00DAC6;
-    --uavcan-cyan:  #007E87;
-    --uavcan-red:   #B00036;
+    --uavcan-blue:  #0003ee;
+    --uavcan-navy:  #1700b3;        /* UAVCAN logo color */
+    --uavcan-teal:  #00dac6;
+    --uavcan-cyan:  #007e87;
+    --uavcan-red:   #b00036;
     --uavcan-black: #000000;
 
     /** Other colors **/
-    --uavcan-pale-blue:  #F0F6FE;
+    --uavcan-pale-blue:  #f0f6fe;
     --uavcan-gray:       #888888;
     --uavcan-black-10pc: rgb(0 0 0 / 0.1);
 

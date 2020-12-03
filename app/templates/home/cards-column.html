@@ -1,0 +1,102 @@
+{%- set fallback_image = '/static/images/logo-square.svg' %}
+<div class="navbar-spacer"></div>
+
+<!---
+   Recent Publications card
+  --->
+
+  {%- if forum_feed_entries %}
+  <div class="card dense">
+    <div class="card-header feed-header">
+      <h2 class="mb-0">Discussions and publications</h2>
+    </div>
+    <div class="card-body py-2 px-3">
+      {%- for e in forum_feed_entries %}
+      <div class="row my-3">
+        <div class="thumbnail col-auto">
+          <a href="{{ e.url }}">
+            <img class="rounded"
+                 alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
+                 onerror="this.src='/static/images/logo-square.svg'">
+          </a>
+        </div>
+        <div class="col">
+          {%- if e.pinned %}
+          <a href="{{ e.url }}"><span class="font-weight-bolder">{{ e.title | safe }}</span></a>
+          {%- else %}
+          <a href="{{ e.url }}">{{ e.title | safe }}</a>
+          {%- endif %}
+          <br>
+          <small>
+            {{ e.timestamp.strftime('%b %d') }}&ensp;
+            {{ e.num_posts }} posts
+            {%- if e.pinned %}
+              <span><i class="fas fa-thumbtack"></i></span>
+            {%- endif %}
+          </small>
+        </div>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+  <br>
+
+<!---
+   Recent Development card
+  --->
+
+  {%- if development_feed_entries %}
+  <div class="card dense">
+    <div class="card-header feed-header">
+      <h2 class="mb-0">Development activity</h2>
+    </div>
+    <div class="card-body py-2 px-3">
+      {%- for e in development_feed_entries %}
+      <div class="row my-3 flex-nowrap">
+        <div class="thumbnail col-auto">
+          <a href="{{ e.target_url or '#' }}">
+            <img class="rounded"
+                 alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
+                 onerror="this.src='{{ fallback_image }}'">
+          </a>
+        </div>
+        <div class="col">
+          {%- if e.is_important %}
+          <span class="font-weight-bolder">{{ e.text | safe }}</span>
+          {%- else %}
+          {{ e.text | safe }}
+          {%- endif %}
+          <br>
+          <small>{{ e.timestamp.strftime('%b %d') }}</small>
+        </div>
+      </div>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+  <br>
+
+<!---
+   Adopters card
+  --->
+
+  {%- if adopters %}
+  <div class="card dense">
+    <div class="card-header feed-header">
+      <h2 class="mb-0">Consortium members and adopters</h2>
+    </div>
+    <div class="card-body py-2 px-3">
+      <div class="adopters-container">
+      {% for a in adopters %}
+        <div class="adopters-entry">
+          <a href="{{ a.website_url }}" target="_blank">
+            <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+          </a>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+  {%- endif %}
+

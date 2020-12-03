@@ -3,28 +3,6 @@
  */
 
 /*
- * Header.
- */
-header {
-    text-align: center;
-    background-color: var(--uavcan-header-bg-color);
-}
-header > img {
-    width: 80%;
-    max-width: 450px;
-    margin: auto;
-    display: block;
-    padding-top: 1em;
-    padding-bottom: 1em;
-}
-header h1 {
-    margin-top: 0;
-    margin-bottom: 1em;
-    font-size: 1.6em;
-    font-weight: normal;
-}
-
-/*
  * Body & Elements.
  */
 body {
@@ -62,12 +40,6 @@ code {
 }
 
 /** Carousel */
-.carousel {
-    /* TODO: not sure if this is the correct way. */
-    /* TODO: the objective is to improve the view on small screens, like mobiles in portrait orientation. */
-    margin-left:  -15px;
-    margin-right: -15px;
-}
 .carousel-caption {
     bottom: 0;                      /* Stick to the very bottom */
     text-shadow: 0 0 1px #000, 0 0 1px #000, 0 0 2px #000, 0 0 2px #000;
@@ -79,6 +51,7 @@ code {
 .carousel-caption > *       { margin-bottom: .3rem; }
 .carousel-caption .credits  { font-size: small; }
 .carousel-item img          { filter: brightness(70%); }
+
 @media all and (min-width: 992px) {
     /* If the medium is large, tint only the caption instead of the whole image. */
     .carousel-item img { filter: none; }
@@ -118,8 +91,19 @@ code {
     margin-left: 8px;
     margin-right: 8px;
 }
-.navbar-uavcan .navbar-nav .active > .nav-link {
-    color: var(--uavcan-sidebar-active-color, inherit)!important;
+.navbar-nav .nav-link {
+    color: var(--uavcan-navbar-active-color, inherit)!important;
+    font-weight: normal;
+}
+.navbar-nav .active > .nav-link {
+    color: var(--uavcan-navbar-active-color, inherit)!important;
+    font-weight: bold;
+}
+.navbar-spacer {
+    height: 80px!important;
+}
+.bg-navbar {
+    background-color: var(--uavcan-header-bg-color);
 }
 
 

@@ -31,34 +31,21 @@
     <title>{% block title %}{{ title }}{% endblock %}</title>
     {% endblock %}
 </head>
+
 <body>
-    {% block header %}
-    <header class="d-none d-lg-block">
-      <img src="/static/images/logo.svg" alt="UAVCAN Logo">
-      <h1>Intravehicular computing</h1>
-      <hr>
+
+    <header>
+      <!-- Header -->
+      {% include "base/navbar.html" %}
     </header>
-    {% endblock %}
 
     <div class="container-fluid">
-      <div class="row">
-
-        <!-- Side Navigation Bar -->
-        <div class="col-lg-2 navbar-header">
-          {% include "sidebar.html" %}
-        </div>
-
-        <!-- Content -->
-        <div class="col-lg-10" style="left-border: 1px">
-          {% block content %}{% endblock %}
-        </div>
-      </div>
+      <!-- Content -->
+      {% block content %}{% endblock %}
     </div>
 
     <!-- Footer block -->
-    <div class="container-fluid">
-      {% block footer %}{% include "base/footer.html" %}{% endblock %}
-    </div>
+    {% block footer %}{% include "base/footer.html" %}{% endblock %}
 
     <!-- JQuery and Bootstrap scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

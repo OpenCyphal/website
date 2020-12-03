@@ -1,0 +1,371 @@
+<div class="navbar-spacer"></div>
+
+<!---
+   Main Content Column
+  --->
+
+<div id="uavcanInAction" class="carousel slide mx-n3 mx-md-0" data-ride="carousel" data-interval="8000">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="/static/images/katla.aero.jpg" alt="Aircraft">
+      <div class="carousel-caption">
+        <p>UAVCAN interfaces avionics and on-board computing systems in manned and unmanned aircraft</p>
+        <p class="credits">Image by Katla Aero</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="/static/images/revolve.jpg" alt="Robotics">
+      <div class="carousel-caption">
+        <p>UAVCAN enables real-time distributed computing in bleeding-edge robotics</p>
+        <p class="credits">Image by Revolve NTNU Trondheim</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="/static/images/hitec.jpg" alt="COTS equipment">
+      <div class="carousel-caption">
+        <p>UAVCAN is an open interoperability standard for off-the-shelf equipment</p>
+        <p class="credits">Image by Hitec RCD</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="/static/images/earthrise.jpg" alt="Spacecraft">
+      <div class="carousel-caption">
+        <p>UAVCAN runs distributed avionics in modern spacecraft</p>
+      </div>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#uavcanInAction" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#uavcanInAction" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="what">What is UAVCAN?</h1>
+<p>
+  UAVCAN is an open technology for real-time intravehicular distributed computing and communication based on
+  modern networking standards (Ethernet, CAN FD, etc.).
+  It was created to address the challenge of on-board deterministic computing and data distribution in
+  next-generation intelligent vehicles: manned and unmanned aircraft, spacecraft, robots, and cars.
+</p>
+<p>
+  The name stands for <i>Uncomplicated Application-level Vehicular Computing And Networking</i>.
+</p>
+<p>
+  UAVCAN is a standard open to everyone, and it will always remain this way.
+  No licensing or approval of any kind is necessary for its implementation, distribution, or use.
+</p>
+<h2>Features</h2>
+<ul>
+  <li>
+    Designed for <b>complex, high-integrity, real-time vehicular computing</b> systems.
+  </li>
+  <li>
+    <b>Publish/subscribe</b> and <b>request/response (RPC)</b> exchange semantics.
+  </li>
+  <li>
+    Specialized interface description language provides <b>rich zero-cost interface abstractions</b>
+    and facilitates <b>service-oriented design</b>.
+  </li>
+  <li>
+    <b>Lightweight</b> — implementable from scratch in ca. 1000 logical lines of code; cheap to verify and validate.
+  </li>
+  <li>
+    <b>Peer-to-peer network</b> — no bus master, no single point of failure.
+  </li>
+  <li>
+    <b>Modular redundancy</b> for fault-tolerant systems with automatic fail-over.
+  </li>
+  <li>
+    <b>Different transport-layer protocols</b> (Ethernet, CAN, etc.), including heterogeneous transport redundancy.
+  </li>
+  <li>
+    <b>High-quality open source reference implementations</b> are freely available under the MIT license.
+  </li>
+</ul>
+
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="how">How do I use UAVCAN?</h1>
+<p>
+  First, read the <a href="/guide" target="_blank">Guide</a>.
+  To learn the technical details, read the <a href="/specification" target="_blank">Specification</a>.
+  Familiarize yourself with the
+  <a href="https://github.com/UAVCAN/public_regulated_data_types">regulated DSDL repository</a>.
+  If you have questions or feedback, bring them to the <a href="https://forum.uavcan.org">forum</a>.
+</p>
+<p>
+  Pick one of the free open source implementations (MIT licensed) for use in your application:
+</p>
+<div class="table-responsive">
+  <table class="table table-borderless table-sm reference">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Library</th>
+        <th scope="col">Transports</th>
+        <th scope="col">Language</th>
+        <th scope="col">Applications</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://github.com/UAVCAN/libcanard">Libcanard</a></td>
+        <td>UAVCAN/CAN</td>
+        <td>C11</td>
+        <td>Embedded</td>
+        <td>Released</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/UAVCAN/pyuavcan">PyUAVCAN</a></td>
+        <td>Any</td>
+        <td>Python</td>
+        <td>HMI, scripting</td>
+        <td>Released</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/UAVCAN/libuavcan">Libuavcan</a></td>
+        <td>Any</td>
+        <td>C++11</td>
+        <td>Embedded</td>
+        <td>Work-in-progress, ETA 2021Q4</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>
+  None of these implementations suits your needs? Write your own!
+  UAVCAN is a very simple protocol; an experienced developer can
+  <a href="https://twitter.com/JediJeremy/status/1263041116321886208">easily</a>
+  create a customized implementation from scratch to address the unique needs of their application.
+</p>
+<p>
+  These open source tools will help you design, develop, and maintain your UAVCAN-based application:
+</p>
+<ul>
+  <li>
+    <a href="https://github.com/UAVCAN/nunavut">Nunavut</a> &mdash;
+    a Python library and a CLI tool for generating code from DSDL definitions.
+  </li>
+  <li>
+    <a href="https://github.com/UAVCAN/yukon">Yukon</a> <em>(work-in-progress)</em> &mdash;
+    an IDE for observing, debugging, and interacting with a UAVCAN bus.
+    This product is currently under active development; ETA 2021Q4.
+  </li>
+</ul>
+<p>
+  Also, third-party solutions may be found <a href="https://github.com/search?q=uavcan">on GitHub</a>.
+</p>
+<p>
+  Please <a href="https://forum.uavcan.org/t/referencing-the-uavcan-project-in-publications/766" target="_blank"
+  >reference UAVCAN</a> in scientific or technical publications.
+</p>
+
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="why">Why do I need UAVCAN?</h1>
+<p>
+  Modern vehicles are becoming increasingly complex as they implement advanced
+  autonomy and safety capabilities.
+  Most of the complexity is concentrated around the on-board software which largely defines the
+  functional capabilities of the vehicle, yielding the concept of a <q>software-defined vehicle</q>.
+  This is especially true for unmanned transport.
+</p>
+<p>
+  Holistic approaches to the design of the on-board vehicular intelligence (or any sophisticated system in general)
+  are complicated by the limitations of the human mind, so <em>distribution</em> is applied widely,
+  where the resulting complex system is composed of subsystems and components
+  whose lesser complexity is hidden behind well-defined abstract interfaces.
+  However, while distributed computing is not a new concept, its application for vehicular intelligence
+  may be hindered by the requirements of functional safety and determinism.
+</p>
+<p>
+  The high intrinsic complexity of existing distributed computing technologies is due to a wide range of
+  supported usage scenarios and types of interaction,
+  only a small part of which is relevant for the application area of ​​interest to us.
+  We propose that this statement is true even for specialized prior art technologies (like DDS, ROS, SOME/IP).
+  Careful rethinking of the basic principles and core requirements of the data distribution platform
+  allowed us to achieve a more balanced trade-off between its intrinsic complexity
+  (and, as a result, the cost of verification and validation)
+  and its ability to express powerful abstractions
+  (and, therefore, allowing the designer to implement more complex behaviors cheaply).
+</p>
+<p>
+  UAVCAN is a response to the unmet demand for a distributed computing technology that would allow the designer
+  to hide the complexity of the components of the on-board intelligence behind well-formalized network services
+  while not compromising on functional safety and the costs of verification and validation.
+  Its design rests on the following core values:
+</p>
+<p>
+  <i class="fas fa-head-side-virus"></i>
+  <b>Simplicity</b> is paramount for high-integrity and safety-critical systems as it reduces the verification
+  and validation efforts.
+  The complexity of UAVCAN scales together with its application: unsophisticated components (nodes) of the distributed
+  computing system may implement the protocol in less than a thousand lines of code from scratch.
+  The only mandatory application-level function that shall be supported by all implementations is the
+  Heartbeat message;
+  the broader spectrum of optional protocol capabilities remains at the disposal of the implementer, if needed.
+</p>
+<p>
+  <i class="fas fa-cubes"></i>
+  <b>High-level abstractions:</b>
+  UAVCAN allows the designer to construct robust service-oriented interfaces between components of the distributed
+  computing system, taking into account fault-tolerance and real-time constraints.
+  The definitions of such interfaces focus solely on the needs of the application and delegate
+  impertinent lower-level details to the protocol
+  (network state machines, distributed state management, data serialization, etc.).
+  UAVCAN provides a specialized domain-specific language for this purpose:
+  <abbr title="Data Structure Description Language">DSDL</abbr>.
+</p>
+<p>
+  <i class="fas fa-shield-alt"></i>
+  <b>Fault-tolerance:</b>
+  UAVCAN is a decentralized peer-to-peer network with built-in support for modular redundancy.
+  Under certain reasonable assumptions,
+  the protocol is compatible with unreliable networks where packet loss is possible due to short-term
+  destructive environmental influences.
+</p>
+<p>
+  <i class="fas fa-cogs"></i>
+  <b>Determinism:</b>
+  UAVCAN is designed to satisfy the requirements of real-time deterministic embedded systems.
+  The resource ceiling (time, memory) is always trivially predictable and provable.
+</p>
+<p>
+  To meet these values, UAVCAN makes reasonable assumptions about the system.
+  The first such assumption is that the
+  <a href="https://en.wikipedia.org/wiki/Network_calculus">service curve</a>
+  of the underlying transport network is well-characterized,
+  and the probability of packet loss in the absence of adverse influences from the outside environment
+  (e.g., electromagnetic interference or faulty connector) is zero.
+  The latter means that losses cannot arise as a result of processes occurring within the network,
+  such as a queue overflow, but short-term disturbances caused by external factors such as electromagnetic
+  interference may occur.
+  Packet losses caused by such external disturbances are
+  <a href="https://forum.uavcan.org/t/idempotent-interfaces-and-deterministic-data-loss-mitigation/643"
+  >mitigated by tunable duplication of transfers</a>.
+  This assumption is valid for deterministic on-board networks.
+</p>
+<p>
+  UAVCAN is nearly <a href="https://en.wikipedia.org/wiki/Stateless_protocol">stateless</a> &mdash;
+  the protocol is designed to drastically minimize the shared state compared to prior art technologies.
+  As a result, the state space of the distributed system is reduced;
+  its analysis, implementation, and testing are simplified.
+  Participants of the distributed system make virtually no assumptions about the state of their collaborators.
+  Traditional pub-sub frameworks define an explicit subscription establishment procedure where the subscriber
+  informs the publisher of its interest in specific data (SOME/IP, DDS, virtually all MQ*, etc.),
+  whereas in UAVCAN the publisher blindly sends messages to the network,
+  allowing interested agents to accept or ignore them.
+</p>
+<p>
+  The latter circumstance would have hampered scalability if not for the extensive reliance on
+  hardware packet filtering and pattern matching.
+  Other commonly used protocols (with notable exclusion of AFDX, ARINC 664) often overlook the fact
+  that modern high-speed networking hardware provides powerful means of automatic traffic policing
+  (e.g., Ethernet NICs, switches, CAN controllers, etc).
+  Reasonable exploitation of this fact
+  <a href="https://forum.uavcan.org/t/alternative-transport-protocols-in-uavcan/324">enables
+  radical simplification</a>
+  of the transport layer.
+</p>
+<p>
+  The absence of explicitly synchronized states between collaborators
+  (between a publisher and a subscriber or between an RPC client and its server)
+  allows a newly joined network participant to start performing its tasks immediately,
+  without any mandatory registration procedures, service discovery, etc.
+  This is important when analyzing failure scenarios where a critical device is briefly shut down
+  and then reconnected to the network
+  (e.g., due to a power surge, lightning strike, software or hardware defect, etc.).
+</p>
+<p>
+  Another assumption is that the distributed computing system is typically configured statically.
+  First, the configuration of vehicular systems is rarely subject to radical changes in the field,
+  which allows UAVCAN to avoid the complexity and failure case analysis of dynamic reconfiguration in most cases.
+  This, however, does not mean that dynamic field reconfiguration (e.g., plug-and-play devices) is not supported
+  (it is useful in research and some limited subset of production systems),
+  but it means that dynamic reconfiguration capabilities belong to the optional parts of the protocol
+  which can be omitted to simplify the validation and verification of safety-critical applications.
+</p>
+<p>
+  Second, UAVCAN always provides a well-defined guaranteed resource ceiling for any part of the system
+  at the design stage.
+  Data types defined using the previously mentioned DSDL language always have an upper limit on the size
+  of any variable-length data field,
+  which means that the worst-case data transfer latency, worst-case (de-)serialization time,
+  and, in general, the worst-case processing time can be determined statically.
+  A practical example is shown below:
+</p>
+<p>
+  <code>
+    <span style="color: var(--uavcan-cyan);">
+    # A generic displacement amplitude spectrum representation. Documentation is omitted for brevity.<br>
+    </span>
+    <b>uavcan.si.unit.frequency.Scalar.1.0</b> frequency_step<br>
+    <b>float32[<=1024]</b> peak_abs_amplitude  <span style="color: var(--uavcan-cyan);"># [meter]</span><br>
+    <span style="color: var(--uavcan-cyan);">
+    # Observe that the array length is bounded. It is not possible to define an unbounded data type.<br>
+    </span>
+    <b>@assert</b> _offset_.max == 8 * (4 + 1 + 1024 * 4)
+    <span style="color: var(--uavcan-cyan);">
+    # Validate the layout.<br>
+    </span>
+  </code>
+</p>
+<p>
+  At the transport layer, bounded resource utilization and timely data processing are facilitated by
+  explicit upper bounds on all protocol resources.
+  For instance, the maximum number of publish-subscribe channels in the system is limited
+  (the limit, however, is expected to be sufficient for any application), as well as the number of network nodes.
+  The specification discusses different approaches to implementing the transport layer
+  with an assessment of their asymptotic complexity.
+</p>
+<p>
+  At the application layer, the user defines custom network services and data types
+  (using the DSDL domain-specific language) for use in pub-sub or RPC links.
+  For common tasks (like diagnostics, file transfer, logging, configuration management, etc.)
+  there is no need to design custom network services because the corresponding definitions are
+  provided by the standard library of network services.
+</p>
+<p>
+  UAVCAN is also intended to serve as a foundation for narrowly specialized
+  domain-specific application-layer standards
+  (like standard USB classes, CANopen profiles, DDS FACE, etc.).
+  One such example is the <em>DS-015 UAVCAN Drone Standard</em> created by the Dronecode Foundation
+  to standardize a UAVCAN-based application layer for unmanned aerial vehicles.
+</p>
+<p class="text-center">
+  <img src="/static/images/scope_of_uavcan.svg" style="width: 750px; max-width: 100%;" alt="Scope of UAVCAN">
+</p>
+<p>
+  Adopting UAVCAN might seem like a little paradigm shift for an engineer experienced with prior art solutions,
+  but our experience and understanding of the field give us confidence that it as a necessary step
+  to adapt to the growing sophistication of modern software-defined vehicles.
+</p>
+
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="who">Who is behind UAVCAN?</h1>
+<p>
+  The UAVCAN Consortium is a non-profit organization established to support, promote and standardize
+  the technology, and expand the UAVCAN ecosystem.
+  Any entity that leverages UAVCAN is welcome to join the organization to take part in shaping the
+  future of the technology and stay ahead of the curve.
+  The following benefits are available only to the members of the Consortium:
+</p>
+<ul>
+  <li>
+    Use the official UAVCAN Conformance Mark with hardware and software products that pass the conformance test.
+  </li>
+  <li>
+    Include vendor-specific or domain-specific data types and network service definitions to the official
+    public regulated data types repository.
+  </li>
+  <li>
+    Directly influence the future of the technology.
+  </li>
+</ul>
+<p>
+  <a href="/consortium">Learn more and apply to become a member</a>.
+</p>
+

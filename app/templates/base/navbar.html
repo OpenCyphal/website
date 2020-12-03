@@ -1,0 +1,44 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-navbar">
+  <!-- UAVCAN Logo -->
+  <a class="navbar-brand" href="#">
+    <img src="static/images/logo.svg" width="150" height="30" alt="" loading="lazy">
+  </a>
+
+  <!-- Menu button in Collapse mode -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navigation Menu -->
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item{% if active == 'home' %} active{% endif %}">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item{% if active == 'consortium' %} active{% endif %}">
+        <a class="nav-link" href="/consortium">Consortium</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDocumentationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Documentation
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDocumentationDropdown">
+          <a class="dropdown-item" target="_blank" href="/guide">Guide</a>
+          <a class="dropdown-item" target="_blank" href="/specification">Specification</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarCollaborationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Collaboration
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarCollaborationDropdown">
+          <a class="dropdown-item" href="https://github.com/UAVCAN">Github</a>
+          <a class="dropdown-item" href="https://forum.uavcan.org">Forum</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://legacy.uavcan.org">Legacy</a>
+      </li>
+    </ul>
+  </div>
+</nav>
