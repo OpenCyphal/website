@@ -2,9 +2,7 @@
  * Main.
  */
 
-/*
- * Body & Elements.
- */
+/** Element modifications **/
 body {
     color: var(--uavcan-body-text-color, inherit);
     /* Proper overflow handling */
@@ -16,10 +14,8 @@ body {
     -webkit-hyphens: auto;
     hyphens: auto;
 }
-h1   { font-size: 1.6em; font-weight: bolder; margin-top: 1.5em; }
-h2   { font-size: 1.2em; font-weight: bolder; }
-h3   { font-size: 1.0em; font-style: italic; }
-h5   { font-size: 1.3em; font-weight: normal; margin-bottom: 1.0em; }
+h1   { font-size: 1.6em; font-weight: bold; }
+h2   { font-size: 1.2em; font-weight: bold; }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
 code {
@@ -29,17 +25,19 @@ code {
     display: inline-block;
     max-width: 100%;
 }
-.table-responsive { width: unset; }
-.table { width: unset; }
+
+/** Attribute modifier classes **/
+.w-unset { width: unset; }
 .table-sm td,
 .table-sm th {
     padding: .3rem 1rem;
 }
-.dense {
+.lh-125 {
     line-height: 1.25;
 }
 
-/** Carousel */
+
+/** Carousel **/
 .carousel-caption {
     bottom: 0;                      /* Stick to the very bottom */
     text-shadow: 0 0 1px #000, 0 0 1px #000, 0 0 2px #000, 0 0 2px #000;
@@ -59,38 +57,6 @@ code {
 }
 
 /** Navbar heading **/
-@media screen and (max-width: 992px) {
-    .navbar-header {
-        background-color: var(--uavcan-header-bg-color, inherit);
-        margin-bottom: 1rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom-style: solid;
-        border-color: var(--uavcan-hr-color, inherit);
-        border-width: 1px;
-    }
-}
-
-.navbar-uavcan {
-    background-color: transparent;
-}
-.navbar-uavcan .navbar-nav {
-    width: 100%;
-}
-.navbar-uavcan .navbar-toggler {
-    border-color: var(--uavcan-sidebar-text-color, inherit);
-}
-.navbar-uavcan .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-.navbar-uavcan .navbar-nav .nav-item .nav-link {
-    color: var(--uavcan-sidebar-text-color, inherit);
-}
-.navbar-uavcan .navbar-nav .nav-item .empty-icon {
-    width: 18px;
-    margin-left: 8px;
-    margin-right: 8px;
-}
 .navbar-nav .nav-link {
     color: var(--uavcan-navbar-active-color, inherit)!important;
     font-weight: normal;
@@ -106,12 +72,6 @@ code {
     background-color: var(--uavcan-header-bg-color);
 }
 
-
-/** Implementations table **/
-table.reference {
-    border-collapse: collapse;
-    white-space: nowrap;
-}
 
 /** Feed cards **/
 .feed-header {
