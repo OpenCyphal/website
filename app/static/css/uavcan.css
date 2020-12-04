@@ -63,10 +63,7 @@ code {
 }
 .navbar-nav .active > .nav-link {
     color: var(--uavcan-navbar-active-color, inherit)!important;
-    font-weight: bold;
-}
-.navbar-spacer {
-    height: 80px!important;
+    font-weight: 600;
 }
 .bg-navbar {
     background-color: var(--uavcan-header-bg-color);

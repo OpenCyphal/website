@@ -9,12 +9,10 @@
 <body>
 
     <!-- Navigation bar header -->
-    <header>
-      {% include "base/navbar.html" %}
-    </header>
+    {% include "base/navbar.html" %}
 
     <!-- Main content block -->
-    <div class="container-fluid">
+    <div class="container-fluid pt-3">
       {% block content %}{% endblock %}
     </div>
 
