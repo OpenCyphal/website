@@ -14,18 +14,23 @@
     /** Other colors **/
     --uavcan-pale-blue:  #f0f6fe;
     --uavcan-gray:       #888888;
-    --uavcan-black-10pc: rgb(0 0 0 / 0.1);
+    --uavcan-cyan-10pc:  rgb(0 126 135 / 0.1);
+    --uavcan-cyan-75pc:  rgb(0 126 135 / 0.75);
+    --uavcan-black-75pc: rgb(0 0 0 / 0.75);
 
     /* Element colors */
     --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
     --uavcan-body-text-color:         var(--uavcan-black);       /* Default text color */
     --uavcan-sidebar-text-color:      var(--uavcan-black);       /* Sidebar navigation text color */
-    --uavcan-sidebar-active-color:    var(--uavcan-black);       /* Sidebar active page text color */
+    --uavcan-sidebar-active-color:    var(--uavcan-black);       /* Sidebar active link text color */
+    --uavcan-sidebar-hover-color:     var(--uavcan-black-75pc);  /* Sidebar hover link text color */
     --uavcan-link-text-color:         var(--uavcan-navy);        /* Hyperlink color */
     --uavcan-ref-thead-text-color:    var(--light, inherit);
     --uavcan-ref-thead-bg-color:      var(--uavcan-navy);
-    --uavcan-feed-card-h2-text-color: var(--light, inherit);     /* Feed card heading text color */
-    --uavcan-feed-card-h2-bg-color:   var(--uavcan-navy);        /* Feed card heading background color */
-    --uavcan-hr-color:                var(--uavcan-black-10pc);  /* Horizontal rule color */
+    --uavcan-card-h2-text-color:      var(--light, inherit);     /* Card heading text color */
+    --uavcan-card-h2-bg-color:        var(--uavcan-navy);        /* Card heading background color */
     --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
+    --uavcan-sandwich-text-color:     var(--uavcan-cyan);
+    --uavcan-sandwich-hover-color:    var(--uavcan-cyan-75pc);
+    --uavcan-sandwich-bg-color:       var(--uavcan-cyan-10pc);
 }

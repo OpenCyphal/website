@@ -3,6 +3,9 @@
  */
 
 /** Element modifications **/
+html {
+    scroll-padding-top: 75px;
+}
 body {
     color: var(--uavcan-body-text-color, inherit);
     /* Proper overflow handling */
@@ -37,6 +40,53 @@ code {
 }
 
 
+/** Navbar heading **/
+.navbar-nav .nav-link {
+    color: var(--uavcan-navbar-text-color, inherit)!important;
+    font-weight: normal;
+}
+.navbar-nav .active > .nav-link {
+    color: var(--uavcan-navbar-active-color, inherit)!important;
+    font-weight: 600;
+}
+.bg-navbar {
+    background-color: var(--uavcan-header-bg-color);
+}
+
+/** Sidebar **/
+.sidebar .sandwich {
+    background-color: var(--uavcan-sandwich-bg-color);
+    font-weight: 600;
+    text-align: center;
+    border-top: 2px solid var(--uavcan-sandwich-text-color);
+    border-bottom: 2px solid var(--uavcan-sandwich-text-color);
+    padding: .75rem 1rem;
+    margin-bottom: .5rem;
+}
+.sidebar .sandwich a {
+    color: var(--uavcan-sandwich-text-color, inherit)!important;
+    text-decoration: none;
+}
+.sidebar .sandwich a:hover {
+    color: var(--uavcan-sandwich-hover-color, inherit)!important;
+}
+.sidebar .nav .nav-heading {
+    color: var(--uavcan-sidebar-text-color, inherit)!important;
+    font-size: 110%;
+    font-weight: 600;
+    padding: .75rem .75rem;
+}
+.sidebar .nav .nav-link {
+    color: var(--uavcan-sidebar-text-color, inherit);
+}
+.sidebar .nav .active {
+    color: var(--uavcan-sidebar-text-color, inherit)!important;
+    font-weight: 600;
+}
+.sidebar .nav a:hover {
+    color: var(--uavcan-sidebar-hover-color, inherit);
+}
+
 /** Carousel **/
 .carousel-caption {
     bottom: 0;                      /* Stick to the very bottom */
@@ -56,28 +106,14 @@ code {
     .carousel-caption  { background: rgba(0, 0, 0, 0.5); }
 }
 
-/** Navbar heading **/
-.navbar-nav .nav-link {
-    color: var(--uavcan-navbar-active-color, inherit)!important;
-    font-weight: normal;
-}
-.navbar-nav .active > .nav-link {
-    color: var(--uavcan-navbar-active-color, inherit)!important;
-    font-weight: 600;
-}
-.bg-navbar {
-    background-color: var(--uavcan-header-bg-color);
-}
-
-
 /** Feed cards **/
 .feed-header {
-    background-color: var(--uavcan-feed-card-h2-bg-color, inherit);
+    background-color: var(--uavcan-card-h2-bg-color, inherit);
 }
 .feed-header h2 {
     font-size: 1.0em;
     font-weight: bolder;
-    color: var(--uavcan-feed-card-h2-text-color, inherit);
+    color: var(--uavcan-card-h2-text-color, inherit);
 }
 div.thumbnail {
     width: 4.5rem;
