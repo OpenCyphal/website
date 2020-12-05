@@ -35,6 +35,11 @@ code {
 .table-sm th {
     padding: .3rem 1rem;
 }
+table.table-nowrap {
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
 .lh-125 {
     line-height: 1.25;
 }
