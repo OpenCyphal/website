@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% set active = 'guide' %}
+
+{% block content %}
+<div class="row"> 
+  <div class="col-lg-2 d-none d-lg-block position-fixed sidebar">
+    {% include "guide/sidebar.html" %}
+  </div>
+  <div class="col-lg-10 ml-auto"> 
+    {% include "guide/content-column.html" %}
+  </div>
+</div>
+{% endblock %}

@@ -19,6 +19,8 @@ body {
 }
 h1   { font-size: 1.6em; font-weight: bold; }
 h2   { font-size: 1.2em; font-weight: bold; }
+h3   { font-size: 1em; font-weight: bold; }
+h4   { font-size: 1em; font-weight: normal; font-style: italic }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
 code {
@@ -85,6 +87,11 @@ table.table-nowrap {
 .sidebar-footnote a {
     font-size: 80%;
     font-weight: 400;
+}
+.sidebar .nav .nav-l2 {
+    color: var(--uavcan-navbar-l2-text-color, inherit);
+    font-size: 90%;
+    padding: .25rem 1.5rem;
 }
 
 /** Carousel **/

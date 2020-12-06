@@ -1,0 +1,1630 @@
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="preface">Preface</h1>
+<p>
+The UAVCAN Guide is the official user documentation that serves as the entry point for new adopters
+of UAVCAN. It is created to explain what UAVCAN is and how it can be leveraged effectively.
+</p>
+<p>
+The guide intentionally leaves out the details pertaining to the implementation libraries (Libuavcan,
+PyUAVCAN, etc.) and other specific software products, focusing on the more abstract matters instead.
+To find documentation for specific software, please consult with the <a href="/">Home</a> page.
+</p>
+<p>
+The formal <a href="/specification">Protocol Specification</a> is published in a separate document.
+We do not recommend it to newcomers because being a formal specification, it is overloaded with
+technical details. Instead, we recommend the specification to those who are interested in creating
+a custom implementation, contributing to the project, or wishing to understand the technology
+in greater detail.
+</p>
+<p>
+The project is managed and coordinated in an open manner. Virtually all of the major design decisions
+are made in discussions conducted on the forum in the <a href="https://forum.uavcan.org/c/dev">
+Development & Maintenance</a> category. Readers wishing to understand the motivation and rationale
+behind the technical decisions are welcome to search through the category and ask questions.
+</p>
+<p>
+The project accepts donations via <a href="https://opencollective.com/uavcan">OpenCollective</a>.
+</p>
+<p>
+This guide is jointly authored by Pavel Kirienko and Scott Dixon.
+</p>
+<hr>
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="overview">Overview</h1>
+<p>
+One of the core design principles of UAVCAN is simplicity. That means two things: the protocol
+is constructed in a straightforward way and it is trivial to apply. We believe that this goal is
+achieved by the current design; yet, there were several occasions where our fellow humans would
+exclaim:
+</p>
+<p class="blockquote">
+But if your protocol is so simple, how come it takes over a hundred pages to describe?
+</p>
+<p>
+That question could arise out of a misunderstanding of how design specifications work. Among other
+objectives, UAVCAN is designed to facilitate the robust interoperability of equipment from different
+vendors in high-integrity applications. That requires that every detail of the protocol is meticulously
+specified to ensure that, first, there are no unforeseen behaviors that might jeopardize a
+safety-critical application; second, that every implementation of the protocol can interoperate
+successfully with any other spec-compliant implementation, possibly from a different vendor. The
+formal project documentation also enables the integration of UAVCAN into high-assurance V-model systems
+design workflow:
+</p>
+<p class="text-left">
+  <img src="/static/images/v-model.png"></img>
+</p>
+<p>
+As a result, a concept that takes one sentence to explain using regular daily speech takes two pages
+in the specification. This chapter provides a legalese-free description of the protocol as a response
+to the misperception of the UAVCAN's complexity.
+</p>
+<p>
+While we are at it, we also explain how to migrate from the earlier experimental revision of the
+protocol commonly known as UAVCAN v0. We are not going to cover how the design decisions were made
+because that would take forever considering that even a simple idea might turn out to be a huge can
+of worms if explored in-depth. If you want the background, feel free to search the forum because it
+is the place where many of the decisions were discussed and agreed upon (that often involves much
+back-and-forth bikeshedding).
+</p>
+<h2 id="basics">Basics</h2>
+<p>
+UAVCAN is a layered composition of three decoupled parts: the <b>application layer</b>, the <b>presentation
+layer</b>, and the <b>transport layer</b> (the physical layer is purposefully omitted). The application
+layer defines some generic high-level functions and concepts that are expected to be useful in
+different application domains, like diagnostics, configuration, basic physical quantities, etc. The
+presentation layer is modeled by <em>DSDL</em>, meaning <em>data structure description language</em>,
+which describes data formats and how that data is to be serialized and interpreted. The transport layer
+determines how to transfer serialized data structures over the network.
+</p>
+<p>
+There are different kinds of data structures:
+</p>
+<ul>
+  <li><b>Messages.</b> A node may <em>publish</em> a message using a <em>specific numerical</em> subject
+      identifier. Using that subject identifier, another node or several may <em>subscribe</em> to specific
+      messages. This is the standard <a href="https://en.wikipedia.org/wiki/Publish-subscribe_pattern">
+      publish-subscribe</a> pattern. This is typically the main mode of communication in UAVCAN applications
+      and it is possible to implement a system using only messages.</li>
+  <li><b>Services.</b> A node may send another node a <em>request</em> identified by a specific numerical
+      service <em>identifier</em>. That other node would receive the request and then maybe send a
+      <em>response</em> back. This is the <a href="https://en.wikipedia.org/wiki/Client-server_model">
+      standard client-server model</a>.</li>
+</ul>
+<p>
+When discussing subject or service identifiers generically we call them port <em>identifiers</em>. There's
+nothing special about this term and any <em>port identifier</em> is always either a subject or service
+identifier in concrete terms.
+</p>
+<p>
+Messages and service calls are exchanged between <em>nodes</em>. A given hardware unit could implement
+one node (e.g. an air-speed sensor might be a single UAVCAN node) or many nodes (e.g. a flight controller
+might have several functions that each act as a UAVCAN node). UAVCAN is a <em>stateless protocol</em>,
+meaning a node can join the network and begin operation immediately upon powering on without any kind of
+registration or preparatory data exchange with other participants. This is an important feature as it
+enables highly deterministic fault-tolerant systems. UAVCAN is a <em>peer-to-peer (democratic)
+protocol,</em> meaning that there is no such thing as a <q>master</q> or any other kind of centralized
+intelligence &ndash; all nodes are equal.
+</p>
+<h2 id="application">Application</h2>
+<p>
+UAVCAN itself is designed to meet the needs of a wide spectrum of vehicular computing applications, so
+as far as the application-level capabilities go, it doesn't offer much beyond the very foundation that
+domain-specific and application-specific entities can be built upon. This includes some common functions
+like diagnostics, introspection, configuration management, etc.
+</p>
+<p class="text-center">
+  <img src="/static/images/scope_of_uavcan.svg" width="750" alt="Scope of UAVCAN"></img>
+</p>
+<p>
+Special interest groups (SIG) or individual adopters can define domain- or application-specific standards
+or conventions on top of UAVCAN (like the <a href="https://forum.uavcan.org/c/sig/drone-sig/17">DS-015
+UAVCAN Drone Standard</a>, for example).
+</p>
+<h2 id="presentation">Presentation</h2>
+<p>
+Anybody familiar with C-like languages should immediately feel at home. Suppose there's a file
+<code>my_project/MyMessageType.1.0.uavcan</code>, where <code>my_project</code> is a <em>namespace
+directory</em> and 1.0 is the version number of the data type:
+</p>
+<pre>
+  <code>
+    uint16 VALUE_LOW  = <span style="color: var(--uavcan-cyan);">1000</span><br>
+    uint16 VALUE_HIGH = <span style="color: var(--uavcan-cyan);">2000</span><br>
+    uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) / <span style="color: var(--uavcan-cyan);">2</span>
+    <em style="color: var(--uavcan-gray);"># Exact rational arithmetics!</em><br>
+    uint16 value<br>
+    uint8[<=<span style="color: var(--uavcan-cyan);">100</span>] key
+    <em style="color: var(--uavcan-gray);"># Variable-length array, at most 100 items.</em><br>
+    @extent 128 * 8<br>
+  </code>
+</pre>
+<p>
+The wire representation is straightforward. The byte order is little-endian and variable-length arrays
+(like key here) are prepended with a length prefix which is either uint8, uint16, uint32, or uint64:
+</p>
+<pre>
+  <code>
+    $ pyuavcan dsdl-gen-pkg dsdl_src/my_project  # Compile the namespace<br>
+    $ python             # Whip out the python to test it using PyUAVCAN<br>
+    >>> import pyuavcan, my_project<br>
+    >>> serialized = pyuavcan.dsdl.serialize(my_project.MyMessageType_1_0(<br>
+    ...     value=1234, key='Hello world!'))<br>
+    >>> bytes(next(serialized))<br>
+    b'\xd2\x04\x0cHello world!'<br>
+  </code>
+</pre>
+<p>
+Here's what we see: 1234 = 0x04D2, so it is serialized as <code>[0xD2, 0x04]</code>. The greeting
+encoded in UTF-8 is 12 bytes long, which is 0x0C, which is immediately followed by <code>Hello world!
+</code>. You can generate and parse such <em>serialized representations</em> using auto-generated code
+(<a href="https://github.com/UAVCAN/nunavut">Nunavut</a> will help you here) or you can just twiddle
+bytes manually if you don't want to get your hands dirty with automatic transcompilers.
+</p>
+<p>
+The crucial thing to note here is that DSDL does not exist at runtime. As a specification language,
+DSDL can be read by humans to serialize and deserialize objects manually, and by machines to generate
+such serialization and deserialization code automatically. An embedded system does not know anything
+about DSDL, because at the time it is deployed DSDL has already done its job.
+</p>
+<p>
+Suppose you manufactured a gazillion devices using the above definition and then you <em>suddenly
+realized</em> that the definition is deficient. You can't just migrate all devices to a newer version
+at once because 1/4 gazillion of these devices are already in the field (sales have been brisk)! At
+this point the concept of <em>semantic compatibility</em> will become extremely prominent in your
+life. The UAVCAN designers endured two years of occasionally heated debates about <em>data type
+versioning</em> and in the end, they summoned the <em>implicit truncation rule</em> and the <em>implicit
+zero extension rule</em> into existence. Here's how they work:
+</p>
+<pre>
+  <code>
+    # my_project/MyMessageType.1.1.uavcan<br>
+    uint16 VALUE_LOW  = 1000<br>
+    uint16 VALUE_HIGH = 2000<br>
+    uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) * 0.5  # Rational arithmetics.<br>
+    uint16 value<br>
+    # This definition has no key. Who needs keys anyway?<br>
+    @extent 128 * 8<br>
+  </code>
+</pre>
+<pre>
+  <code>
+    # my_project/MyMessageType.1.2.uavcan<br>
+    uint16 value<br>
+    uint8[<=100] key     # The key is back.<br>
+    float64 extra_value  # A new field!<br>
+    @extent 128 * 8<br>
+  </code>
+</pre>
+<p>
+We have two new versions of the same type which look quite different, but they are all <em>semantically
+compatible</em>. A node may publish <code>my_project/MyMessageType.1.1</code>, another node may subscribe
+and deserialize the message using <code>my_project/MyMessageType.1.2</code>, and they would communicate
+just fine thanks to the <em>implicit zero extension rule</em>. The rule says that if the deserializer
+expects more data than there is, it shall assume that it's just zeros all the way down, so the key
+would look empty and the extra field would be zero. If the nodes reversed their roles, the <em>implicit
+truncation rule</em> would enter the scene, which says that if there's more data than the node expected,
+it should pretend that the extra data isn't there at all. At the DSDL level, a related concept is
+<em>structural polymorphism</em> or <em>structural sub-typing</em>.
+</p>
+<p>
+There are two other things that are sometimes relevant: <a href="https://en.wikipedia.org/wiki/Tagged_union">
+tagged unions</a> and service types. A tagged union is a way of encoding one value out of several possible
+options (like <code>std::variant&lt;&gt;</code> in C++ or enumerations in Rust, there is no equivalent in
+C); the encoded value is prepended with a byte that says which one is it:
+</p>
+<pre>
+  <code>
+    @union  # This directive adds one byte in front of the message.<br>
+    uint16 integer       # If the tag is zero, it's an integer.<br>
+    uint8[<=100] string  # If the tag is one... You know the drill.<br>
+    my_project.MyMessageType.1.2 my_object  # Yeah, composition.<br>
+    @extent 200 * 8<br>
+  </code>
+</pre>
+<p>
+A service type is defined by inserting three minus characters (---) somewhere into the definition, which
+separates <em>service request schema</em> from the <em>response schema</em>. If you have experience with
+ROS, you already know everything there is to know.
+</p>
+<p>
+Looking at the examples here might help:
+</p>
+
+<!-- TODO : Insert public regulated data types example here -->
+<div style="border: 2px solid gray; height: 6em;">Insert example here.</div>
+
+<p>
+The public regulated data types define certain standard application-level functions such as the heartbeat
+message <code>uavcan.node.Heartbeat</code>, the only application-level function that <em><b>every UAVCAN
+node is required to support</b></em>. Except for publishing a Heartbeat once a second, every other
+application-level function is optional and can be implemented at the discretion (or lack thereof) of
+the designer. The documentation for such application-level behaviors is provided right in the comments
+of the respective DSDL definitions so that everything is kept conveniently in one place.
+</p>
+<p>
+The last thing you need to know about the presentation layer of UAVCAN is how subject and service
+identifiers (aka port identifiers) are assigned unique numbers. Suppose there is a node that publishes
+messages of type <code>my_project.MyMessageType.1.2</code> or provides a service of such and such type.
+How does it know what exact port to use? The vendor of the node could go the UAVCAN v0 way and just
+hard-code a specific identifier, but you might see, perhaps, how this could get out of hand? Another
+vendor would do the same thing; collisions galore! So we 
+<a href="https://forum.uavcan.org/t/on-standards-and-regulation/260">say</a> this:
+</p>
+<ul>
+  <li>
+    If the vendor really needs that <em>fixed port identifier</em>, it should <b>send a pull request with
+    the new data type definition to the public regulated data types repository</b> linked above. The
+    UAVCAN maintainers will be picky about which types are allowed into the <em>regulated data type
+    set</em>; if the proposed type serves a very specific use case of a small vendor, it might get
+    rejected. Think of it like the USB standard classes or CANopen standard profiles.
+  </li>
+  <li>
+    If the above does not hold (it rarely does), the vendor shall <b>provide the ability to reconfigure
+    the subject/service identifier</b> by the end-user or integrator (such identifiers are called
+    non-fixed identifiers). Failure to do so will render the device not UAVCAN-compliant and will
+    cause many headaches for the customer.
+  </li>
+  <li>
+    If the vendor happens to be using UAVCAN in a closed project with no exposure to the outside world
+    the vendor can do as it pleases (in most countries). Nobody cares, really.
+  </li>
+</ul>
+<p>
+Seems restrictive? That's the cost of <em>robust interoperability</em>.
+</p>
+<p>
+The specification and the public regulated data types repository document the ranges of port identifiers
+that can be used with fixed and non-fixed identifiers; the former are called <em>regulated identifiers</em>
+in the UAVCAN parlance, and the latter is <em>unregulated</em>.
+</p>
+<p>
+This is a case where the specification might actually be pretty clear so we'll repeat table 2.1 here to
+sum up this section:
+</p>
+<div class="table-responsive">
+  <table class="table table-borderless table-sm w-unset table-nowrap">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">&nbsp;</th>
+        <th scope="col">regulated</th>
+        <th scope="col">unregulated</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>public</th>
+        <td>robust interoperability</td>
+        <td>no fixed port identifiers/must be configurable</td>
+      </tr>
+      <tr>
+        <th>private</th>
+        <td>(nope, not a thing)</td>
+        <td>sure, just keep it to yourself</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="transport">Transport</h2>
+<p>
+The job of the transport layer is to ferry serialized objects around the network (such occurrences are
+called <em>transfers</em>) and to facilitate topic-based filtering. The transports are designed with the
+requirements of high-integrity applications in mind, which include strict temporal predictability
+guarantees, redundant interfaces, and more exotic concepts like
+<a href="https://forum.uavcan.org/t/idempotent-interfaces-and-deterministic-data-loss-mitigation/643">
+tunable reliability controls</a> for very special snowflakes.
+</p>
+<p>
+There are several transport protocols designed on top of different networking technologies such as CAN
+(FD) (called <em>UAVCAN/CAN</em>) or UDP/IP (called <em>UAVCAN/UDP</em>); they are replaceable, meaning
+that the presentation layer and the application on top of it are isolated from the specifics of the
+transport and can be migrated from one transport to another easily.
+</p>
+<p>
+The transport protocols are designed to support topic-based data filtering <em>in hardware</em>, such
+that when the application requests a particular subscription or a service, the transport layer configures
+the underlying hardware to accept the relevant messages/requests/responses and to reject the rest
+automatically. All common implementations of high-speed and/or real-time networking hardware, like CAN
+controllers or Ethernet adapters, provide the necessary functionality out of the box so the software
+doesn't need to sift through copious amounts of data in real-time.
+</p>
+<h3>UAVCAN/CAN</h3>
+<p>
+The UAVCAN/CAN transport is the direct successor of the experimental UAVCAN v0 extended with CAN FD
+support. One familiar with v0 will have no trouble migrating to v1 because, in essence, it relies on
+the same core concepts just having a few bits shifted around. The specification of UAVCAN/CAN is hardly
+five pages long, so implementing it from scratch should be generally a no-brainer and it would barely
+take more than a few hundred lines of code but even that is unlikely to be necessary given that there
+are portable MIT-licensed implementations available.
+</p>
+<p>
+Not to replicate the specification but for clarity's sake, the CAN transport treats both Classic CAN
+and CAN FD equivalently, the only difference being the <em>maximum transmission unit</em> (MTU, the
+amount of data per CAN frame). Most of the metadata (such as the subject/service ID, source node ID,
+and priority) is packed into the CAN ID in the most obvious way possible, except for the four things:
+the transfer-ID and the three flags which are start-of-transfer, end-of-transfer, and the toggle bit.
+These four things go into the last byte of the frame payload, also known as the <em>tail</em> byte.
+</p>
+<p>
+The transfer-ID is a peculiarity of the UAVCAN jargon &ndash; most other protocols call it the sequence
+number. It is an integer that is incremented every time a message of a specific subject is published
+or a specific service is invoked, and it is quite paramount for many functions of the protocol.
+</p>
+<p>
+The flags are only used when the serialized entity does not fit into a single frame, which means that
+the transfer is a <em>multi-frame transfer</em>. Multi-frame transfers may appear convoluted but
+essentially they are a zero-cost feature because any other implementation that takes into account all
+relevant edge cases (which are many) will end up being functionally similar. The purpose of the flags
+should be evident: the start-of-frame and the end-of-frame demarcate the first and the last frame of
+the transfer, respectively, and the toggle bit toggles, starting from one.
+</p>
+<p>
+It is well known that one console dump is worth 1024 words. Suppose we start up the PyUAVCAN CLI tool
+and use it to publish a message of the type we defined above over a GNU/Linux SocketCAN interface
+using the subject-ID 4919 (0x1337 in hex) from node-ID 59:
+</p>
+<pre>
+  <code>
+    # Generate Python packages from DSDL namespaces:<br>
+    $ pyuavcan dsdl-gen-pkg https://github.com/UAVCAN/public_regulated_data_types/archive/master.zip dsdl_src/my_project<br>
+    # Publish a message:<br>
+    $ pyuavcan pub 4919.my_project.MyMessageType.1.0 '{value: 1234, key: "Hello world!"}' --tr='CAN(can.media.socketcan.SocketCANMedia("vcan1",64),59)'<br>
+  </code>
+</pre>
+<p>
+Meanwhile, having started the candump utility in another terminal, we observe the following
+developments:
+</p>
+<pre>
+  <code>
+    # Columns: timestamp, iface, flags (B means BRS), CAN ID, [payload size], payload.<br>
+    $ candump -decaxta any<br>
+    (1.365)  vcan1  TX B -  107D553B  [08]  00 00 00 00 20 89 00 E0   '.... ...'<br>
+    (1.366)  vcan1  TX B -  1013373B  [16]  D2 04 0C 48 65 6C 6C 6F 20 77 6F 72 6C 64 21 E0<br>
+    (2.366)  vcan1  TX B -  107D553B  [08]  01 00 00 00 20 89 00 E1   '.... ...'<br>
+  </code>
+</pre>
+<p>
+The first and the last frames here are the heartbeats from the CLI tool &ndash; remember, they are
+mandatory for all nodes. In the following example, we equip a pair of sunglasses and publish the same
+message but the MTU is set to 8 bytes, forcing the publisher to resort to a multi-frame transfer:
+</p>
+<pre>
+  <code>
+    $ pyuavcan pub 4919.my_project.MyMessageType.1.0 '{value: 1234, key: "Hello world!"}' --tr='CAN(can.media.socketcan.SocketCANMedia("vcan2",8),59)'<br>
+  </code>
+</pre>
+<pre>
+  <code>
+    $ candump -decaxta any<br>
+    (7.925)  vcan2  TX - -  107D553B   [8]  00 00 00 00 20 3D 01 E0   '.... =..'<br>
+    (7.925)  vcan2  TX - -  1013373B   [8]  D2 04 0C 48 65 6C 6C A0   '...Hell.'<br>
+    (7.925)  vcan2  TX - -  1013373B   [8]  6F 20 77 6F 72 6C 64 00   'o world.'<br>
+    (7.925)  vcan2  TX - -  1013373B   [4]  21 F9 02 60               '!..`'<br>
+    (8.926)  vcan2  TX - -  107D553B   [8]  01 00 00 00 20 3D 01 E1   '.... =..'<br>
+  </code>
+</pre>
+<p>
+Look at it go. The last two bytes at the end of the transfer (right after the exclamation mark !) are
+the multi-frame <em>transfer CRC</em> &ndash; the CRC-16-CCITT function of the serialized representation.
+It is needed to let the receiver ensure that the received multi-frame transfer is reassembled correctly.
+</p>
+<h3>UAVCAN/whatever</h3>
+<p>
+UAVCAN/UDP and UAVCAN/serial are very new transports that are reviewed in detail in other sources like
+the <a href="https://pyuavcan.readthedocs.io/">PyUAVCAN docs</a> or the post on
+<a href="https://forum.uavcan.org/t/alternative-transport-protocols/324">Alternative transport protocols
+in UAVCAN</a>. Essentially they all reify the same concepts using the functional means provided by the
+underlying networking technology. For example, in the case of UAVCAN/UDP, the subjects and services are
+manifested as UDP port numbers, which is optimal because it allows the implementation to offload the
+network traffic handling to the standard IP stack and the underlying networking hardware.
+</p>
+
+<h2 id="migration">Migration from UAVCAN v0</h2>
+<p>
+The protocol has been <a href="https://forum.uavcan.org/t/stockholm-summit-recap/170">simplified</a>
+noticeably since v0, and several design issues were resolved. Here is the full list of substantial
+changes:
+</p>
+<ul>
+  <li>
+    The Data Type ID has been removed. Without going much into detail, it was coupling the <em>syntax</em>
+    of data (a data type definition) with its <em>semantics</em> (how it was used). It was the cause
+    of certain architectural imperfections in the applications that relied on v0, so proceeding
+    further without resolving that issue was considered undesirable. In v1, this is resolved with
+    the new concepts of Subjects and Services, which are decoupled from the type identity and permit
+    surjective mapping of subjects or services onto types, rendering UAVCAN architecturally identical
+    to conventional publish-subscribe frameworks.
+  </li>
+  <li>
+    The Data Type Signature went the same way. It was shown to make data type definitions unnecessarily
+    difficult to evolve. The new design permits polymorphic subtyping and arbitrary modification of
+    data types so that deployed systems can be upgraded incrementally. This is the second most
+    important upgrade after the syntax-semantics decoupling shown above.
+  </li>
+  <li>
+    The multi-frame transfer CRC is no longer pre-seeded with anything. This is a direct consequence
+    of the above. Also, in UAVCAN/CAN v1 the CRC has been moved towards the end of the transfer.
+  </li>
+  <li>
+    Data type definitions can now be explicitly versioned and evolved sensibly. Messed up a type?
+    No problem, just release a new version.
+  </li>
+  <li>
+    Tail Array Optimization is removed. Every array has a length prefix now, always.
+  </li>
+  <li>
+    The implicit fields (array length and union tag) are now either
+    <a href="https://forum.uavcan.org/t/proposed-change-to-variable-length-arrays/740">8, 16, 32, or
+    64-bit wide</a>. They used to have odd sizes like <code>uint3</code>. This change simplifies data
+    type design and serialization.
+  </li>
+  <li>
+    The byte order is kept little-endian but the bits are now
+    <a href="https://forum.uavcan.org/t/big-endian-vs-little-endian-in-the-context-of-bit-level-encoding/428">
+    populated LSB-to-MSB, not the other way around</a>. This change provides enhanced compatibility with
+    3rd-party tools and enables faster serialization and deserialization on conventional little-endian
+    microarchitectures (big-endian platforms shall convert the byte order during serialization and
+    deserialization).
+  </li>
+  <li>
+    The CAN ID bit layout of UAVCAN/CAN v1 is different and the toggle bit starts with 1 instead of 0.
+    The toggle bit change is to make v0 and v1 distinguishable at runtime, enabling their coexistence
+    in the same application.
+  </li>
+  <li>
+    UAVCAN/CAN v1 supports CAN FD.
+  </li>
+</ul>
+<p>
+There are no changes that affect the hardware. A single unit or a whole system can migrate from v0 and v1
+by a trivial software update. Said software update amounts to few things:
+</p>
+<ul>
+  <li>
+    Replace your old v0 library with its v1 equivalent. The API will be slightly different but
+    architecturally they are all alike. Some things got new names; like, Data Type ID is now the
+    subject/service-ID. Some things are completely removed thus making development easier; for example,
+    no more Data Type Signature and Tail Array Optimization.
+  </li>
+  <li>
+    Don't forget to RTFM! All libraries are supplied with extensive documentation.
+  </li>
+  <li>
+    Add version numbers to your DSDL definitions and remove the manual padding before variable-length
+    arrays and unions. Read the design guidelines in the public regulated DSDL repository and consider the
+    <a href="https://forum.uavcan.org/t/idempotent-interfaces-and-deterministic-data-loss-mitigation/643">
+    recommendations about idempotency</a>, if applicable. Don't forget that there's no tail array
+    optimization anymore.
+  </li>
+</ul>
+<p>
+It doesn't take much effort on the software side and there are zero repercussions for the hardware. Most
+importantly, the new implementations are built to a much higher quality standard. The only valid reason
+for holding onto v0 is the legacy, and we are actively working with vendors to ensure their speedy
+convergence on v1.
+</p>
+<h2 id="furtherinfo">Further information</h2>
+<p>
+The best place to start for a newcomer is probably the <a href="https://pyuavcan.readthedocs.io/en/latest/pages/usage.html">
+PyUAVCAN demo</a>, as it allows experimenting on the local machine without much preparation. The key
+concepts are easily transferable to other implementations such as the deeply embedded real-time
+<a href="https://github.com/UAVCAN/libcanard">Libcanard</a> (which implements the full UAVCAN/CAN
+in a little over <a href="https://github.com/UAVCAN/libcanard">1000 lines of code</a> and works in
+extremely resource-constrained microcontrollers with ca. 32K ROM, 8K RAM, taking only a few
+kibibytes of ROM for itself).
+</p>
+<hr>
+<!-- -------------------------------------------------------------------------------------------------------------- -->
+<h1 id="iface-design">Interface design guidelines</h1>
+<p class="blockquote">
+The realization that software is more difficult to develop than hardware is one of the most important
+lessons of the Apollo program. &mdash; Computers in Spaceflight: The NASA Experience [Allen Kent,
+James G. Williams]
+<p>
+<p>
+The concept of <em>data type</em> is a cornerstone of UAVCAN. The protocol can only deliver good
+results if the developer practices a disciplined approach to data type design. To paraphrase Brian
+Kernighan, the border between an <q>elegant and efficient design</q> and a <q>bloody mess</q> may
+be thin.
+</p>
+<p>
+In this chapter, an interface is defined as a set of one or more data types describing the structure
+of data exchanged across networks combined with timing constraints and behavioral contracts. The
+exchange of structured data drives the behaviors of network participants based on the interfaces
+they support. To author data types and interfaces, UAVCAN includes its own specialized 
+<a href="https://en.wikipedia.org/wiki/Interface_description_language">interface definition language</a>
+called DSDL. DSDL documents formally define the service contracts that participants of an intravehicular
+network agree to respect and the structure of the data these participants will exchange. Networks are
+core components of distributed systems where system functions are served and supported by the network
+participants (nodes).
+</p>
+<p>
+This guide defines a disciplined interface design using the following five key ideas:
+</p>
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Service-orientation">Service-orientation</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Stateless_protocol">Statelessness</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Type_safety">Safe typing</a></li>
+  <li>Semantic segregation</li>
+  <li><a href="https://en.wikipedia.org/wiki/International_System_of_Units">SI</a></li>
+</ul>
+<p>
+Acronym connoisseurs may appreciate that the list conveniently abbreviates to <b>SSSSS</b>.
+</p>
+<p>
+These key ideas are not novel; rather, they are a hand-picked collection of well-known practices
+adapted specifically to UAVCAN and put into concrete terms. These five key ideas can guide data
+type authors towards correct, consistent, maintainable, and useful designs.
+</p>
+<p>
+Before we start, there are a couple of things the reader should know. First, those familiar with
+version v0 of the UAVCAN protocol will notice that much of the guidance in this document defines the
+v0 set of interfaces as being flawed. If you are porting a system from v0 it is of particular importance
+that you use this guide to understand the deficiencies of those interfaces so you can avoid the mistakes
+made in their design. Also, all DSDL definitions should follow the rules provided in the 
+<a href="https://uavcan.org/specification/">UAVCAN specification</a> such as documentation and naming
+conventions. This guide augments the specification's requirements with hard-won lessons from past
+mistakes. You are free to repeat these mistakes without violating the specification but we hope
+you won't.
+</p>
+<h2 id="orientation">Service-orientation</h2>
+<p>
+A given component of a distributed UAVCAN-based computing system is said to <em>provide service</em>
+if it participates in the data exchange using a specific well-defined set of UAVCAN data types
+following the formal requirements imposed by their definitions. Usually, this involves publishing
+messages of well-defined types carrying particular data at specific rates. Also, it may involve
+responding to UAVCAN service requests as dictated by their data type definitions.
+</p>
+<p>
+Similarly, a given component is said to <em>consume service</em> if it relies upon the formal
+contractual obligations upheld by a service provider as defined above. Usually, that involves
+subscribing to messages of a specific type or making calls (sending requests) to a specific UAVCAN
+service.
+</p>
+<p>
+There is an unfortunate linguistic complication in the fact that a service can mean both the type of
+UAVCAN communication (as opposed to messages) and a higher-level architectural entity. In this piece,
+we're mostly focused on the latter.
+</p>
+<p>
+We <a href="https://forum.uavcan.org/uploads/short-url/lBmsRnkX7EkHAq8HZ5hYKQEIlRl.pdf">understand
+service-orientation</a> as the general method of designing distributed systems as opposed to the much
+narrower definition of SOA given by W3C. Under our model based on the definitions given by the CBDI
+Forum, service-orientation refers to the design process that values the following core principles:
+</p>
+<ul>
+  <li>
+    <b>Abstract</b> &ndash; service consumer is shielded from the implementation details.
+  </li>
+  <li>
+    <b>Consumer-focused</b> &ndash; the design is driven by the needs of the service consumer rather
+    than the constraints of the service provider.
+  </li>
+  <li>
+    <b>Reusable</b> &ndash; once defined, the service can be applied to related tasks whose context
+    or implementation details may be different. Existing services can be composed to implement new
+    behaviors.
+  </li>
+  <li>
+    <b>Published contract</b> &ndash; the service is defined by its published specification and not
+    by the specifics of its implementation. The behaviors of the service provider and its consumers
+    are driven by the formal contract defined by the service specification.
+  </li>
+</ul>
+<p>
+The proposed values may be considered to signify a departure from the conventional approaches practiced
+in the design of deeply embedded vehicular systems where tight optimization to the requirements of the
+specific environment at hand is prioritized. We propose that the rapid increase in the complexity of
+vehicular electronics renders such established approaches unfeasible. At the time of writing this
+piece, the field of distributed vehicular computing is undergoing a similar shift in the design mindset
+towards increased levels of abstraction that occurred in the general ICT domain almost two decades ago.
+The need for abstract interfaces that are reliable and time-predictable is the raison d'être of UAVCAN
+</p>
+<p>
+We suggest that the system designer views the network as an integral part of the onboard vehicular
+intelligence rather than its facilitator. A node that requires a particular service is to reach the
+network itself, as opposed to any of its specific participants, for the fulfillment of the service.
+As cleverly formulated by Lars-Berno Fredriksson in his
+<a href="https://forum.uavcan.org/uploads/short-url/5lAC88jvBjQYCF2QdLNRBCMLhFC.pdf">CanKingdom protocol
+specification</a>, network participants are to serve the needs of the network (<q>module-serves-the-network</q>),
+and their knowledge of the network should be minimized. The network itself should be defined by the
+designer of the vehicular system, who is then to design and/or integrate the participants (nodes) that
+underpin the network so as to meet its requirements.
+</p>
+<p>
+Per the above, it is a breach of abstraction if any particular participant knows more about the network
+than it absolutely requires to perform its duties. The approaches advocated here are often more
+demanding in terms of hardware resource utilization than specialized solutions, but this is a conscious
+trade-off to ensure maintainability and reduction of long-term technical debt in quickly evolving
+sophisticated systems.
+</p>
+<p>
+In the case of data-centric services specifically, abstract and consumer-focused design implies that
+the service should provide (consume) processed information that is clean of any impertinent specifics
+of the implementation. For example, a sensor that estimates the pose of a body may be installed with a
+non-zero rotation and translation relative to the origin of the body frame. A naive design may provide
+the estimated pose of the sensor along with the rotation and translation of the sensor relative to the
+body frame. The correct design would provide the estimated pose of the body hiding the specifics of the
+sensor installation from the consumer.
+</p>
+<p>
+A critical aspect of robust and maintainable service architecture is <em>orthogonality</em>:
+</p>
+<div class="blockquote">
+Orthogonality is a system design property which guarantees that modifying the technical effect produced
+by a component of a system neither creates nor propagates side effects to other components of the system.
+Typically this is achieved through the separation of concerns and encapsulation, and it is essential for
+feasible and compact designs of complex systems. The emergent behavior of a system consisting of components
+should be controlled strictly by formal definitions of its logic and not by side effects resulting from
+poor integration, i.e., non-orthogonal design of modules and interfaces. Orthogonality reduces testing
+and development time because it is easier to verify designs that neither cause side effects nor depend
+on them. <em>[Wikipedia]</em>
+</div>
+<p>
+As a design property, orthogonality applies to services, data types that define them, and the composition
+of data types themselves. In the context of software interfaces specifically, there is a concretization
+known as the <a href="https://en.wikipedia.org/wiki/Interface_segregation_principle">Interface Segregation
+Principle</a>. For example, in a control system, a particular physical process may be continuously assessed
+and controlled in a closed-loop. The relevant characteristics of the process expressed in terms of the DSDL
+type system are typically invariant to the particular role within the control loop where the types are
+employed. Imagine a vehicular position control loop where the current position estimate is reported over the
+subject <em>E</em>, and the target position being commanded over the subject <em>T</em>; by virtue of
+modeling the same physical quantity, both <em>E</em> and <em>T</em> can and should leverage the same data
+type. Excessive segmentation of the data space with specialized data types harms the composability of the
+resulting system, potentially nullifying the advantages of the distributed architecture.
+</p>
+<p>
+As another example, imagine that a data type designer wishing to express the concept of an airspeed
+estimate crafted up the following definition:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    <br>
+    uavcan.si.unit.length.Vector3.1.0 pitot_position<br>
+    <br>
+    uint16 filter_delay_us  # [microsecond]<br>
+    uint64 error_count<br>
+    <br>
+    uavcan.si.unit.velocity.Scalar.1.0 true_airspeed<br>
+    uavcan.si.unit.velocity.Scalar.1.0 true_airspeed_raw<br>
+    float32                            true_airspeed_var  # [(m/s)^2]<br>
+    <br>
+    uavcan.si.unit.velocity.Scalar.1.0 indicated_airspeed<br>
+    uavcan.si.unit.velocity.Scalar.1.0 indicated_airspeed_raw<br>
+    float32                            indicated_airspeed_var  # [(m/s)^2]<br>
+    <br>
+    uavcan.si.unit.pressure.Scalar.1.0    static_pressure<br>
+    uavcan.si.sample.pressure.Scalar.1.0  static_pressure_raw<br>
+    float32                               static_pressure_var  # [(Pa)^2]<br>
+    uavcan.si.unit.temperature.Scalar.1.0 static_air_temperature<br>
+    <br>
+    uavcan.si.unit.temperature.Scalar.1.0 device_temperature<br>
+  </code>
+</pre>
+<p>
+<em>(N.B.: in this chapter, we omit most comments from DSDL definitions for brevity. Per the advisory rules
+set forth in the specification, every data type definition should be the single point of trust for its users
+which defines every relevant aspect of the service contract. This requires that data types should be extensively
+documented in proses that are not shown here.)</em>
+</p>
+<p>
+While the definition appears to include every pertinent piece of data, its design is suboptimal because it
+violates the Interface Segregation Principle, forcing strong logical coupling of unrelated items which hurts
+the extensibility and composability of the resulting distributed data system. Being equipped with the knowledge
+that the fields <code>filter_delay_us</code> and <code>error_count</code> (whatever their purpose may be, it is
+irrelevant for this case study) are present for virtually all sensor feed types in the designed data system, we
+split the definition into several orthogonal constituents:
+</p>
+<ul>
+  <li>True and indicated airspeed estimate with the timestamp (same type for both).</li>
+  <li>Static outside air pressure estimate with the timestamp.</li>
+  <li>Static outside air temperature with the timestamp.</li>
+  <li>Device temperature with the timestamp.</li>
+  <li>The generic sensor metadata: filter delay and error count with the timestamp.</li>
+  <li>Pitot position (not timestamped because it is assumed to be constant).</li>
+</ul>
+<p>
+resulting in the following set of orthogonal and composable definitions. First is the type for the
+true/indicated airspeed:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    uavcan.si.unit.velocity.Scalar.1.0    airspeed<br>
+    float32                               airspeed_var  # [(m/s)^2]<br>
+    uavcan.si.unit.velocity.Scalar.1.0    airspeed_raw<br>
+  </code>
+</pre>
+<p>
+Assuming here that the raw measurement is of less relevance than the error variance, we reorder them
+to facilitate structural subtyping, should that become necessary in the future. Depending on the specifics
+of the domain, the two airspeeds (indicated and true) may be further combined and published in one atomic
+entity over one subject instead of two (the dedicated timestamp fields will not be needed in this case):
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    Airspeed.1.0 indicated_airspeed<br>
+    Airspeed.1.0 true_airspeed<br>
+  </code>
+</pre>
+<p>
+Next is the static outside air pressure type:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    uavcan.si.unit.pressure.Scalar.1.0    static_pressure<br>
+    float32                               static_pressure_var  # [(Pa)^2]<br>
+    uavcan.si.sample.pressure.Scalar.1.0  static_pressure_raw<br>
+  </code>
+</pre>
+<p>
+The generic sensor metadata would take a dedicated type that is reusable with different sensors. If
+multiple sensor services (subject publications, to be specific) are fulfilled by the same node (the air
+data computer in this case), the node can (and should) avoid the extra workload and traffic of publishing
+the same metadata multiple times by using the same metadata subject for all estimation subjects:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    uint16 max_filter_delay_us  # [microsecond]<br>
+    uint64 error_count<br>
+  </code>
+</pre>
+<p>
+That's it. We have split one large and non-composable subject into several smaller composable subjects
+based upon loosely coupled, function-orthogonal data type definitions. Now, you might exclaim here that
+we didn't provide types for the device and outside air temperature; this is because their use is already
+covered by the standard type <code>
+<a href="https://github.com/UAVCAN/public_regulated_data_types/blob/master/uavcan/si/sample/temperature/Scalar.1.0.uavcan">
+uavcan.si.sample.temperature.Scalar.1.0</a></code>. Should it be necessary to extend the temperature
+types with additional data later (such as, for example, by adding the error variance), it is always
+possible to do so by defining a new type and switching to that without breaking backward compatibility
+thanks to the extensibility provisions. It's desirable to keep things simple and generic
+<a href="https://en.wikipedia.org/wiki/YAGNI">until it's proven than an extension is inevitable</a>.
+Another missing bit is the pitot offset, but as you might have guessed already, the generic length type
+is already defined under <code>uavcan.si</code> as well.
+</p>
+<p>
+The manifestation of orthogonality-related concerns at the type system level will be reviewed separately
+in the section on safe typing later; the current section is mostly focused on higher-level issues.
+</p>
+<p>
+The last practical case study we review is the well-known hard disk drive (HDD) addressing interface.
+This example is probably irrelevant for vehicular systems, but by virtue of coming from a completely
+different domain, it allows one to have a fresh look at the problem with a clear eye.
+</p>
+<p>
+A conventional HDD data storage device consists of several rotating disks (platters) coated with magnetic
+layers on both sides. On either side of each platter, there is a movable read/write magnetic head. In order
+to access a specific block of data on the disk, the disk controller selects a specific platter, moves the
+head to its specific track (referred to as cylinder, see diagram), and awaits until the platter, which is
+rotating at the fixed speed, reaches the angular position where the start of the desired sector is
+underneath the head:
+</p>
+<div class="text-left">
+  <img src="/static/images/platters.png" width="500" alt="Rotating disk platters"></img>
+  <p><a href="https://commons.wikimedia.org/w/index.php?curid=79334677"><em>Image by Henry Mühlpfordt, CC
+     BY-SA 4.0</em></a>
+  </p>
+</div>
+<p>
+The first HDD designs, in the spirit of their time, were electronically very simple devices virtually
+devoid of processing capabilities. Such drives were controlled using a very simple command set that
+explicitly instructed the drive to select a particular cylinder (track), a specific head, and wait
+until the disk reaches the specified angular position before commencing the read/write transaction.
+The resulting addressing scheme was aptly named <em>cylinder-head-sector</em> or CHS.
+</p>
+<p>
+Suppose we view the drive controller as a provider of the disk read-write service. The modern theory
+of distributed systems tells us that such design is deficient because it doesn't meet the criteria of
+<em>abstraction</em>, <em>consumer-focus</em>, and <em>reusability</em>. The leaky abstraction spills
+out the details of the hard disk implementation which results in the high resistance to evolution (the
+implementation cannot be easily changed because the consumer is also aware of it). One can immediately
+see the first prospect to optimization in the fact that, given the constant angular rate, the linear
+velocity of the head relative to the platter surface changes linearly with the cylinder number, which
+means that at the fixed sector size, the write density is constrained by the selectivity of the head
+at the innermost sectors, whereas the outermost sectors remain heavily underutilized. Yet, under this
+addressing model, such optimization is not easily implementable. Changing the core principles of the
+storage device (such as switching to solid-state memory or networked storage) would also be difficult.
+</p>
+<p>
+The shortcomings of the CHS system were certainly not from the lack of understanding of robust design
+principles by its authors, but rather a result of the constraints imposed by the extremely limited
+capabilities of the electronics of the past. Thankfully, modern distributed vehicular computing systems
+are not subjected to hard constraints on the amount of abstraction logic. Considering that along with
+the fact that vehicular computing can be complex and tends to evolve, optimizing intravehicular
+interfaces for the specifics of the task-at-hand would be a mistake.
+</p>
+<p>
+Getting back to hard drives, future models quickly ran into the limitations of the CHS system and, being
+unable to simply swap out the implementation without breaking service contracts, resorted to emulation,
+where the disk controller would report a completely fictitious CHS configuration to the host, running a
+mapping logic internally. In the more distant future, the CHS system was replaced with the properly
+consumer-focused <em>logical block addressing</em> (LBA) interface which hid the implementation details
+of the storage system completely, simply exposing a contiguously numbered sequence of blocks.
+</p>
+<p>
+Distributed services and their interfaces shape the design of the distributed system and define how one
+would think about it. The basic decisions and contracts put in place by an engineer who designed the
+services will guide the reasoning of engineers implementing them. A well-constructed service should be
+defined by the end goals it is intended to accomplish rather than by the means of accomplishing those
+goals; following this principle will also render the service composable and interoperable with other
+participants of the system. In many cases, it will lead to additional abstraction layers within service
+implementations (that one might misidentify as being superfluous) and less optimal resource utilization
+than an equivalent interface narrowly optimized for the particular case at hand. Such overheads should
+be recognized, accepted, and tolerated.
+</p>
+<p>
+A practical question that may arise here in the context of subject-based services (dataflows), specifically,
+is: how does one split a complex-typed subject into several smaller subjects while retaining atomic data
+transactions? The answer is to rely on the timestamps, as is the common practice in certain high-level
+messaging frameworks. As required by the UAVCAN timestamping specification, data instances pertaining to
+the same instance of time should bear identical timestamps, thus allowing the service consumer (subscriber)
+to match related data items and process them atomically. For more hands-on guidance on this, refer to the
+user documentation of your UAVCAN implementation.
+</p>
+<p>
+One comparatively less important aspect that comes up frequently is the representation of various low-level
+implementation-specific ancillary data for diagnostic and logging purposes. Naturally, the main functional
+services cannot be polluted with implementation details, as demonstrated above, yet it is often desirable
+to have access to the inner states for diagnostic and debugging purposes, sometimes even in a production
+system. For that, we recommend one of the following methods:
+</p>
+<ul>
+  <li>
+    The recommended option for various numerical states or states that tend to update periodically is the
+    standard register interface <code>
+    <a href="https://github.com/UAVCAN/public_regulated_data_types/tree/master/uavcan/register">
+    uavcan.register.Access</a></code>. The vendor can expose arbitrary scalars, vectors, matrices, or
+    strings as human-readable named variables that can be queried atomically at the consumer-defined rate
+    (<em>pull semantics</em>). For example, a motor controller vendor could define a register
+    <code>motor.i_dq</code> of type <code>float32[2]</code> containing the rotating system's current
+    vector components. The same interface is also used for modifying the node configuration parameters,
+    assigning the port identifiers, and any other schemaless weakly-structured data.
+  </li>
+  <li>
+    For irregular events that should be reported using the push semantics (where the updates are
+    provider-driven as opposed to consumer-driven) in a human-readable format, the standard log subject
+    <code><a href="https://github.com/UAVCAN/public_regulated_data_types/tree/master/uavcan/diagnostic">
+    uavcan.diagnostic.Record</a></code> should be used.
+  </li>
+  <li>
+    An equipment vendor may choose to define a vendor-specific data type for complex vendor-specific data.
+  </li>
+</ul>
+<p>
+To summarize this section:
+</p>
+<ul>
+  <li>
+    <b>Apply top-down, consumer-first design.</b> Define services based on the addressed problem rather
+    than the available means.
+  </li>
+  <li>
+    <b>Define granular, composable services (dataflows).</b> Many simple services based on a few abstract
+    data types should be preferred over a few complex services based on specialized data types. Separate
+    data pertaining to different processes or states. Separate data from metadata (sensor
+    measurement/sensor state).
+  </li>
+  <li>
+    <b>Design for the future.</b> Do not shy away from abstraction, hiding the implementation details even
+    if it may seem superfluous at first. Be visionary and don't hesitate to trade-off performance gains for
+    generality and clarity.
+  </li>
+</ul>
+
+<h2 id="statelessness">Statelessness</h2>
+<p>
+Our publication about
+<a href="https://forum.uavcan.org/t/idempotent-interfaces-and-deterministic-data-loss-mitigation/643">
+idempotent interfaces and deterministic data loss mitigation</a> shows that someone <em>designing a 
+mission-critical intravehicular network may benefit from unlearning some of the principles that are
+commonly found in general-purpose networked applications</em>. Stateful communication is one such
+principle.
+</p>
+<p>
+For the purposes of the following discussion, we will introduce a specific conceptual framework. The 
+<em><a href="https://en.wikipedia.org/wiki/State_(computer_science)">state</a></em> of a process executed
+by a distributed system is understood as a point in an n-dimensional space where each dimension is mapped
+to one of the n process state variables. The process itself is then to be understood as the trajectory of
+the said point steered through the state space.
+</p>
+<p>
+A distributed process is such a process whose state variables are controlled by different agents that
+interact through the network. To implement the correct state trajectory, the agents must ensure a consistent
+view of the involved process state variables.
+</p>
+<p>
+An interface between the collaborating agents facilitating the distributed process is said to be <em>stateful</em>
+if the exchanged information omits some of the process state variables, thereby requiring the agents to
+rely on their own model of each other's state instead of providing them with a direct view of it. The
+interface is said to be <em>more stateful</em> if it leaves out more state variables from the network
+exchange. Conversely, an interface that communicates (more) state variables explicitly is said to be
+(more) <em>stateless</em>.
+</p>
+<p>
+In order to steer the state along the desired trajectory, all collaborating agents must share a consistent
+view of its variables. Failing that, a distortion of the trajectory will result, which we call a <em>process
+failure</em>.
+</p>
+<p>
+A closely related concept is <em><a href="https://en.wikipedia.org/wiki/Idempotence">idempotence</a></em>,
+which is applicable to interfaces in distributed systems.
+</p>
+<div class="blockquote">
+Idempotence is the property of certain operations whereby they can be applied multiple times without
+changing the result beyond the initial application.
+</div>
+<p>
+The proposed framework makes the following observations trivial:
+</p>
+<ul>
+  <li>
+    Stateful interfaces may be less demanding to the performance of the distributed system because they
+    exchange less information between agents.
+  </li>
+  <li>
+    Stateless interfaces are more robust against process failure resulting from the divergence of the
+    collaborating agents
+  </li>
+  <li>
+    Systems based on stateless interfaces are easier to analyze because state variables are distributed
+    among fewer agents.
+  </li>
+  <li>
+    All fully stateless interfaces are idempotent.
+  </li>
+</ul>
+<p>
+Note that the service idempotency discussed here is not related to the temporal transfer redundancy (that
+is, intentionally repeated transfers) discussed in the article <em><q>Idempotent interfaces and deterministic
+data loss mitigation</q></em>. The article discusses the idempotency guarantees that are artificially emulated
+by the UAVCAN transport layer with the help of the transfer-ID counters. Readers interested in the technical
+details are advised to consult with the UAVCAN Specification. The summary is that UAVCAN provides a hard
+guarantee (presuming that certain basic assumptions hold) that every transfer is received at most once,
+which allows the sending node to repeat transfers multiple times if it is expected that the network may
+lose some due to its known lack of reliability. This is proposed as an alternative to the traditional
+confirm-retry logic (e.g., TCP/IP, CAN, or DDS/RTPS model) that is more deterministic at the expense of
+certain new edge cases that must be considered.
+</p>
+<p>
+Conventional, non-high-integrity applications, such as those found in the general
+<a href="https://en.wikipedia.org/wiki/Information_and_communications_technology">ICT</a> domain, are
+commonly designed with a completely different set of core design goals compared to high-integrity vehicular
+computing systems. As a result, interface design choices that are optimal in the former may be suboptimal
+for the latter. As the former field employs vastly more engineers than the latter and its discourse is far
+more extensive, we are dismayed to find that the mindset and practices that are poorly suited for the latter
+creep in there anyway.
+</p>
+<p>
+A diligent engineer designing a UAVCAN-based distributed vehicular computing system should strive to produce
+robust interfaces that are tolerant to a loss of state caused by restarting nodes, able to recover from
+transient failures with minimal intervention from other participants of the network, and are easy to
+<a href="https://en.wikipedia.org/wiki/Verification_and_validation">verify and validate</a>.
+</p>
+<div class="table-responsive">
+  <table class="table table-borderless table-sm w-unset table-nowrap">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Mode</th>
+        <th scope="col">Possible advantages</th>
+        <th scope="col">Likely disadvantages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Stateless</th>
+        <td>Robustness, determinism</td>
+        <td>Higher average-case resource utilization</td>
+      </tr>
+      <tr>
+        <th>Stateful</th>
+        <td>Reduced average-case resource utilization</td>
+        <td>State-space segmentation, complex failure modes, fragility</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<h3>Examples</h3>
+<h4>Camera configuration</h4>
+<p>Consider the following educational example (it may not accurately reflect the specifics of production
+applications, but it illustrates the interface design principles). The vehicle is equipped with cameras
+that publish rectified 24-bit RGB888 frames using the following type:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp  # Shutter timestamp.<br>
+    uint16 IMAGE_WIDTH  = 1280<br>
+    uint16 IMAGE_HEIGHT = 800<br>
+    uint8 BITS_PER_PIXEL = 24<br>
+    uint8[IMAGE_WIDTH * IMAGE_HEIGHT * BITS_PER_PIXEL / 8] rectified_rgb888_pixels<br>
+  </code>
+</pre>
+<p>
+The camera is self-triggered synchronously with the network time (relying on the network time synchronization
+service instead of a dedicated hardware trigger signal); runtime reconfiguration of the exposure and flash
+duration is supported for enhanced operational flexibility. A designer who failed to adopt the proper
+mindset of distributed stateless thinking might implement the reconfiguration logic via a dedicated UAVCAN
+service type. In the following example, the configuration service provided by the camera accepts the desired
+configuration and returns the actually applied configuration that may differ due to rounding or
+auto-configuration:
+</p>
+<pre>
+  <code>
+    uint8 frame_rate  # [hertz] The desired triggering rate. Phase-locked to seconds.<br>
+    uint8 FRAME_RATE_DISABLE = 0  # No triggering, camera disabled.<br>
+    uint8 FRAME_RATE_MAX     = 60<br>
+    <br>
+    uint32[<=1] exposure_duration_us  # [microsecond] Automatic exposure if unset.<br>
+    uint32 EXPOSURE_DURATION_MIN_us = 10<br>
+    uint32 EXPOSURE_DURATION_MAX_us = 200_000<br>
+    <br>
+    uint32[<=1] flash_duration_us  # [microsecond] Automatic flash if unset. Zero to disable.<br>
+    uint32 FLASH_DURATION_MAX_us = 100_000<br>
+    <br>
+    @assert _offset_ % 8 == {0}<br>
+    ---<br>
+    uint32 exposure_duration_us  # [microsecond] Adopted exposure duration.<br>
+    uint32 flash_duration_us     # [microsecond] Adopted flash duration.<br>
+  </code>
+</pre>
+<p>
+While the described design may seem sensible at first, it is actually flawed because it requires the
+service consumers (i.e., subscribers to the camera frames) to make assumptions about the current
+configuration of the camera. The interface is prone to failure should the camera suffer a sudden loss
+of state &ndash; e.g., a power cycle, or a race condition when it is mistakenly reconfigured by another
+consumer. It is possible to mitigate this shortcoming by issuing the service calls periodically (thereby
+making the effects of a configuration loss contained by the next service call), but this would result
+in a non-idiomatic design because per the UAVCAN specification, services are intended for inherently
+stateful low-level interactions. Replacing the service with two subjects instead &ndash; one for
+configuration input (modeled after the request schema) and one for the status (modeled after the response
+schema) &ndash; renders the interface decoupled from the implementation details (the consumer will not need
+to be aware of the node-ID of the camera) and more composable (multiple cameras can be subscribed to the
+same configuration subject for lockstep operation). The resulting definitions would be as follows:
+</p>
+<pre>
+  <code>
+    # Camera configuration message type.<br>
+    uint8 frame_rate  # [hertz] The desired triggering rate. Phase-locked to seconds.<br>
+    uint8 FRAME_RATE_DISABLE = 0  # No triggering, camera disabled.<br>
+    uint8 FRAME_RATE_MAX     = 60<br>
+    <br>
+    uint32[<=1] exposure_duration_us  # [microsecond] Automatic exposure if unset.<br>
+    uint32 EXPOSURE_DURATION_MIN_us = 10<br>
+    uint32 EXPOSURE_DURATION_MAX_us = 200_000<br>
+    <br>
+    uint32[<=1] flash_duration_us  # [microsecond] Automatic flash if unset. Zero to disable.<br>
+    uint32 FLASH_DURATION_MAX_us = 100_000<br>
+    <br>
+    @assert _offset_ % 8 == {0}<br>
+  </code>
+</pre>
+<pre>
+  <code>
+    # Camera status message type.<br>
+    uint32 exposure_duration_us  # [microsecond] Adopted exposure duration.<br>
+    uint32 flash_duration_us     # [microsecond] Adopted flash duration.<br>
+  </code>
+</pre>
+<h4>BMS status</h4>
+<p>
+Suppose that the objective is to design a UAVCAN interface to a 
+<a href="https://en.wikipedia.org/wiki/Battery_management_system">BMS</a> for the
+<a href="https://en.wikipedia.org/wiki/Electric_vehicle_battery">traction battery</a>. The physical states
+managed by devices like BMS can be unambiguously segregated into two categories by the rate of their
+evolution: slow ones (like the battery capacity, state of health, number of charge cycles), and fast
+ones (like the available energy estimate, state of charge, temperature). Recognizing that the data
+exchange and processing resources of the network are finite, an engineer may segregate the UAVCAN
+services offered by a BMS into two categories in a similar manner: high-frequency ones and their slow
+complements.
+</p>
+<p>
+A naive design inspired by traditional client-server applications might be to define a status message (or
+several) carrying the high-rate data along with a certain flag that is raised whenever the slow states have
+changed, prompting the consumers to query the BMS node for the updated low-rate information. This design,
+however, is flawed due to its highly stateful nature and the obvious race condition.
+</p>
+<p>
+An idiomatic design would define a dedicated secondary subject carrying the low-rate data where the messages
+would be published both at a fixed rate and additionally ad-hoc on change (possibly at a lower priority).
+Should it be deemed impractical to exchange such low-rate data periodically (e.g., due to the large amount
+of such optional data coupled with its low significance for most consumers), it is possible to publish a
+modification counter with a large overflow interval (or hash) that is updated whenever the low-rate optional
+data is changed, prompting the interested consumers to explicitly request the data (e.g., using the standard
+service <code>uavcan.file.Read</code>) while safeguarding them against race conditions.
+</p>
+<h4>Fail-operational systems</h4>
+<p>
+Interfaces to most industrial machines are designed with the presumption that
+<a href="https://en.wikipedia.org/wiki/Kill_switch">the safest state is where the system is deactivated</a>.
+This mindset is inadequate for those safety-critical applications where an unscheduled deactivation of the
+system (e.g., in the event of an emergency) <a href="https://en.wikipedia.org/wiki/Safety-critical_system">
+may lead to drastic consequences</a>. For example, any problem with a typical factory robot may be quickly
+contained by pressing the emergency stop button, whereas applying a similar failure handing policy to an
+aircraft engine <a href="https://en.wikipedia.org/wiki/2015_Seville_Airbus_A400M_crash">may lead to a
+catastrophe</a>.
+</p>
+<p>
+The difference in the safety requirements motivates why the approach taken by the CANopen DS402 motor
+control profile that requires the service consumer to navigate through the complex state machine to launch
+the motor may not be applicable to the critical systems of an aircraft. The designer seeking to equip a
+propulsion controller with an arming switch must carefully evaluate the expansion of the state space of the
+resulting system &ndash; it is quite possible that the safety gains introduced by the arming logic may be
+outweighed by the undesirable effects of the increased complexity of the interface.
+</p>
+<h4>File transfer</h4>
+<p>
+<a href="https://en.wikipedia.org/wiki/Trivial_File_Transfer_Protocol">TFTP</a> is a simple file transfer
+protocol designed for conventional ICT applications. Its advantages include simplicity, efficiency, and
+low resource utilization. The disadvantage that is most relevant to the current discussion is its high
+dependence on the correct coordination of the communicating agents which results in fragility. The basic
+operating principle is summarized in the following diagram:
+</p>
+<div class="text-left">
+  <img src="/static/images/tftp.png" alt="TFTP"></img>
+  <p><em>(Image adapted from <a href="https://en.wikipedia.org/wiki/Trivial_File_Transfer_Protocol">
+    Wikipedia</a>)</em></p>
+</div>
+<p>
+The intended applications of TFTP can tolerate its low reliability. The danger here is that an engineer
+who is familiar with the typical design methods practiced in the general ICT industry might inadvertently
+carry over the accepted design trade-offs into a domain where they would yield deeply suboptimal results.
+A diligent engineer designing an intravehicular UAVCAN-based network will always be aware of the different
+design objectives and will avoid the mindless transfer of ill-suited methods.
+</p>
+<p>
+Consider the standard file transfer service built upon the types under the <code>uavcan.file.*</code>
+namespace. Responding to the different design goals, the UAVCAN standard file transfer protocol is less
+efficient, but it is entirely stateless (excepting the optional <a href="https://en.wikipedia.org/wiki/Soft_state">
+soft states</a> that may be leveraged by the implementations to improve the average-case performance).
+UAVCAN file transfers are resilient against arbitrary disruption in communication and the involved network
+interactions are idempotent.
+</p>
+
+<h2 id="safe-typing">Safe typing</h2>
+<p>
+In the context of UAVCAN service design, <em>type safety</em> is understood narrowly as the construction
+of interfaces that are robust against unintended misuse and that convey the intent of the designer clearly
+and unambiguously through the DSDL type system.
+</p>
+<p>
+Previously we mentioned that the concept of orthogonality can manifest at the data type composition level.
+We can illustrate this with the following synthetic example of a hypothetical UAVCAN service that provides
+a remote shell command execution capability:
+</p>
+<pre>
+  <code>
+    uavcan.primitive.String.1.0 command<br>
+    ---<br>
+    uavcan.primitive.String.1.0 output  # Ignore if errored<br>
+    uint32 status<br>
+    uint32 STATUS_OK = 0<br>
+  </code>
+</pre>
+<p>
+Suppose that the service contract dictates (this should be detailed in the DSDL comments but we take
+shortcuts for conciseness) that upon successful execution, the <code>status</code> should be zero and the
+output should contain, well, the output of the command, if any. In the event of an error, however, the
+output should be ignored and the status should be non-zero. This design is flawed, but before we turn
+to the fix, let's consider a failed attempt at designing a (fictitious) actuator command type:
+</p>
+<pre>
+  <code>
+    uint8 command_type<br>
+    uint8 COMMAND_TYPE_FORCE                = 0<br>
+    uint8 COMMAND_TYPE_POSITION             = 1<br>
+    uint8 COMMAND_TYPE_RATIOMETRIC_POSITION = 2<br>
+<br>
+    float32 command<br>
+  </code>
+</pre>
+<p>
+Both of the illustrated examples suffer from the same design issue: they fail to adequately express the
+semantics of the data through the type system, resulting in poor service design with an interface prone to
+accidental misuse. A diligent designer would notice that in the first example, unsuccessful execution renders
+the output redundant, and in the second example, the type of the command is a function of the command type
+selector. Expression of the data semantics through the type system results in fool-proof interfaces that
+force the user (and/or the programming language used to implement the logic, provided that its own type
+system is adequate) to avoid certain errors.
+</p>
+<p>
+The corrected service design would make use of a disjoint union to express the mutually exclusive nature
+of the error and success cases:
+</p>
+<pre>
+  <code>
+    uavcan.primitive.String.1.0 command  # The request is unchanged.<br>
+    ---<br>
+    @union                              # The response is a disjoint union.<br>
+    uavcan.primitive.String.1.0 output  # Success case.<br>
+    uint32 error                        # Failure case.<br>
+  </code>
+</pre>
+<p>
+The actuator command message would make use of the disjoint union to encode the different physical meaning
+of each option through the type system. Additionally, the decoupling of the command type from its meaning
+allows the designer to better express the ratiometric case:
+</p>
+<pre>
+  <code>
+    @union  # Three type-safe options: force, position, ratiometric_position<br>
+    <br>
+    uavcan.si.unit.force.Scalar.1.0  force      # Notice the types.<br>
+    uavcan.si.unit.length.Scalar.1.0 position<br>
+    <br>
+    int16 ratiometric_position<br>
+    int16 RATIOMETRIC_POSITION_NEUTRAL = 0<br>
+    int16 RATIOMETRIC_POSITION_MAX = 2 ** 15 - 1<br>
+    int16 RATIOMETRIC_POSITION_MIN = -RATIOMETRIC_POSITION_MAX<br>
+  </code>
+</pre>
+<p>
+As a rule of thumb, a well-typed interface is devoid of special values that modify the semantics of the
+variable and it does not rely on implicit typing where the meaning of a value is defined by another value.
+This may feel foreign to C programmers but adepts of the less type-challenged modern languages will feel
+at home. <em>(N.B.: a careful reader will notice that the standard namespace <code>uavcan.*</code> contains
+a couple of data types that violate these principles; this is a known design deficiency that is left
+uncorrected for the sake of backward compatibility with UAVCAN v0.)</em>
+</p>
+<p>
+DSDL supports <a href="https://en.wikipedia.org/wiki/Structural_type_system">structural subtyping</a> that
+can be leveraged for building abstracted interfaces in the spirit of object-oriented programming where the
+generalized data is defined in the first fields of the schema and the specialized fields are added near the
+end. In some cases, this approach allows the data type author to uphold the interface segregation principle
+by providing a single abstract root type accompanied by concretized subtypes.
+</p>
+<p>
+The aforementioned structural subtyping is facilitated by the so-called Implicit Truncation Rule. Together
+with its counterpart &ndash; the Implicit Zero Extension Rule &ndash; the two enable simple and straightforward
+means of data type evolution where existing types can be amended with new fields inserted at the end of the
+definition without breaking backward compatibility. Existing fields cannot be removed in general, but
+fixed-length fields can be replaced with voids if they are no longer relevant. For example:
+</p>
+<pre>
+  <code>
+    # v1.0<br>
+    float32 foo<br>
+    float16[3] bar<br>
+    float64 baz<br>
+  </code>
+</pre>
+<pre>
+  <code>
+    # v1.1<br>
+    float32 foo<br>
+    void48       # We no longer need the bar.<br>
+    float64 baz<br>
+  </code>
+</pre>
+<pre>
+  <code>
+    # v1.2<br>
+    float32 foo<br>
+    void48<br>
+    float64 baz<br>
+    uint8[16] qux  # New field.<br>
+  </code>
+</pre>
+<p>
+If <code>bar</code> was a variable-length entity, such replacement would not be possible to do in a safe
+manner. The design of the extensibility features of DSDL attempts to offer an optimal balance between its
+capabilities and the simplicity of the implementation. Those seeking more background information about this
+will benefit from the knowledge that DSDL leverages a non-TLV non-self-describing binary serialization format
+as explained in the technical discussion in
+<a href="https://forum.uavcan.org/t/data-type-extensibility-and-composition/827/7">Data type extensibility
+and composition</a>.
+</p>
+<p>
+If the scope of the changes to a data type cannot be accommodated by the available means of type
+extensibility, the designer should consider releasing a new major version of the type. This comes with the
+breakage of backward compatibility. If a soft transition to the new interface is desired, the affected services
+should be constructed with the support for both versions of the interface (the old and the new one) for the
+duration of the transitory period. Immediately upon the commencement of the transitory period the old data
+type definition should be annotated with a special directive <b><code>@deprecated</code></b> to signify its
+impending removal from the system.
+</p>
+<p>
+Excepting certain uncommon special circumstances, all fields should be byte-aligned, as this allows the
+implementations to use drastically faster byte-level (de-)serialization routines as opposed to their slower
+bit-level counterparts. The data type designer should use the <b><code>@assert _offset_ % 8 == {0}</code></b>
+directive to statically prove that under all possible field layout configurations the fields are always
+aligned. When combined with the special variable <code>_offset_</code>, the assertion check directive can be
+used for validating complex properties of the layout, as shown in the following practical example of a data
+type that models a UDP/IP datagram:
+</p>
+<pre>
+  <code>
+    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
+    void8<br>
+    @assert _offset_ % 64 == {0}<br>
+    # Ensure 64-bit alignment here.<br>
+    <br>
+    Endpoint.0.1 source<br>
+    Endpoint.0.1 destination<br>
+    @assert _offset_ % 64 == {0}<br>
+    # Likewise -- the endpoints are 64-bit aligned as well.<br>
+    <br>
+    uint14 MTU = 1024 * 9 - 20 - 8<br>
+    uint8[<=MTU] data<br>
+    @assert _offset_ % 8 == {0}<br>
+    # Whatever the payload size may be, the end offset is always byte-aligned.<br>
+  </code>
+</pre>
+<p>
+There are more practical examples in the public regulated data type repository.
+</p>
+<p>
+Since data type definitions establish formal service contracts, it is paramount to ensure that every
+definition contains a detailed and exhaustive service usage specification. As was said earlier, the examples
+given in this document lack such documentation for brevity, but for production types, this would be unacceptable.
+A data type definition is a single source of truth for the users and providers of the modeled service, and as
+such, its embedded documentation written as DSDL comments should provide every pertinent bit of information
+about it. Such documentation should never be kept separate from the data type definition because it creates the
+risk of divergence, and makes the definitions prone to misuse due to having to consult with several artificially
+separated sources instead of one.
+</p>
+
+<h2 id="segregation">Semantic segregation</h2>
+<p>
+This design aspect might not require a separate section since it is already covered by the principles of
+service-oriented design. However, the prevalence of poor design practices perpetuated by certain prior
+art made it necessary to warn the architects of the possible pitfalls here.
+</p>
+<p>
+The basis of this discussion roots in the fact that UAVCAN is positioned differently compared to other
+intravehicular communication technologies. Being a (near) zero-cost real-time distributed computing protocol,
+UAVCAN differs from its alternatives, requiring the engineer to adopt a slightly different mindset when designing
+intravehicular networks. A simplified representation of different tiers of abstraction is summarized in the
+following table:
+</p>
+<div class="table-responsive">
+  <table class="table table-borderless table-sm w-unset table-nowrap">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Level of abstraction</th>
+        <th scope="col">Design focus</th>
+        <th scope="col">Basic information unit</th>
+        <th scope="col">Examples</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Distributed computing</td>
+        <td>Network services</td>
+        <td>Domain object</td>
+        <td>DDS, CORBA, ROS graph, <b><em>UAVCAN</em></b></td>
+      </tr>
+      <tr>
+        <td>Databus (logical)</td>
+        <td>Data packets</td>
+        <td>Set of numerical values</td>
+        <td>MODBUS, J1939, CANopen, AFDX</td>
+      </tr>
+      <tr>
+        <td>Multiplexed digital signaling</td>
+        <td>Physical wiring</td>
+        <td>Scalar signal</td>
+        <td>ARINC 429, NMEA 0183, DShot</td>
+      </tr>
+      <tr>
+        <td>Analog/discrete signaling</td>
+        <td>Physical wiring</td>
+        <td>Scalar signal</td>
+        <td>Analog ports, GPIO, RCPWM</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>
+Expanding upon prior explanation, a network service specification is an abstract blueprint, focused on
+high-level behaviors and contracts that do not define the means of its implementation. Implementing the
+said behaviors and contracts such that they become available to consumers is referred to as service
+<em>instantiation</em>. Instantiating a service necessarily involves assigning its subjects and
+UAVCAN-services certain specific port-identifiers at the discretion of the implementer (for example,
+configuring an air data computer of an aircraft to publish its estimates as defined by the air data service
+contract over specific subject-IDs chosen by the integrator).
+</p>
+<p>
+Excepting special use cases, the port-ID assignment is necessarily removed from the scope of service
+specification because its inclusion would render the service inherently less composable and less reusable,
+and additionally forcing the service designer to decide in advance that there should be at most one instance
+of the said service per network. While it is possible to embed the means of instance identification into the
+service contract itself (for example, by extending the data types with a numerical instance identifier like
+it is sometimes done in DDS keyed topics), this practice is ill-advised because it constitutes a leaky
+abstraction that couples the service instance identification with its domain objects. Continuing with the
+air data computer (ADC) example, one could assume that multiple ADC may be differentiated by a dedicated
+numerical ID, but this would come at a cost of polluting the application data with unrelated implementation
+support details and forcing the service designer to determine the allowed composition strategies.
+</p>
+<p>
+The <q>special use cases</q> mentioned above &ndash; where a service specification dictates a specific way of its
+instantiation &ndash; occur when enforcing a single rigidly-defined instance-per-network aligns with the domain
+(business) objectives. This circumstance is rare in practical systems and many of the services that would be
+candidates for such special methods are already provided by the standard data types. Such single-instance
+services are called <em>singleton services</em>, borrowing the term <q>singleton</q> from the theory of
+object-oriented programming. The following practical rules of thumb are recommended for deciding if a
+singleton service is advised:
+</p>
+<ul>
+  <li>
+    The service is not related to monitoring or controlling a physical process or interacting with the real
+    world. This rule excludes sensor feeds, control loops, etc.
+  </li>
+  <li>
+    The service is related to facilitating the process of distributed computing itself. This rule admits
+    auxiliary functions like logging (<code>uavcan.diagnostic.Record</code>), node status monitoring (like
+    the standard Heartbeat or vendor-specific extended monitoring services), file transfer
+    (<code>uavcan.file.*</code>), firmware update, etc.
+  </li>
+</ul>
+<p>
+Singleton services are facilitated by the DSDL feature of <em>fixed port-ID</em>: the service designer can
+explicitly express the fact that the service that is built on top of a particular data type is a singleton
+by specifying a particular fixed port-ID. Keep in mind that the space of fixed port-ID is tightly regulated
+by the UAVCAN maintainers to avoid conflicts and promote interoperability &ndash; the details are provided in
+the UAVCAN Specification. The list of <a href="https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers">
+well-known TCP/UDP port numbers</a> offers a convenient analogy: defining a fixed port-ID is like claiming
+a specific TCP/UDP port number for a standard application, like HTTP server or NTP.
+</p>
+<p>
+A service may be designed in such a way where it is provided by a group of identical collaborating agents with
+<em><a href="https://en.wikipedia.org/wiki/Cohesion_(computer_science)">strong logical cohesion</a></em>. In
+this case, we admit that the means of differentiating said identical agents from each other belong to the
+business domain, and as such, the service specification should contain the necessary provisions for that. We
+call such designs <em>multi-agent services</em>. Observe that this is not related to the concept of singleton
+service. A network may contain multiple instances of a multi-agent service where each instance is provided by
+an independent group of strongly logically bound agents. As a practical example of a multi-agent service,
+consider the propulsion system of a quad-plane VTOL: the propulsors creating lift in the hover mode belong to
+one multi-agent propulsion service, each propulsor being modeled as a separate service agent; the propulsors
+creating thrust in the forward flight belong to the second multi-agent service. In this example, the service
+consumers are unaware of which UAVCAN nodes implement which propulsor agent &ndash; each agent could be a
+dedicated ESC/FADEC, or they all could be managed by a single hardware unit, or something in between.
+</p>
+<p>
+The architectural difference between a regular service (we call it <q>generic service</q> here to avoid 
+ambiguity) and a singleton service is formally illustrated by the following UML model:
+</p>
+<div class="text-left">
+  <img src="/static/images/generic_vs_singleton.png" alt="Generic vs Singleton service architecture"></img>
+</div>
+<p>
+Observe that relying on node-IDs to differentiate the service instances or agents would be a mistake for two
+reasons. The first reason is that a node-ID, per the UAVCAN network model, is a transport-layer property that
+exists primarily to facilitate the operation of the network itself rather than to enrich the application-level
+contracts. Relying on the node-ID to define application-level functions constitutes a leaky abstraction
+throughout the layers separating the application and the transport. The second reason is that such separation
+presumes that each service instance or agent should be implemented by a separate node, which is not an adequate
+assumption for a service designer to make.
+</p>
+<p>
+An attentive reader here might notice that UAVCAN-services (not <q>architectural services</q> but <q>services
+as opposed to subjects</q>) are inherently bound to node-IDs and as such their ability to participate in
+well-architected network services is limited. This is a correct observation. This design is one manifestation
+of UAVCAN's commitment to providing powerful abstractions at zero cost &ndash; occasionally, certain trade-offs
+have to be made. Many practical services will be designed based on subjects alone without relying on
+UAVCAN-services at all.
+</p>
+<p>
+The principles explained in this section are generally referred to as the principles of <em>semantic
+segregation</em> because they dictate that service decomposition should be done based on the domain logic
+and business objectives rather than the envisioned means of implementation. The service instantiation is delayed
+until the system definition time and it can be effectively imagined in the form of a table that ties together
+specific services, their ports, and their port-identifiers. For example:
+</p>
+<div class="table-responsive">
+  <table class="table table-borderless table-sm w-unset table-nowrap">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Subject-ID</th>
+        <th scope="col">Type</th>
+        <th scope="col">Subject description</th>
+        <th scope="col">Part of service</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>4003</td>
+        <td><code>vendor.camera.Image.1.0</code></td>
+        <td>Left camera image</td>
+        <td>Visual perception feed</td>
+      </tr>
+      <tr>
+        <td>4004</td>
+        <td><code>vendor.camera.Image.1.0</code></td>
+        <td>Right camera image</td>
+        <td>Visual perception feed</td>
+      </tr>
+      <tr>
+        <td>200</td>
+        <td><code>vendor.battery.Status.1.0</code></td>
+        <td>Main battery status</td>
+        <td>Power management</td>
+      </tr>
+      <tr>
+        <td>201</td>
+        <td><code>vendor.battery.Status.1.0</code></td>
+        <td>Payload battery status</td>
+        <td>Power management</td>
+      </tr>
+      <tr>
+        <td>3000</td>
+        <td><code>vendor.geometry.geo.Position.1.0</code></td>
+        <td>Estimated GNSS position of the vehicle</td>
+        <td>Navigation</td>
+      </tr>
+      <tr>
+        <td>3001</td>
+        <td><code>vendor.sensor.gnss.Status.1.0</code></td>
+        <td>GNSS fix status of the above</td>
+        <td>Navigation</td>
+      </tr>
+      <tr>
+        <td>3010</td>
+        <td><code>vendor.geometry.geo.Pose.1.0</code></td>
+        <td>Estimated position and orientation of the vehicle</td>
+        <td>Navigation</td>
+      </tr>
+      <tr>
+        <td>3100</td>
+        <td><code>vendor.geometry.geo.Pose.1.0</code></td>
+        <td>Target position and orientation of the vehicle</td>
+        <td>Navigation</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>
+It follows that particular hardware or software units that are involved in distributed computing require
+configuration that cannot be known in advance until the unit is integrated into the network. Considering
+the described methods undesirable for high-integrity systems because of the perceived configuration
+complexity, would be a mistake because the configuration is defined and established exactly once at the
+system definition time rather than dynamically, and as such, the increase in complexity is marginal to
+nonexistent.
+</p>
+<p>
+The negative examples given in this section are purposefully kept simple. One should recognize that the
+costs associated with suboptimal architectural choices tend to increase drastically with the complexity
+of the services or their applications.
+</p>
+
+<h2 id="si">SI</h2>
+<p>
+Historically, various cultures on our planet have relied on different systems of measurement, which has
+resulted in a certain amount of turmoil due to either incompatibility of such ad-hoc systems between each
+other, or their lack of inner consistency. The worldwide process of 
+<a href="https://en.wikipedia.org/wiki/Metrication">metrication</a> has largely eradicated this problem,
+especially in science and engineering, with some exceptions.
+</p>
+<p>
+Inconsistent use of the systems of measure has been known to occasionally cause catastrophic failures,
+including the famous cases of the Mars Climate Orbiter or the Gimli Glider. Such issues are cheap to avoid
+by enforcing consistency across the board.
+</p>
+<p>
+UAVCAN requires that every data item should use one of the base or derived units of the International System
+of Units. Occasionally, this may result in the units that feel unfamiliar (e.g., kelvin instead of degrees,
+coulomb instead of ampere-hours, pascal instead of bars, radian/second instead of RPM, etc.), but this is
+not considered to be a problem because in the machine-to-machine interfaces consistency and
+standard-compliance far outweigh whatever personal discomfort the designer may perceive. Should it be desired
+to perform the unit conversion for the convenience of the human operator, it should be done by the end
+equipment exclusively.
+</p>
+<p>
+As dictated by the specification, <a href="https://en.wikipedia.org/wiki/Metric_prefix">metric scaling</a>
+is permitted, provided that the affected attributes are adequately suffixed. Scaling coefficients that are
+not multiples of 1000 should be avoided (i.e., centi, deci, deca, and hecto). The letter case of the suffix
+is independent of the attribute name suffix. The following example is nearly an exact copy from the UAVCAN
+Specification &ndash; please read it for the background:
+</p>
+<pre>
+  <code>
+    float16 temperature           # [kelvin]      No suffix because an unscaled SI unit is used.<br>
+    uint32 delay_us               # [microsecond] Scaled unit, suffix required. Mu replaced with "u".<br>
+    uint32 MAX_DELAY_us = 90_000  # [microsecond] Notice the letter case.<br>
+    float32 kinetic_energy_GJ     # [gigajoule]   Notice the letter case.<br>
+  </code>
+</pre>

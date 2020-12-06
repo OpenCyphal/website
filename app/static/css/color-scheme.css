@@ -17,6 +17,7 @@
     --uavcan-cyan-10pc:  rgb(0 126 135 / 0.1);
     --uavcan-cyan-75pc:  rgb(0 126 135 / 0.75);
     --uavcan-black-75pc: rgb(0 0 0 / 0.75);
+    --uavcan-black-60pc: rgb(0 0 0 / 0.6);
 
     /* Element colors */
     --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
@@ -34,4 +35,5 @@
     --uavcan-sandwich-text-color:     var(--uavcan-cyan);
     --uavcan-sandwich-hover-color:    var(--uavcan-cyan-75pc);
     --uavcan-sandwich-bg-color:       var(--uavcan-cyan-10pc);
+    --uavcan-navbar-l2-text-color:    var(--uavcan-black-60pc);  /* Sidebar navigation text color */
 }

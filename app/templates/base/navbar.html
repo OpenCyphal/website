@@ -18,12 +18,12 @@
       <li class="nav-item{% if active == 'consortium' %} active{% endif %}">
         <a class="nav-link" href="/consortium">Consortium</a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown{% if active == 'guide' %} active{% endif %}">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDocumentationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Documentation
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDocumentationDropdown">
-          <a class="dropdown-item" target="_blank" href="/guide">Guide</a>
+          <a class="dropdown-item" href="/guide">Guide</a>
           <a class="dropdown-item" target="_blank" href="/specification">Specification</a>
         </div>
       </li>
