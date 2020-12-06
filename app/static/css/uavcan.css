@@ -59,6 +59,10 @@ table.table-nowrap {
 }
 
 /** Sidebar **/
+.sidebar {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
 .sidebar .nav .nav-heading {
     color: var(--uavcan-sidebar-heading-color, inherit)!important;
     font-size: 110%;
