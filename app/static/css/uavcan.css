@@ -59,27 +59,10 @@ table.table-nowrap {
 }
 
 /** Sidebar **/
-.sidebar .sandwich {
-    background-color: var(--uavcan-sandwich-bg-color);
-    font-weight: 600;
-    text-align: center;
-    border-top: 2px solid var(--uavcan-sandwich-text-color);
-    border-bottom: 2px solid var(--uavcan-sandwich-text-color);
-    padding: .75rem 1rem;
-    margin-bottom: .5rem;
-}
-.sidebar .sandwich a {
-    color: var(--uavcan-sandwich-text-color, inherit)!important;
-    text-decoration: none;
-}
-.sidebar .sandwich a:hover {
-    color: var(--uavcan-sandwich-hover-color, inherit)!important;
-}
 .sidebar .nav .nav-heading {
-    color: var(--uavcan-sidebar-text-color, inherit)!important;
+    color: var(--uavcan-sidebar-heading-color, inherit)!important;
     font-size: 110%;
-    font-weight: 600;
-    padding: .75rem .75rem;
+    font-weight: 700;
 }
 .sidebar .nav .nav-link {
     color: var(--uavcan-sidebar-text-color, inherit);
@@ -90,6 +73,14 @@ table.table-nowrap {
 }
 .sidebar .nav a:hover {
     color: var(--uavcan-sidebar-hover-color, inherit);
+}
+.sidebar-footnote {
+    padding: 0 1rem;
+    line-height: 1.25rem;
+}
+.sidebar-footnote a {
+    font-size: 80%;
+    font-weight: 400;
 }
 
 /** Carousel **/

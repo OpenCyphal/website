@@ -24,6 +24,7 @@
     --uavcan-sidebar-text-color:      var(--uavcan-black);       /* Sidebar navigation text color */
     --uavcan-sidebar-active-color:    var(--uavcan-black);       /* Sidebar active link text color */
     --uavcan-sidebar-hover-color:     var(--uavcan-black-75pc);  /* Sidebar hover link text color */
+    --uavcan-sidebar-heading-color:   var(--uavcan-red);         /* Sidebar navigation heading color */
     --uavcan-link-text-color:         var(--uavcan-navy);        /* Hyperlink color */
     --uavcan-ref-thead-text-color:    var(--light, inherit);
     --uavcan-ref-thead-bg-color:      var(--uavcan-navy);
