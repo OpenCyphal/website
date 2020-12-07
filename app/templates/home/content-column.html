@@ -294,22 +294,13 @@
   and, in general, the worst-case processing time can be determined statically.
   A practical example is shown below:
 </p>
-<p>
-  <code>
-    <span style="color: var(--uavcan-cyan);">
-    # A generic displacement amplitude spectrum representation. Documentation is omitted for brevity.<br>
-    </span>
-    <b>uavcan.si.unit.frequency.Scalar.1.0</b> frequency_step<br>
-    <b>float32[<=1024]</b> peak_abs_amplitude  <span style="color: var(--uavcan-cyan);"># [meter]</span><br>
-    <span style="color: var(--uavcan-cyan);">
-    # Observe that the array length is bounded. It is not possible to define an unbounded data type.<br>
-    </span>
-    <b>@assert</b> _offset_.max == 8 * (4 + 1 + 1024 * 4)
-    <span style="color: var(--uavcan-cyan);">
-    # Validate the layout.<br>
-    </span>
-  </code>
-</p>
+<pre>
+<code class="comment"># A generic displacement amplitude spectrum representation. Documentation is omitted for brevity.</code>
+<code class="type">uavcan.si.unit.frequency.Scalar.1.0</code> <code>frequency_step</code>
+<code class="type">float32[<=1024]</code> <code>peak_abs_amplitude</code>  <code class="comment"># [meter]</code>
+<code class="comment"># Observe that the array length is bounded. It is not possible to define an unbounded data type.</code>
+<code class="type">@assert</code> <code>_offset_.max == 8 * (4 + 1 + 1024 * 4)</code> <code class="comment"># Validate the layout.</code>
+</pre>
 <p>
   At the transport layer, bounded resource utilization and timely data processing are facilitated by
   explicit upper bounds on all protocol resources.

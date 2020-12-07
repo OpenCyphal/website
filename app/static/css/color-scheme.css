@@ -32,8 +32,10 @@
     --uavcan-card-h2-text-color:      var(--light, inherit);     /* Card heading text color */
     --uavcan-card-h2-bg-color:        var(--uavcan-navy);        /* Card heading background color */
     --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
-    --uavcan-sandwich-text-color:     var(--uavcan-cyan);
-    --uavcan-sandwich-hover-color:    var(--uavcan-cyan-75pc);
-    --uavcan-sandwich-bg-color:       var(--uavcan-cyan-10pc);
-    --uavcan-navbar-l2-text-color:    var(--uavcan-black-60pc);  /* Sidebar navigation text color */
+    --uavcan-navbar-l2-text-color:    var(--uavcan-black-60pc);  /* Sidebar navigation level two */
+    --uavcan-code-text-color:         var(--uavcan-black);       /* Code text */
+    --uavcan-code-comment-color:      var(--uavcan-gray);        /* Code comments */
+    --uavcan-code-value-color:        var(--uavcan-cyan);        /* Code values */
+    --uavcan-code-em-color:           var(--uavcan-red);         /* Code emphasis */
+    --uavcan-code-bg-color:           var(--uavcan-cyan-10pc);   /* Code background */
 }

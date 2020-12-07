@@ -23,12 +23,28 @@ h3   { font-size: 1em; font-weight: bold; }
 h4   { font-size: 1em; font-weight: normal; font-style: italic }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
+
+pre {
+    color: var(--uavcan-code-text-color);
+    background-color: var(--uavcan-code-bg-color);
+    padding: 0.5rem 1rem;
+}
 code {
-    color: var(--uavcan-body-text-color);
-    white-space: nowrap;
-    overflow-x: auto;
-    display: inline-block;
-    max-width: 100%;
+    color: var(--uavcan-code-text-color);
+}
+code.comment {
+    color: var(--uavcan-code-comment-color);
+    font-style: italic;
+}
+code.type {
+    color: var(--uavcan-code-text-color);
+    font-weight: bold;
+}
+code.value {
+    color: var(--uavcan-code-value-color);
+}
+code.emphasis {
+    color: var(--uavcan-code-em-color);
 }
 
 /** Attribute modifier classes **/

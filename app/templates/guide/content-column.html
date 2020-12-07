@@ -127,36 +127,30 @@ Anybody familiar with C-like languages should immediately feel at home. Suppose 
 directory</em> and 1.0 is the version number of the data type:
 </p>
 <pre>
-  <code>
-    uint16 VALUE_LOW  = <span style="color: var(--uavcan-cyan);">1000</span><br>
-    uint16 VALUE_HIGH = <span style="color: var(--uavcan-cyan);">2000</span><br>
-    uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) / <span style="color: var(--uavcan-cyan);">2</span>
-    <em style="color: var(--uavcan-gray);"># Exact rational arithmetics!</em><br>
-    uint16 value<br>
-    uint8[<=<span style="color: var(--uavcan-cyan);">100</span>] key
-    <em style="color: var(--uavcan-gray);"># Variable-length array, at most 100 items.</em><br>
-    @extent 128 * 8<br>
-  </code>
+<code>uint16 VALUE_LOW  = <code class="value">1000</code></code>
+<code>uint16 VALUE_HIGH = <code class="value">2000</code></code>
+<code>uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) / <code class="value">2</code> <code class="comment"># Exact rational arithmetics!</code></code>
+<code>uint16 value</code>
+<code>uint8[<=<code class="value">100</code>] key  <code class="comment"># Variable-length array, at most 100 items.</code></code>
+<code>@extent 128 * 8</code>
 </pre>
 <p>
 The wire representation is straightforward. The byte order is little-endian and variable-length arrays
 (like key here) are prepended with a length prefix which is either uint8, uint16, uint32, or uint64:
 </p>
 <pre>
-  <code>
-    $ pyuavcan dsdl-gen-pkg dsdl_src/my_project  # Compile the namespace<br>
-    $ python             # Whip out the python to test it using PyUAVCAN<br>
-    >>> import pyuavcan, my_project<br>
-    >>> serialized = pyuavcan.dsdl.serialize(my_project.MyMessageType_1_0(<br>
-    ...     value=1234, key='Hello world!'))<br>
-    >>> bytes(next(serialized))<br>
-    b'\xd2\x04\x0cHello world!'<br>
-  </code>
+<code>$ pyuavcan dsdl-gen-pkg dsdl_src/my_project  <code class="comment"># Compile the namespace</code></code>
+<code>$ python             <code class="comment"># Whip out the python to test it using PyUAVCAN</code></code>
+<code>>>> <code class="type">import</code> pyuavcan, my_project</code>
+<code>>>> serialized = pyuavcan.dsdl.serialize(my_project.MyMessageType_1_0(</code>
+<code>...     value=<code class="value">1234</code>, key=<code class="emphasis">'Hello world!'M</code>))</code>
+<code>>>> bytes(next(serialized))</code>
+<code class="emphasis">b'\xd2\x04\x0cHello world!'</code>
 </pre>
 <p>
 Here's what we see: 1234 = 0x04D2, so it is serialized as <code>[0xD2, 0x04]</code>. The greeting
-encoded in UTF-8 is 12 bytes long, which is 0x0C, which is immediately followed by <code>Hello world!
-</code>. You can generate and parse such <em>serialized representations</em> using auto-generated code
+encoded in UTF-8 is 12 bytes long, which is 0x0C, which is immediately followed by <code>Hello world!</code>.
+You can generate and parse such <em>serialized representations</em> using auto-generated code
 (<a href="https://github.com/UAVCAN/nunavut">Nunavut</a> will help you here) or you can just twiddle
 bytes manually if you don't want to get your hands dirty with automatic transcompilers.
 </p>
@@ -176,24 +170,20 @@ versioning</em> and in the end, they summoned the <em>implicit truncation rule</
 zero extension rule</em> into existence. Here's how they work:
 </p>
 <pre>
-  <code>
-    # my_project/MyMessageType.1.1.uavcan<br>
-    uint16 VALUE_LOW  = 1000<br>
-    uint16 VALUE_HIGH = 2000<br>
-    uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) * 0.5  # Rational arithmetics.<br>
-    uint16 value<br>
-    # This definition has no key. Who needs keys anyway?<br>
-    @extent 128 * 8<br>
-  </code>
+<code class="comment"># my_project/MyMessageType.1.1.uavcan</code>
+<code>uint16 VALUE_LOW  = </code><code class="value">1000</code>
+<code>uint16 VALUE_HIGH = </code><code class="value">2000</code>
+<code>uint16 VALUE_MID = (VALUE_HIGH + VALUE_LOW) * <code class="value">0.5</code>  <code class="comment"># Rational arithmetics.</code></code>
+<code>uint16 value</code>
+<code class="comment"># This definition has no key. Who needs keys anyway?</code>
+<code>@extent 128 * 8</code>
 </pre>
 <pre>
-  <code>
-    # my_project/MyMessageType.1.2.uavcan<br>
-    uint16 value<br>
-    uint8[<=100] key     # The key is back.<br>
-    float64 extra_value  # A new field!<br>
-    @extent 128 * 8<br>
-  </code>
+<code class="comment"># my_project/MyMessageType.1.2.uavcan</code>
+<code>uint16 value</code>
+<code>uint8[<=<code class="value">100</code>] key     <code class="comment"># The key is back.</code></code>
+<code>float64 extra_value  <code class="comment"># A new field!</code></code>
+<code>@extent 128 * 8</code>
 </pre>
 <p>
 We have two new versions of the same type which look quite different, but they are all <em>semantically
@@ -213,13 +203,11 @@ options (like <code>std::variant&lt;&gt;</code> in C++ or enumerations in Rust, 
 C); the encoded value is prepended with a byte that says which one is it:
 </p>
 <pre>
-  <code>
-    @union  # This directive adds one byte in front of the message.<br>
-    uint16 integer       # If the tag is zero, it's an integer.<br>
-    uint8[<=100] string  # If the tag is one... You know the drill.<br>
-    my_project.MyMessageType.1.2 my_object  # Yeah, composition.<br>
-    @extent 200 * 8<br>
-  </code>
+<code>@union  <code class="comment"># This directive adds one byte in front of the message.</code></code>
+<code>uint16 integer       <code class="comment"># If the tag is zero, it's an integer.</code></code>
+<code>uint8[<=<code class="value">100</code>] string  <code class="comment"># If the tag is one... You know the drill.</code></code>
+<code>my_project.MyMessageType<code class="value">.1.2</code> my_object  <code class="comment"># Yeah, composition.</code></code>
+<code>@extent 200 * 8</code>
 </pre>
 <p>
 A service type is defined by inserting three minus characters (---) somewhere into the definition, which
@@ -364,25 +352,21 @@ and use it to publish a message of the type we defined above over a GNU/Linux So
 using the subject-ID 4919 (0x1337 in hex) from node-ID 59:
 </p>
 <pre>
-  <code>
-    # Generate Python packages from DSDL namespaces:<br>
-    $ pyuavcan dsdl-gen-pkg https://github.com/UAVCAN/public_regulated_data_types/archive/master.zip dsdl_src/my_project<br>
-    # Publish a message:<br>
-    $ pyuavcan pub 4919.my_project.MyMessageType.1.0 '{value: 1234, key: "Hello world!"}' --tr='CAN(can.media.socketcan.SocketCANMedia("vcan1",64),59)'<br>
-  </code>
+<code class="comment"># Generate Python packages from DSDL namespaces:</code>
+<code>$ pyuavcan dsdl-gen-pkg https://github.com/UAVCAN/public_regulated_data_types/archive/master.zip dsdl_src/my_project</code>
+<code class="comment"># Publish a message:</code>
+<code>$ pyuavcan pub <code class="value">4919.</code>my_project.MyMessageType<code class="value">.1.0</code> <code class="emphasis">'{value: 1234, key: "Hello world!"}'</code> --tr=<code class="emphasis">'CAN(can.media.socketcan.SocketCANMedia("vcan1",64),59)'</code></code>
 </pre>
 <p>
 Meanwhile, having started the candump utility in another terminal, we observe the following
 developments:
 </p>
 <pre>
-  <code>
-    # Columns: timestamp, iface, flags (B means BRS), CAN ID, [payload size], payload.<br>
-    $ candump -decaxta any<br>
-    (1.365)  vcan1  TX B -  107D553B  [08]  00 00 00 00 20 89 00 E0   '.... ...'<br>
-    (1.366)  vcan1  TX B -  1013373B  [16]  D2 04 0C 48 65 6C 6C 6F 20 77 6F 72 6C 64 21 E0<br>
-    (2.366)  vcan1  TX B -  107D553B  [08]  01 00 00 00 20 89 00 E1   '.... ...'<br>
-  </code>
+<code class="comment"># Columns: timestamp, iface, flags (B means BRS), CAN ID, [payload size], payload.</code>
+<code>$ candump -decaxta any</code>
+<code>(<code class="value">1.365</code>)  vcan1  TX B -  <code class="value">107</code>D553B  [<code class="value">08</code>]  <code class="value">00 00 00 00 20 89 00</code> E0   '.... ...'</code>
+<code>(<code class="value">1.366</code>)  vcan1  TX B -  <code class="value">1013373</code>B  [<code class="value">16</code>]  D2 <code class="value">04 0</code>C <code class="value">48 65 6</code>C <code class="value">6</code>C <code class="value">6</code>F <code class="value">20 77 6</code>F <code class="value">72 6</code>C <code class="value">64 21</code> E0</code>
+<code>(<code class="value">2.366</code>)  vcan1  TX B -  <code class="value">107</code>D553B  [<code class="value">08</code>]  <code class="value">01 00 00 00 20 89 00</code> E1   '.... ...'</code>
 </pre>
 <p>
 The first and the last frames here are the heartbeats from the CLI tool &ndash; remember, they are
@@ -390,19 +374,15 @@ mandatory for all nodes. In the following example, we equip a pair of sunglasses
 message but the MTU is set to 8 bytes, forcing the publisher to resort to a multi-frame transfer:
 </p>
 <pre>
-  <code>
-    $ pyuavcan pub 4919.my_project.MyMessageType.1.0 '{value: 1234, key: "Hello world!"}' --tr='CAN(can.media.socketcan.SocketCANMedia("vcan2",8),59)'<br>
-  </code>
+<code>$ pyuavcan pub <code class="value">4919.</code>my_project.MyMessageType<code class="value">.1.0</code> <code class="emphasis">'{value: 1234, key: "Hello world!"}'</code> --tr=<code class="emphasis">'CAN(can.media.socketcan.SocketCANMedia("vcan2",8),59)'</code></code>
 </pre>
 <pre>
-  <code>
-    $ candump -decaxta any<br>
-    (7.925)  vcan2  TX - -  107D553B   [8]  00 00 00 00 20 3D 01 E0   '.... =..'<br>
-    (7.925)  vcan2  TX - -  1013373B   [8]  D2 04 0C 48 65 6C 6C A0   '...Hell.'<br>
-    (7.925)  vcan2  TX - -  1013373B   [8]  6F 20 77 6F 72 6C 64 00   'o world.'<br>
-    (7.925)  vcan2  TX - -  1013373B   [4]  21 F9 02 60               '!..`'<br>
-    (8.926)  vcan2  TX - -  107D553B   [8]  01 00 00 00 20 3D 01 E1   '.... =..'<br>
-  </code>
+<code>$ candump -decaxta any</code>
+<code>(<code class="value">7.925</code>)  vcan2  TX - -  <code class="value">107</code>D553B   [<code class="value">8</code>]  <code class="value">00 00 00 00 20 3</code>D <code class="value">01</code> E0   <code class="emphasis">'.... =..'</code></code>
+<code>(<code class="value">7.925</code>)  vcan2  TX - -  <code class="value">1013373</code>B   [<code class="value">8</code>]  D2 <code class="value">04 0</code>C <code class="value">48 65 6</code>C <code class="value">6</code>C A0   <code class="emphasis">'...Hell.'</code></code>
+<code>(<code class="value">7.925</code>)  vcan2  TX - -  <code class="value">1013373</code>B   [<code class="value">8</code>]  <code class="value">6</code>F <code class="value">20 77 6</code>F <code class="value">72 6</code>C <code class="value">64 00</code>   <code class="emphasis">'o world.'</code></code>
+<code>(<code class="value">7.925</code>)  vcan2  TX - -  <code class="value">1013373</code>B   [<code class="value">4</code>]  <code class="value">21</code> F9 <code class="value">02 60</code>               <code class="emphasis">'!..`'</code></code>
+<code>(<code class="value">8.926</code>)  vcan2  TX - -  <code class="value">107</code>D553B   [<code class="value">8</code>]  <code class="value">01 00 00 00 20 3</code>D <code class="value">01</code> E1   <code class="emphasis">'.... =..'</code></code>
 </pre>
 <p>
 Look at it go. The last two bytes at the end of the transfer (right after the exclamation mark !) are
@@ -679,29 +659,27 @@ As another example, imagine that a data type designer wishing to express the con
 estimate crafted up the following definition:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    <br>
-    uavcan.si.unit.length.Vector3.1.0 pitot_position<br>
-    <br>
-    uint16 filter_delay_us  # [microsecond]<br>
-    uint64 error_count<br>
-    <br>
-    uavcan.si.unit.velocity.Scalar.1.0 true_airspeed<br>
-    uavcan.si.unit.velocity.Scalar.1.0 true_airspeed_raw<br>
-    float32                            true_airspeed_var  # [(m/s)^2]<br>
-    <br>
-    uavcan.si.unit.velocity.Scalar.1.0 indicated_airspeed<br>
-    uavcan.si.unit.velocity.Scalar.1.0 indicated_airspeed_raw<br>
-    float32                            indicated_airspeed_var  # [(m/s)^2]<br>
-    <br>
-    uavcan.si.unit.pressure.Scalar.1.0    static_pressure<br>
-    uavcan.si.sample.pressure.Scalar.1.0  static_pressure_raw<br>
-    float32                               static_pressure_var  # [(Pa)^2]<br>
-    uavcan.si.unit.temperature.Scalar.1.0 static_air_temperature<br>
-    <br>
-    uavcan.si.unit.temperature.Scalar.1.0 device_temperature<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+
+<code>uavcan.si.unit.length.Vector3<code class="value">.1.0</code> pitot_position</code>
+
+<code>uint16 filter_delay_us  <code class="comment"># [microsecond]</code></code>
+<code>uint64 error_count</code>
+
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code> true_airspeed</code>
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code> true_airspeed_raw</code>
+<code>float32                            true_airspeed_var  <code class="comment"># [(m/s)^2]</code></code>
+
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code> indicated_airspeed</code>
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code> indicated_airspeed_raw</code>
+<code>float32                            indicated_airspeed_var  <code class="comment"># [(m/s)^2]</code></code>
+
+<code>uavcan.si.unit.pressure.Scalar<code class="value">.1.0</code>    static_pressure</code>
+<code>uavcan.si.sample.pressure.Scalar<code class="value">.1.0</code>  static_pressure_raw</code>
+<code>float32                               static_pressure_var  <code class="comment"># [(Pa)^2]</code></code>
+<code>uavcan.si.unit.temperature.Scalar<code class="value">.1.0</code> static_air_temperature</code>
+
+<code>uavcan.si.unit.temperature.Scalar<code class="value">.1.0</code> device_temperature</code>
 </pre>
 <p>
 <em>(N.B.: in this chapter, we omit most comments from DSDL definitions for brevity. Per the advisory rules
@@ -730,12 +708,10 @@ resulting in the following set of orthogonal and composable definitions. First i
 true/indicated airspeed:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    uavcan.si.unit.velocity.Scalar.1.0    airspeed<br>
-    float32                               airspeed_var  # [(m/s)^2]<br>
-    uavcan.si.unit.velocity.Scalar.1.0    airspeed_raw<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code>    airspeed</code>
+<code>float32                               airspeed_var  <code class="comment"># [(m/s)^2]</code></code>
+<code>uavcan.si.unit.velocity.Scalar<code class="value">.1.0</code>    airspeed_raw</code>
 </pre>
 <p>
 Assuming here that the raw measurement is of less relevance than the error variance, we reorder them
@@ -744,22 +720,18 @@ of the domain, the two airspeeds (indicated and true) may be further combined an
 entity over one subject instead of two (the dedicated timestamp fields will not be needed in this case):
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    Airspeed.1.0 indicated_airspeed<br>
-    Airspeed.1.0 true_airspeed<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+<code>Airspeed<code class="value">.1.0</code> indicated_airspeed</code>
+<code>Airspeed<code class="value">.1.0</code> true_airspeed</code>
 </pre>
 <p>
 Next is the static outside air pressure type:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    uavcan.si.unit.pressure.Scalar.1.0    static_pressure<br>
-    float32                               static_pressure_var  # [(Pa)^2]<br>
-    uavcan.si.sample.pressure.Scalar.1.0  static_pressure_raw<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+<code>uavcan.si.unit.pressure.Scalar<code class="value">.1.0</code>    static_pressure</code>
+<code>float32                               static_pressure_var  <code class="comment"># [(Pa)^2]</code></code>
+<code>uavcan.si.sample.pressure.Scalar<code class="value">.1.0</code>  static_pressure_raw</code>
 </pre>
 <p>
 The generic sensor metadata would take a dedicated type that is reusable with different sensors. If
@@ -768,11 +740,9 @@ data computer in this case), the node can (and should) avoid the extra workload 
 the same metadata multiple times by using the same metadata subject for all estimation subjects:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    uint16 max_filter_delay_us  # [microsecond]<br>
-    uint64 error_count<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+<code>uint16 max_filter_delay_us  <code class="comment"># [microsecond]</code></code>
+<code>uint64 error_count</code>
 </pre>
 <p>
 That's it. We have split one large and non-composable subject into several smaller composable subjects
@@ -1036,13 +1006,11 @@ applications, but it illustrates the interface design principles). The vehicle i
 that publish rectified 24-bit RGB888 frames using the following type:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp  # Shutter timestamp.<br>
-    uint16 IMAGE_WIDTH  = 1280<br>
-    uint16 IMAGE_HEIGHT = 800<br>
-    uint8 BITS_PER_PIXEL = 24<br>
-    uint8[IMAGE_WIDTH * IMAGE_HEIGHT * BITS_PER_PIXEL / 8] rectified_rgb888_pixels<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp  <code class="comment"># Shutter timestamp.</code></code>
+<code>uint16 IMAGE_WIDTH  = <code class="value">1280</code></code>
+<code>uint16 IMAGE_HEIGHT = <code class="value">800</code></code>
+<code>uint8 BITS_PER_PIXEL = <code class="value">24</code></code>
+<code>uint8[IMAGE_WIDTH * IMAGE_HEIGHT * BITS_PER_PIXEL / <code class="value">8</code>] rectified_rgb888_pixels</code>
 </pre>
 <p>
 The camera is self-triggered synchronously with the network time (relying on the network time synchronization
@@ -1054,23 +1022,21 @@ configuration and returns the actually applied configuration that may differ due
 auto-configuration:
 </p>
 <pre>
-  <code>
-    uint8 frame_rate  # [hertz] The desired triggering rate. Phase-locked to seconds.<br>
-    uint8 FRAME_RATE_DISABLE = 0  # No triggering, camera disabled.<br>
-    uint8 FRAME_RATE_MAX     = 60<br>
-    <br>
-    uint32[<=1] exposure_duration_us  # [microsecond] Automatic exposure if unset.<br>
-    uint32 EXPOSURE_DURATION_MIN_us = 10<br>
-    uint32 EXPOSURE_DURATION_MAX_us = 200_000<br>
-    <br>
-    uint32[<=1] flash_duration_us  # [microsecond] Automatic flash if unset. Zero to disable.<br>
-    uint32 FLASH_DURATION_MAX_us = 100_000<br>
-    <br>
-    @assert _offset_ % 8 == {0}<br>
-    ---<br>
-    uint32 exposure_duration_us  # [microsecond] Adopted exposure duration.<br>
-    uint32 flash_duration_us     # [microsecond] Adopted flash duration.<br>
-  </code>
+<code>uint8 frame_rate  <code class="comment"># [hertz] The desired triggering rate. Phase-locked to seconds.</code></code>
+<code>uint8 FRAME_RATE_DISABLE = <code class="value">0</code>  <code class="comment"># No triggering, camera disabled.</code></code>
+<code>uint8 FRAME_RATE_MAX     = <code class="value">60</code></code>
+
+<code>uint32[<=1] exposure_duration_us  <code class="comment"># [microsecond] Automatic exposure if unset.</code></code>
+<code>uint32 EXPOSURE_DURATION_MIN_us = <code class="value">10</code></code>
+<code>uint32 EXPOSURE_DURATION_MAX_us = <code class="value">200</code>_000</code>
+
+<code>uint32[<=1] flash_duration_us  <code class="comment"># [microsecond] Automatic flash if unset. Zero to disable.</code></code>
+<code>uint32 FLASH_DURATION_MAX_us = <code class="value">100</code>_000</code>
+
+<code>@assert _offset_ % 8 == {0}</code>
+<code>---</code>
+<code>uint32 exposure_duration_us  <code class="comment"># [microsecond] Adopted exposure duration.</code></code>
+<code>uint32 flash_duration_us     <code class="comment"># [microsecond] Adopted flash duration.</code></code>
 </pre>
 <p>
 While the described design may seem sensible at first, it is actually flawed because it requires the
@@ -1087,28 +1053,24 @@ to be aware of the node-ID of the camera) and more composable (multiple cameras 
 same configuration subject for lockstep operation). The resulting definitions would be as follows:
 </p>
 <pre>
-  <code>
-    # Camera configuration message type.<br>
-    uint8 frame_rate  # [hertz] The desired triggering rate. Phase-locked to seconds.<br>
-    uint8 FRAME_RATE_DISABLE = 0  # No triggering, camera disabled.<br>
-    uint8 FRAME_RATE_MAX     = 60<br>
-    <br>
-    uint32[<=1] exposure_duration_us  # [microsecond] Automatic exposure if unset.<br>
-    uint32 EXPOSURE_DURATION_MIN_us = 10<br>
-    uint32 EXPOSURE_DURATION_MAX_us = 200_000<br>
-    <br>
-    uint32[<=1] flash_duration_us  # [microsecond] Automatic flash if unset. Zero to disable.<br>
-    uint32 FLASH_DURATION_MAX_us = 100_000<br>
-    <br>
-    @assert _offset_ % 8 == {0}<br>
-  </code>
+<code class="comment"># Camera configuration message type.</code>
+<code>uint8 frame_rate  <code class="comment"># [hertz] The desired triggering rate. Phase-locked to seconds.</code></code>
+<code>uint8 FRAME_RATE_DISABLE = <code class="value">0</code>  <code class="comment"># No triggering, camera disabled.</code></code>
+<code>uint8 FRAME_RATE_MAX     = <code class="value">60</code></code>
+
+<code>uint32[<=1] exposure_duration_us  <code class="comment"># [microsecond] Automatic exposure if unset.</code></code>
+<code>uint32 EXPOSURE_DURATION_MIN_us = <code class="value">10</code></code>
+<code>uint32 EXPOSURE_DURATION_MAX_us = <code class="value">200</code>_000</code>
+
+<code>uint32[<=1] flash_duration_us  <code class="comment"># [microsecond] Automatic flash if unset. Zero to disable.</code></code>
+<code>uint32 FLASH_DURATION_MAX_us = <code class="value">100</code>_000</code>
+
+<code>@assert _offset_ % 8 == {0}</code>
 </pre>
 <pre>
-  <code>
-    # Camera status message type.<br>
-    uint32 exposure_duration_us  # [microsecond] Adopted exposure duration.<br>
-    uint32 flash_duration_us     # [microsecond] Adopted flash duration.<br>
-  </code>
+<code class="comment"># Camera status message type.</code>
+<code>uint32 exposure_duration_us  <code class="comment"># [microsecond] Adopted exposure duration.</code></code>
+<code>uint32 flash_duration_us     <code class="comment"># [microsecond] Adopted flash duration.</code></code>
 </pre>
 <h4>BMS status</h4>
 <p>
@@ -1197,13 +1159,11 @@ We can illustrate this with the following synthetic example of a hypothetical UA
 a remote shell command execution capability:
 </p>
 <pre>
-  <code>
-    uavcan.primitive.String.1.0 command<br>
-    ---<br>
-    uavcan.primitive.String.1.0 output  # Ignore if errored<br>
-    uint32 status<br>
-    uint32 STATUS_OK = 0<br>
-  </code>
+<code>uavcan.primitive.String<code class="value">.1.0</code> command</code>
+<code>---</code>
+<code>uavcan.primitive.String<code class="value">.1.0</code> output  <code class="comment"># Ignore if errored</code></code>
+<code>uint32 status</code>
+<code>uint32 STATUS_OK = <code class="value">0</code></code>
 </pre>
 <p>
 Suppose that the service contract dictates (this should be detailed in the DSDL comments but we take
@@ -1213,14 +1173,12 @@ output should be ignored and the status should be non-zero. This design is flawe
 to the fix, let's consider a failed attempt at designing a (fictitious) actuator command type:
 </p>
 <pre>
-  <code>
-    uint8 command_type<br>
-    uint8 COMMAND_TYPE_FORCE                = 0<br>
-    uint8 COMMAND_TYPE_POSITION             = 1<br>
-    uint8 COMMAND_TYPE_RATIOMETRIC_POSITION = 2<br>
-<br>
-    float32 command<br>
-  </code>
+<code>uint8 command_type</code>
+<code>uint8 COMMAND_TYPE_FORCE                = <code class="value">0</code></code>
+<code>uint8 COMMAND_TYPE_POSITION             = <code class="value">1</code></code>
+<code>uint8 COMMAND_TYPE_RATIOMETRIC_POSITION = <code class="value">2</code></code>
+
+<code>float32 command</code>
 </pre>
 <p>
 Both of the illustrated examples suffer from the same design issue: they fail to adequately express the
@@ -1236,13 +1194,11 @@ The corrected service design would make use of a disjoint union to express the m
 of the error and success cases:
 </p>
 <pre>
-  <code>
-    uavcan.primitive.String.1.0 command  # The request is unchanged.<br>
-    ---<br>
-    @union                              # The response is a disjoint union.<br>
-    uavcan.primitive.String.1.0 output  # Success case.<br>
-    uint32 error                        # Failure case.<br>
-  </code>
+<code>uavcan.primitive.String<code class="value">.1.0</code> command  <code class="comment"># The request is unchanged.</code></code>
+<code>---</code>
+<code>@union                              <code class="comment"># The response is a disjoint union.</code></code>
+<code>uavcan.primitive.String<code class="value">.1.0</code> output  <code class="comment"># Success case.</code></code>
+<code>uint32 error                        <code class="comment"># Failure case.</code></code>
 </pre>
 <p>
 The actuator command message would make use of the disjoint union to encode the different physical meaning
@@ -1250,17 +1206,15 @@ of each option through the type system. Additionally, the decoupling of the comm
 allows the designer to better express the ratiometric case:
 </p>
 <pre>
-  <code>
-    @union  # Three type-safe options: force, position, ratiometric_position<br>
-    <br>
-    uavcan.si.unit.force.Scalar.1.0  force      # Notice the types.<br>
-    uavcan.si.unit.length.Scalar.1.0 position<br>
-    <br>
-    int16 ratiometric_position<br>
-    int16 RATIOMETRIC_POSITION_NEUTRAL = 0<br>
-    int16 RATIOMETRIC_POSITION_MAX = 2 ** 15 - 1<br>
-    int16 RATIOMETRIC_POSITION_MIN = -RATIOMETRIC_POSITION_MAX<br>
-  </code>
+<code>@union  <code class="comment"># Three type-safe options: force, position, ratiometric_position</code></code>
+
+<code>uavcan.si.unit.force.Scalar<code class="value">.1.0</code>  force      <code class="comment"># Notice the types.</code></code>
+<code>uavcan.si.unit.length.Scalar<code class="value">.1.0</code> position</code>
+
+<code>int16 ratiometric_position</code>
+<code>int16 RATIOMETRIC_POSITION_NEUTRAL = <code class="value">0</code></code>
+<code>int16 RATIOMETRIC_POSITION_MAX = <code class="value">2</code> ** <code class="value">15</code> - <code class="value">1</code></code>
+<code>int16 RATIOMETRIC_POSITION_MIN = -RATIOMETRIC_POSITION_MAX</code>
 </pre>
 <p>
 As a rule of thumb, a well-typed interface is devoid of special values that modify the semantics of the
@@ -1285,29 +1239,23 @@ definition without breaking backward compatibility. Existing fields cannot be re
 fixed-length fields can be replaced with voids if they are no longer relevant. For example:
 </p>
 <pre>
-  <code>
-    # v1.0<br>
-    float32 foo<br>
-    float16[3] bar<br>
-    float64 baz<br>
-  </code>
+<code class="comment"># v1.0</code>
+<code>float32 foo</code>
+<code>float16[<code class="value">3</code>] bar</code>
+<code>float64 baz</code>
 </pre>
 <pre>
-  <code>
-    # v1.1<br>
-    float32 foo<br>
-    void48       # We no longer need the bar.<br>
-    float64 baz<br>
-  </code>
+<code class="comment"># v1.1</code>
+<code>float32 foo</code>
+<code>void48       <code class="comment"># We no longer need the bar.</code></code>
+<code>float64 baz</code>
 </pre>
 <pre>
-  <code>
-    # v1.2<br>
-    float32 foo<br>
-    void48<br>
-    float64 baz<br>
-    uint8[16] qux  # New field.<br>
-  </code>
+<code class="comment"># v1.2</code>
+<code>float32 foo</code>
+<code>void48</code>
+<code>float64 baz</code>
+<code>uint8[<code class="value">16</code>] qux  <code class="comment"># New field.</code></code>
 </pre>
 <p>
 If <code>bar</code> was a variable-length entity, such replacement would not be possible to do in a safe
@@ -1337,22 +1285,20 @@ used for validating complex properties of the layout, as shown in the following 
 type that models a UDP/IP datagram:
 </p>
 <pre>
-  <code>
-    uavcan.time.SynchronizedTimestamp.1.0 timestamp<br>
-    void8<br>
-    @assert _offset_ % 64 == {0}<br>
-    # Ensure 64-bit alignment here.<br>
-    <br>
-    Endpoint.0.1 source<br>
-    Endpoint.0.1 destination<br>
-    @assert _offset_ % 64 == {0}<br>
-    # Likewise -- the endpoints are 64-bit aligned as well.<br>
-    <br>
-    uint14 MTU = 1024 * 9 - 20 - 8<br>
-    uint8[<=MTU] data<br>
-    @assert _offset_ % 8 == {0}<br>
-    # Whatever the payload size may be, the end offset is always byte-aligned.<br>
-  </code>
+<code>uavcan.time.SynchronizedTimestamp<code class="value">.1.0</code> timestamp</code>
+<code>void8</code>
+<code>@assert _offset_ % 64 == {0}</code>
+<code class="comment"># Ensure 64-bit alignment here.</code>
+
+<code>Endpoint<code class="value">.0.1</code> source</code>
+<code>Endpoint<code class="value">.0.1</code> destination</code>
+<code>@assert _offset_ % 64 == {0}</code>
+<code class="comment"># Likewise -- the endpoints are 64-bit aligned as well.</code>
+
+<code>uint14 MTU = <code class="value">1024</code> * <code class="value">9</code> - <code class="value">20</code> - <code class="value">8</code></code>
+<code>uint8[<=MTU] data</code>
+<code>@assert _offset_ % 8 == {0}</code>
+<code class="comment"># Whatever the payload size may be, the end offset is always byte-aligned.</code>
 </pre>
 <p>
 There are more practical examples in the public regulated data type repository.
@@ -1621,10 +1567,8 @@ is independent of the attribute name suffix. The following example is nearly an 
 Specification &ndash; please read it for the background:
 </p>
 <pre>
-  <code>
-    float16 temperature           # [kelvin]      No suffix because an unscaled SI unit is used.<br>
-    uint32 delay_us               # [microsecond] Scaled unit, suffix required. Mu replaced with "u".<br>
-    uint32 MAX_DELAY_us = 90_000  # [microsecond] Notice the letter case.<br>
-    float32 kinetic_energy_GJ     # [gigajoule]   Notice the letter case.<br>
-  </code>
+<code>float16 temperature           <code class="comment"># [kelvin]      No suffix because an unscaled SI unit is used.</code></code>
+<code>uint32 delay_us               <code class="comment"># [microsecond] Scaled unit, suffix required. Mu replaced with "u".</code></code>
+<code>uint32 MAX_DELAY_us = <code class="value">90</code>_000  <code class="comment"># [microsecond] Notice the letter case.</code></code>
+<code>float32 kinetic_energy_GJ     <code class="comment"># [gigajoule]   Notice the letter case.</code></code>
 </pre>
