@@ -15,27 +15,36 @@
     --uavcan-pale-blue:  #f0f6fe;
     --uavcan-gray:       #888888;
     --uavcan-cyan-10pc:  rgb(0 126 135 / 0.1);
-    --uavcan-cyan-75pc:  rgb(0 126 135 / 0.75);
     --uavcan-black-75pc: rgb(0 0 0 / 0.75);
     --uavcan-black-60pc: rgb(0 0 0 / 0.6);
 
-    /* Element colors */
+
+    /** Element colors -- applied from palette **/
+
+    /* Basic element colors */
     --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
     --uavcan-body-text-color:         var(--uavcan-black);       /* Default text color */
-    --uavcan-sidebar-text-color:      var(--uavcan-black);       /* Sidebar navigation text color */
-    --uavcan-sidebar-active-color:    var(--uavcan-black);       /* Sidebar active link text color */
-    --uavcan-sidebar-hover-color:     var(--uavcan-black-75pc);  /* Sidebar hover link text color */
-    --uavcan-sidebar-heading-color:   var(--uavcan-red);         /* Sidebar navigation heading color */
     --uavcan-link-text-color:         var(--uavcan-navy);        /* Hyperlink color */
-    --uavcan-ref-thead-text-color:    var(--light, inherit);
-    --uavcan-ref-thead-bg-color:      var(--uavcan-navy);
+    --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
+
+    /* Navbar colors */
+    --uavcan-navbar-heading-color:    var(--uavcan-red);         /* Sidebar navigation heading color */
+    --uavcan-navbar-text-color:       var(--uavcan-black);       /* Sidebar navigation text color */
+    --uavcan-navbar-text-l2-color:    var(--uavcan-black-60pc);  /* Sidebar navigation level two */
+    --uavcan-navbar-hover-color:      var(--uavcan-black-75pc);  /* Sidebar hover link text color */
+    --uavcan-navbar-toggler-color:    var(--uavcan-black);       /* Navbar toggler button color */
+
+    /* Card colors */
     --uavcan-card-h2-text-color:      var(--light, inherit);     /* Card heading text color */
     --uavcan-card-h2-bg-color:        var(--uavcan-navy);        /* Card heading background color */
-    --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
-    --uavcan-navbar-l2-text-color:    var(--uavcan-black-60pc);  /* Sidebar navigation level two */
+
+    /* Code block colors */
     --uavcan-code-text-color:         var(--uavcan-black);       /* Code text */
     --uavcan-code-comment-color:      var(--uavcan-gray);        /* Code comments */
     --uavcan-code-value-color:        var(--uavcan-cyan);        /* Code values */
     --uavcan-code-em-color:           var(--uavcan-red);         /* Code emphasis */
     --uavcan-code-bg-color:           var(--uavcan-cyan-10pc);   /* Code background */
+
+    /* Highlight box colors */
+    --uavcan-highlight-box-border:    var(--uavcan-gray);        /* Highlight box border */
 }
