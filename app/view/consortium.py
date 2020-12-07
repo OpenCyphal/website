@@ -7,6 +7,7 @@ import os
 from flask import render_template, send_file, abort
 from .. import app
 from .home import TITLE
+from ..model import adopters
 
 
 _CONSORTIUM_DIRECTORY_PATH = os.path.join(app.root_path, '..', 'consortium')
@@ -14,8 +15,12 @@ _CONSORTIUM_DIRECTORY_PATH = os.path.join(app.root_path, '..', 'consortium')
 
 @app.route('/consortium')
 def consortium():
+
+    adopter_list = list(adopters.get_list())
+
     return render_template('consortium.html',
-                           title=TITLE)
+                           title=TITLE,
+                           adopters=adopter_list)
 
 
 @app.route('/consortium/<path:file_name>')
