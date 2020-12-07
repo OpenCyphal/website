@@ -141,6 +141,9 @@ table.table-nowrap {
 }
 
 /** Feed cards **/
+.card img  { 
+    max-width: unset;
+}
 .feed-header {
     background-color: var(--uavcan-card-h2-bg-color, inherit);
 }
