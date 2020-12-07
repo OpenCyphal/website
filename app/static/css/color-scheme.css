@@ -12,7 +12,7 @@
     --uavcan-black: #000000;
 
     /** Other colors **/
-    --uavcan-pale-blue:  #f0f6fe;
+    --uavcan-white:      #ffffff;
     --uavcan-gray:       #888888;
     --uavcan-cyan-10pc:  rgb(0 126 135 / 0.1);
     --uavcan-black-75pc: rgb(0 0 0 / 0.75);
@@ -22,7 +22,7 @@
     /** Element colors -- applied from palette **/
 
     /* Basic element colors */
-    --uavcan-header-bg-color:         var(--uavcan-pale-blue);   /* Header background color */
+    --uavcan-header-bg-color:         var(--uavcan-white);       /* Header background color */
     --uavcan-body-text-color:         var(--uavcan-black);       /* Default text color */
     --uavcan-link-text-color:         var(--uavcan-navy);        /* Hyperlink color */
     --uavcan-footer-text-color:       var(--uavcan-gray);        /* Footer text color */
