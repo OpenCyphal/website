@@ -37,9 +37,9 @@ is constructed in a straightforward way and it is trivial to apply. We believe t
 achieved by the current design; yet, there were several occasions where our fellow humans would
 exclaim:
 </p>
-<p class="blockquote">
+<blockquote class="blockquote">
 But if your protocol is so simple, how come it takes over a hundred pages to describe?
-</p>
+</blockquote>
 <p>
 That question could arise out of a misunderstanding of how design specifications work. Among other
 objectives, UAVCAN is designed to facilitate the robust interoperability of equipment from different
@@ -497,11 +497,14 @@ kibibytes of ROM for itself).
 <hr>
 <!-- -------------------------------------------------------------------------------------------------------------- -->
 <h1 id="iface-design">Interface design guidelines</h1>
-<p class="blockquote">
-The realization that software is more difficult to develop than hardware is one of the most important
-lessons of the Apollo program. &mdash; Computers in Spaceflight: The NASA Experience [Allen Kent,
-James G. Williams]
-<p>
+<blockquote class="blockquote">
+<p class="mb-0">The realization that software is more difficult to develop than hardware is one of the
+most important lessons of the Apollo program.</p>
+<footer class="blockquote-footer">
+  Allen Kent, James G. Williams, 
+  <cite title="Computers in Spaceflight: The NASA Experience">Computers in Spaceflight: The NASA Experience</cite>
+</footer>
+</blockquote>
 <p>
 The concept of <em>data type</em> is a cornerstone of UAVCAN. The protocol can only deliver good
 results if the developer practices a disciplined approach to data type design. To paraphrase Brian
@@ -631,16 +634,19 @@ sensor installation from the consumer.
 <p>
 A critical aspect of robust and maintainable service architecture is <em>orthogonality</em>:
 </p>
-<div class="blockquote">
-Orthogonality is a system design property which guarantees that modifying the technical effect produced
-by a component of a system neither creates nor propagates side effects to other components of the system.
-Typically this is achieved through the separation of concerns and encapsulation, and it is essential for
-feasible and compact designs of complex systems. The emergent behavior of a system consisting of components
-should be controlled strictly by formal definitions of its logic and not by side effects resulting from
-poor integration, i.e., non-orthogonal design of modules and interfaces. Orthogonality reduces testing
-and development time because it is easier to verify designs that neither cause side effects nor depend
-on them. <em>[Wikipedia]</em>
-</div>
+<blockquote class="blockquote">
+<p class="mb-0">Orthogonality is a system design property which guarantees that modifying the technical
+effect produced by a component of a system neither creates nor propagates side effects to other components
+of the system. Typically this is achieved through the separation of concerns and encapsulation, and it is
+essential for feasible and compact designs of complex systems. The emergent behavior of a system consisting
+of components should be controlled strictly by formal definitions of its logic and not by side effects
+resulting from poor integration, i.e., non-orthogonal design of modules and interfaces. Orthogonality reduces
+testing and development time because it is easier to verify designs that neither cause side effects nor depend
+on them.</p>
+<footer class="blockquote-footer">
+<cite title="Orthogonality &ndash; Wikipedia">
+<a href="https://en.wikipedia.org/wiki/Orthogonality#Computer_science">Wikipedia</a></cite></footer>
+</blockquote>
 <p>
 As a design property, orthogonality applies to services, data types that define them, and the composition
 of data types themselves. In the context of software interfaces specifically, there is a concretization
@@ -925,10 +931,10 @@ failure</em>.
 A closely related concept is <em><a href="https://en.wikipedia.org/wiki/Idempotence">idempotence</a></em>,
 which is applicable to interfaces in distributed systems.
 </p>
-<div class="blockquote">
+<blockquote class="blockquote">
 Idempotence is the property of certain operations whereby they can be applied multiple times without
 changing the result beyond the initial application.
-</div>
+</blockquote>
 <p>
 The proposed framework makes the following observations trivial:
 </p>

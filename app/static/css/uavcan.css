@@ -57,9 +57,19 @@ table.table-nowrap {
     border-collapse: collapse;
     white-space: nowrap;
 }
-
 .lh-125 {
     line-height: 1.25;
+}
+.blockquote {
+    font-size: 100%;
+    color: var(--uavcan-code-text-color);
+    background-color: var(--uavcan-code-bg-color);
+    padding: 0.5rem 1rem;
+    border-left: 4px solid var(--uavcan-cyan);
+}
+.blockquote-footer {
+    padding: unset;
+    text-align: right;
 }
 
 
