@@ -3,9 +3,6 @@
  */
 
 /** Element modifications **/
-html {
-    scroll-padding-top: 75px;
-}
 body {
     color: var(--uavcan-body-text-color, inherit);
     /* Proper overflow handling */
@@ -44,11 +41,14 @@ table.table-nowrap {
 
 
 /** Navbar heading **/
+.navbar-brand {
+    margin-right: unset;
+}
 .navbar-nav .nav-link {
     color: var(--uavcan-navbar-text-color, inherit)!important;
     font-weight: normal;
 }
-.navbar-nav .active > .nav-link {
+.navbar-nav .nav-link.active {
     color: var(--uavcan-navbar-active-color, inherit)!important;
     font-weight: 600;
 }
@@ -64,7 +64,7 @@ table.table-nowrap {
 
 /** Sidebar **/
 .sidebar {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 2rem);
     overflow-y: auto;
 }
 .sidebar .nav .nav-heading {
@@ -74,13 +74,22 @@ table.table-nowrap {
 }
 .sidebar .nav .nav-link {
     color: var(--uavcan-navbar-text-color, inherit);
+    padding: .5rem .75rem;
 }
 .sidebar .nav .active {
     color: var(--uavcan-navbar-text-color, inherit)!important;
-    font-weight: 600;
 }
 .sidebar .nav a:hover {
     color: var(--uavcan-navbar-hover-color, inherit);
+}
+.sidebar .nav .nav-link.nav-l1-active {
+    color: var(--uavcan-navbar-text-color, inherit)!important;
+    font-weight: 600;
+}
+.sidebar .nav .nav-l2 {
+    color: var(--uavcan-navbar-text-l2-color, inherit);
+    font-size: 90%;
+    padding: .25rem 1.25rem;
 }
 .sidebar-footnote {
     padding: 0 1rem;
@@ -89,11 +98,6 @@ table.table-nowrap {
 .sidebar-footnote a div {
     font-size: 80%;
     font-weight: 400;
-}
-.sidebar .nav .nav-l2 {
-    color: var(--uavcan-navbar-text-l2-color, inherit);
-    font-size: 90%;
-    padding: .25rem 1.5rem;
 }
 
 /** Carousel **/
