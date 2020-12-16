@@ -14,6 +14,7 @@
     /** Other colors **/
     --uavcan-white:      #ffffff;
     --uavcan-gray:       #888888;
+    --uavcan-pale:       #bbbbbb;
     --uavcan-cyan-10pc:  rgb(0 126 135 / 0.1);
     --uavcan-black-75pc: rgb(0 0 0 / 0.75);
     --uavcan-black-60pc: rgb(0 0 0 / 0.6);
