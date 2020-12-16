@@ -28,6 +28,7 @@ img  { max-width: 100% }
 .table-sm th {
     padding: .3rem 1rem;
 }
+.table .thead-light th { color: inherit; }
 table.table-nowrap {
     border-collapse: collapse;
     white-space: nowrap;
@@ -123,13 +124,8 @@ table.table-nowrap {
 .card img  {
     max-width: unset;
 }
-.feed-header {
-    background-color: var(--uavcan-card-h2-bg-color, inherit);
-}
 .feed-header h2 {
     font-size: 1.0em;
-    font-weight: bolder;
-    color: var(--uavcan-card-h2-text-color, inherit);
 }
 div.thumbnail {
     width: 4.5rem;
