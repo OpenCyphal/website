@@ -6,6 +6,7 @@
 from .. import app
 from ..model import devel_feed, forum_feed
 from flask import render_template
+from ..model import adopters
 
 
 FEED_LENGTH = 20
@@ -18,6 +19,7 @@ TITLE = 'Uncomplicated Application-layer Vehicular Computing And Networking'
 @app.route('/')
 @app.route('/home')
 def _index():
+    adopter_list = list(adopters.get_list())
     try:
         development_feed_entries = devel_feed.get(max_items=FEED_LENGTH)
     except Exception:
@@ -33,4 +35,5 @@ def _index():
     return render_template('home.html',
                            title=TITLE,
                            development_feed_entries=development_feed_entries,
-                           forum_feed_entries=forum_feed_entries)
+                           forum_feed_entries=forum_feed_entries,
+                           adopters=adopter_list)

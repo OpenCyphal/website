@@ -74,4 +74,27 @@
     </div>
   </div>
   {%- endif %}
+  <br>
 
+<!---
+   Adopters card
+  --->
+
+  {%- if adopters %}
+  <div class="card lh-125">
+    <div class="card-header feed-header">
+      <h2 class="mb-0">Consortium members and adopters</h2>
+    </div>
+    <div class="card-body py-2 px-3">
+      <div class="adopters-container">
+      {% for a in adopters %}
+        <div class="adopters-entry-small">
+          <a href="{{ a.website_url }}" target="_blank">
+            <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+          </a>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+  {%- endif %}

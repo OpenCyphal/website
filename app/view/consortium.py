@@ -15,7 +15,6 @@ _CONSORTIUM_DIRECTORY_PATH = os.path.join(app.root_path, '..', 'consortium')
 
 @app.route('/consortium')
 def consortium():
-
     adopter_list = list(adopters.get_list())
 
     return render_template('consortium.html',

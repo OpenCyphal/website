@@ -120,7 +120,7 @@ table.table-nowrap {
 }
 
 /** Feed cards **/
-.card img  { 
+.card img  {
     max-width: unset;
 }
 .feed-header {
@@ -146,25 +146,32 @@ div.thumbnail a img {
     justify-content: space-around;
     align-items: center;
 }
-.adopters-entry {
+.adopters-container img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+.adopters-container img:hover {
+    filter: none;
+}
+.adopters-entry-small {
     margin: 15px;
     flex-grow: 1;
     flex-shrink: 1;
     height: 2rem;
     max-width: 8rem;
 }
-.adopters-entry img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
+.adopters-entry-large {
+    margin: 15px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 3rem;
+    max-width: 12rem;
 }
 @media (pointer:fine) {
-    .adopters-entry img {
+    .adopters-container img {
         filter: contrast(50%);
     }
-}
-.adopters-entry img:hover {
-    filter: none;
 }
 
 /** Code block styles **/
