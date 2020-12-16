@@ -219,16 +219,10 @@ footer {
     text-align: center;
     font-size: 0.8em;
     line-height: 1.5em;
-    font-weight: lighter;
     color: var(--uavcan-footer-text-color, inherit);
-    padding-top: 4em;
-    padding-bottom: 1em;
-}
-footer a {
-    font-weight: inherit;
 }
 footer p {
-    margin: 0;
+    margin-bottom: 0.5em;
 }
 footer a img {
     padding: 0.5em;
