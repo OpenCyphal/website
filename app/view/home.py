@@ -4,9 +4,8 @@
 #
 
 from .. import app
-from ..model import devel_feed, forum_feed
+from ..model import devel_feed, forum_feed, adopters
 from flask import render_template
-from ..model import adopters
 
 
 FEED_LENGTH = 20

@@ -46,11 +46,18 @@ table.table-nowrap {
     margin-right: unset;
 }
 .navbar-nav .nav-link {
-    color: var(--uavcan-navbar-text-color, inherit)!important;
+    color: var(--uavcan-navbar-major-text-color, inherit)!important;
     font-weight: normal;
 }
 .navbar-nav .nav-link.active {
-    color: var(--uavcan-navbar-active-color, inherit)!important;
+    color: var(--uavcan-navbar-active-color, inherit);
+    font-weight: 600;
+}
+nav .nav-link.nav-minor {
+    color: var(--uavcan-navbar-minor-text-color, inherit)!important;
+}
+nav .nav-link.nav-l1-active {
+    color: var(--uavcan-navbar-major-text-color, inherit);
     font-weight: 600;
 }
 .bg-navbar {
@@ -74,26 +81,19 @@ table.table-nowrap {
     font-weight: 700;
 }
 .sidebar .nav .nav-link {
-    color: var(--uavcan-navbar-text-color, inherit);
+    color: var(--uavcan-navbar-major-text-color, inherit);
     padding: .5rem .75rem;
 }
-.sidebar .nav .active {
-    color: var(--uavcan-navbar-text-color, inherit)!important;
-}
 .sidebar .nav a:hover {
-    color: var(--uavcan-navbar-hover-color, inherit);
-}
-.sidebar .nav .nav-link.nav-l1-active {
-    color: var(--uavcan-navbar-text-color, inherit)!important;
-    font-weight: 600;
+    color: var(--uavcan-navbar-hover-text-color, inherit);
 }
 .sidebar .nav .nav-l2 {
-    color: var(--uavcan-navbar-text-l2-color, inherit);
+    color: var(--uavcan-navbar-minor-text-color, inherit);
     font-size: 90%;
     padding: .25rem 1.25rem;
 }
-.sidebar .nav .nav-minor {
-    color: var(--uavcan-pale);
+.sidebar .nav .nav-l2.active {                              /* .active used by scroll-spy */
+    color: var(--uavcan-navbar-major-text-color, inherit);
 }
 
 /** Carousel **/
@@ -130,7 +130,7 @@ div.thumbnail a img {
     height: 3.5rem;
 }
 
-/** Adopters flex-box. */
+/** Adopters flex-box **/
 .adopters-container {
     display: flex;
     flex-wrap: wrap;

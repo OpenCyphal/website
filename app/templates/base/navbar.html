@@ -14,23 +14,23 @@
   <div class="collapse navbar-collapse" id="nav-dropdown-menu">
     <div class="navbar-nav">
       {% if active == 'home' %}
-        <a class="nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link nav-l1-active" href="/">Home <span class="sr-only">(current)</span></a>
         <a class="nav-link" href="/consortium">Consortium</a>
         <div class="dropdown-divider"></div>
         <a class="nav-link" href="/guide"><i class="fas fa-graduation-cap"></i>&ensp;Guide</a>
         <a class="nav-link" href="/specification"><i class="far fa-file-pdf"></i>&ensp;Specification</a>
         <a class="nav-link" href="/github"><i class="fab fa-github"></i>&ensp;GitHub</a>
         <a class="nav-link" href="/forum"><i class="far fa-comments"></i>&ensp;Forum</a>
-        <a class="nav-link" href="/legacy"><i class="fas fa-history"></i>&ensp;Legacy</a>
+        <a class="nav-link nav-minor" href="/legacy"><i class="fas fa-history"></i>&ensp;Legacy</a>
       {% endif %}
       {% if active == 'consortium' %}
         <a class="nav-link" href="/">Home</a>
-        <a class="nav-link active" href="/consortium">Consortium <span class="sr-only">(current)</span></a>
+        <a class="nav-link nav-l1-active" href="/consortium">Consortium <span class="sr-only">(current)</span></a>
         <div class="dropdown-divider"></div>
         <a class="nav-link" href="/consortium/uavcan_consortium_articles_of_association.pdf"
            target="_blank"><i class="fas fa-gavel"></i>&ensp;Bylaws</a>
-        <a class="nav-link nav-l2" href="/consortium/uavcan_consortium_articles_of_association_annex_1.pdf"
-           target="_blank"><i class="fa fw"></i>&ensp;Annex 1 &ndash; fees</a>
+        <a class="nav-link nav-minor" href="/consortium/uavcan_consortium_articles_of_association_annex_1.pdf"
+           target="_blank" style="font-size: 90%"><i class="fa fw"></i>&emsp;Annex 1 &ndash; fees</a>
         <a class="nav-link" href="/consortium/uavcan_consortium_membership_application.pdf"
            target="_blank"><i class="far fa-handshake"></i>&ensp;Application form</a>
         <a class="nav-link" href="/forum" target="_blank"><i class="far fa-comments"></i>&ensp;Forum</a>
