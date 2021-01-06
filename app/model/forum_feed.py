@@ -10,6 +10,7 @@ from . import cache
 
 
 _FORUM_URL = 'https://forum.uavcan.org'
+_3RD_PARTY_CATEGORY_ID = 18
 
 _UPDATE_INTERVAL = 60
 _CACHE_LIFETIME = 3600 * 24
@@ -48,7 +49,7 @@ class Entry:
             url=_FORUM_URL + '/t/' + str(topic['id']),
             image_url=image_url,
             timestamp=datetime.datetime.strptime(topic['bumped_at'], '%Y-%m-%dT%H:%M:%S.%fZ'),
-            pinned=topic.get('pinned') or topic.get('pinned_globally'),
+            pinned=(topic.get('pinned') or topic.get('pinned_globally')) and topic.get('category_id') != _3RD_PARTY_CATEGORY_ID,
         )
 
 
