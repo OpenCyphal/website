@@ -2,7 +2,8 @@
 
 Sources of the [uavcan.org](https://uavcan.org) website.
 
-If you want your company to be listed on the front page, please follow the instructions under `adopters/`.
+If you want your company to be listed on the front page,
+[apply to become a member of the UAVCAN Consortium](https://uavcan.org/consortium).
 
 ## Running locally
 

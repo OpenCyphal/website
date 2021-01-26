@@ -1,5 +1,5 @@
-There should be one image file per adopter.
-If you want your company to be listed (unlisted), please send us a pull request.
+If you want your company to be listed on the front page,
+[apply to become a member of the UAVCAN Consortium](https://uavcan.org/consortium).
 
 The image should have no margins -- they are controlled by the website design.
 The background should be transparent.
