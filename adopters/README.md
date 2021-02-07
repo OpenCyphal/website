@@ -6,10 +6,12 @@ The background should be transparent.
 
 The file name shall follow the following format with space-separated components:
 
-    <human-readable-name> <domain-name>.png
+    <tier> <human-readable-name> <domain-name>.png
 
 For example:
 
-    Zubax Robotics zubax.com.png
+    0 Zubax Robotics zubax.com.png
 
-where: `Zubax Robotics` -- name; `zubax.com` -- domain name; `.png` -- file extension.
+where: `0` -- tier; `Zubax Robotics` -- name; `zubax.com` -- domain name; `.png` -- file extension.
+
+Tiers: 0 - Expert; 1 - Regular; 2 - Sponsored

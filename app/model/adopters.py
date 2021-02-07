@@ -24,11 +24,15 @@ class Adopter:
             self.website_url = 'http://' + website
 
 
-def get_list() -> typing.Iterable[Adopter]:
-    entries = list(sorted(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + '/*.png'))))
+def get_adopters() -> list:
+    tiered_adopters=[[] for i in range(10)]
+    entries = list(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + '/*.png')))
+
     for e in entries:
-        name, website = e.rsplit('.', 1)[0].rsplit(' ', 1)
-        yield Adopter(name, e, website)
+        name, website = e[2:].rsplit('.', 1)[0].rsplit(' ', 1)
+        tiered_adopters[int(e[0:1])].append(Adopter(name, e, website))
+
+    return tiered_adopters
 
 
 def get_logo_file_path(logo_file_name: str) -> str:

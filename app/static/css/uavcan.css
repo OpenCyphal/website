@@ -14,10 +14,11 @@ body {
     -webkit-hyphens: auto;
     hyphens: auto;
 }
-h1   { font-size: 1.6em; font-weight: bold; }
-h2   { font-size: 1.2em; font-weight: bold; }
-h3   { font-size: 1em; font-weight: bold; }
-h4   { font-size: 1em; font-weight: normal; font-style: italic }
+h1   { font-size: 1.6rem; font-weight: bold; }
+h2   { font-size: 1.2rem; font-weight: bold; }
+h3   { font-size: 1rem; font-weight: bold; }
+h4   { font-size: 1rem; font-weight: normal; font-style: italic }
+h5   { font-size: 1.1rem; }
 a    { color: var(--uavcan-link-text-color, inherit); }
 i    { width: 20px; text-align: center }
 img  { max-width: 100% }
@@ -144,6 +145,10 @@ div.thumbnail a img {
 }
 .adopters-container img:hover {
     filter: none;
+}
+.adopters-tier {
+    margin-top: .75rem;
+    margin-bottom: .75rem;
 }
 .adopters-entry-small {
     margin: 15px;

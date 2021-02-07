@@ -18,7 +18,6 @@ TITLE = 'Uncomplicated Application-layer Vehicular Computing And Networking'
 @app.route('/')
 @app.route('/home')
 def _index():
-    adopter_list = list(adopters.get_list())
     try:
         development_feed_entries = devel_feed.get(max_items=FEED_LENGTH)
     except Exception:
@@ -35,4 +34,4 @@ def _index():
                            title=TITLE,
                            development_feed_entries=development_feed_entries,
                            forum_feed_entries=forum_feed_entries,
-                           adopters=adopter_list)
+                           adopters=adopters.get_adopters())

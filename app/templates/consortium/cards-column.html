@@ -5,22 +5,55 @@
   {%- if adopters %}
   <div class="card lh-125">
     <div class="card-header feed-header">
-      <h2 class="mb-0">Consortium members and adopters</h2>
+      <h2 class="mb-0">Consortium members</h2>
     </div>
     <div class="card-body py-2 px-3">
-      <div class="adopters-container">
-      {% for a in adopters %}
-        <div class="adopters-entry-large">
-          <a href="{{ a.website_url }}" target="_blank">
-            <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
-          </a>
+      {%- if adopters[0] %}
+      <div class="adopters-tier">
+        <h5 class="card-title text-center">Expert Tier</h5>
+        <div class="adopters-container">
+        {% for a in adopters[0] %}
+          <div class="adopters-entry-small">
+            <a href="{{ a.website_url }}" target="_blank">
+              <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+            </a>
+          </div>
+        {% endfor %}
         </div>
-      {% endfor %}
       </div>
+      {%- endif %}
+      {%- if adopters[1] %}
+      <div class="adopters-tier">
+        <h5 class="card-title text-center">Regular Tier</h5>
+        <div class="adopters-container">
+        {% for a in adopters[1] %}
+          <div class="adopters-entry-small">
+            <a href="{{ a.website_url }}" target="_blank">
+              <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+            </a>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+      {%- endif %}
+      {%- if adopters[2] %}
+      <div class="adopters-tier">
+        <h5 class="card-title text-center">Sponsored Tier</h5>
+        <div class="adopters-container">
+        {% for a in adopters[2] %}
+          <div class="adopters-entry-small">
+            <a href="{{ a.website_url }}" target="_blank">
+              <img src="/adopters/logo/{{ a.logo_file_name }}" alt="{{ a.name }}" title="{{ a.name }}">
+            </a>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+      {%- endif %}
     </div>
   </div>
   {%- endif %}
-  <br/>
+  <br>
 
 <!---
    Footer block
