@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SOURCE_DIR: ".,!.git,!.github"
-      TARGET_DIR: "/var/www/uat.uavcan.org"
+      TARGET_DIR: "/var/www/uat.opencyphal.org"
 
     steps:
     - name: Retrieve repository
