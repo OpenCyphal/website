@@ -1,4 +1,4 @@
-{%- set fallback_image = '/static/images/logo-square.svg' %}
+{%- set fallback_image = '/static/images/favicon.svg' %}
 
 <!---
    Recent Publications card
@@ -16,7 +16,7 @@
           <a href="{{ e.url }}">
             <img class="rounded"
                  alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
-                 onerror="this.src='/static/images/logo-square.svg'">
+                 onerror="this.src='{{ fallback_image }}'">
           </a>
         </div>
         <div class="col">
@@ -56,7 +56,7 @@
         <div class="thumbnail col-auto">
           <a href="{{ e.target_url or '#' }}">
             <img class="rounded"
-                 alt="{{ e.title }}" src="{{ e.image_url or '/static/images/logo-square.svg' }}"
+                 alt="{{ e.title }}" src="{{ e.image_url or fallback_image }}"
                  onerror="this.src='{{ fallback_image }}'">
           </a>
         </div>
