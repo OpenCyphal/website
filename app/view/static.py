@@ -13,13 +13,14 @@ from flask import send_from_directory, send_file, abort, redirect, render_templa
 # The wildcards are not case-sensitive.
 # First match wins.
 _COMPATIBILITY_REDIRECT_WILDCARDS = {
-    '*hardware_design_recommendations*': 'https://forum.cyphal.org/t/removal-of-the-physical-layer-specification/895',
+    '*hardware_design_recommendations*':
+        'https://forum.opencyphal.org/t/removal-of-the-physical-layer-specification/895',
     '*specification*':                   '/specification',  # Old website, also non-existent PDF versions.
     '/implementations*':                 '/',
     '/contact*':                         '/',
     '/uavcan*':                          '/',
-    '/gui_tool*':                        'https://forum.cyphal.org/c/app/yukon/14',
-    '/example*':                         'https://forum.cyphal.org/t/libcanard-examples-starters-tutorials/935',
+    '/gui_tool*':                        'https://forum.opencyphal.org/c/app/yukon/14',
+    '/example*':                         'https://forum.opencyphal.org/t/libcanard-examples-starters-tutorials/935',
 }
 
 
