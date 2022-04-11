@@ -1,6 +1,6 @@
 # Cyphal website
 
-Sources of the [cyphal.org](https://cyphal.org) website (formerly uavcan.org).
+Sources of the [opencyphal.org](https://opencyphal.org) website (formerly uavcan.org).
 
 ## Running locally
 
