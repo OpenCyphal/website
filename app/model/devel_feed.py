@@ -174,7 +174,7 @@ def get(max_items):
 
     data = []
     for page_index in range(_NUM_PAGES_TO_POLL):
-        response = cache.get('https://api.github.com/orgs/UAVCAN/events?page=%r' % (page_index + 1),
+        response = cache.get('https://api.github.com/orgs/OpenCyphal/events?page=%r' % (page_index + 1),
                              headers={'Accept': 'application/vnd.github.v3+json'},
                              background_update_interval=_UPDATE_INTERVAL,
                              cache_expiration_timeout=_CACHE_LIFETIME) or b'[]'

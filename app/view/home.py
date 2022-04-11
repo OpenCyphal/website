@@ -11,7 +11,8 @@ from flask import render_template
 FEED_LENGTH = 20
 
 
-TITLE = 'Uncomplicated Application-layer Vehicular Computing And Networking'
+TITLE = "Open technology for real-time intravehicular distributed computing and communication " \
+        "based on modern networking standards"
 
 
 # noinspection PyBroadException

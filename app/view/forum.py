@@ -7,7 +7,7 @@ from .. import app
 from flask import redirect
 
 
-_FORUM_URL = 'https://forum.uavcan.org'
+_FORUM_URL = 'https://forum.opencyphal.org'
 
 
 @app.route('/forum/')

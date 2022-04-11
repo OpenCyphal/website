@@ -9,7 +9,7 @@ from .. import app
 from . import cache
 
 
-_FORUM_URL = 'https://forum.uavcan.org'
+_FORUM_URL = 'https://forum.opencyphal.org'
 _3RD_PARTY_CATEGORY_ID = 18
 
 _UPDATE_INTERVAL = 60

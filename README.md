@@ -1,16 +1,13 @@
-# UAVCAN website
+# Cyphal website
 
-Sources of the [uavcan.org](https://uavcan.org) website.
-
-If you want your company to be listed on the front page,
-[apply to become a member of the UAVCAN Consortium](https://uavcan.org/consortium).
+Sources of the [opencyphal.org](https://opencyphal.org) website (formerly uavcan.org).
 
 ## Running locally
 
 A GNU/Linux-based OS is required.
 
 ```sh
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ./debug.py
 ```
 
