@@ -15,12 +15,12 @@ from flask import send_from_directory, send_file, abort, redirect, render_templa
 _COMPATIBILITY_REDIRECT_WILDCARDS = {
     '*hardware_design_recommendations*':
         'https://forum.opencyphal.org/t/removal-of-the-physical-layer-specification/895',
-    '*specification*':                   '/specification',  # Old website, also non-existent PDF versions.
-    '/implementations*':                 '/',
-    '/contact*':                         '/',
-    '/uavcan*':                          '/',
-    '/gui_tool*':                        'https://forum.opencyphal.org/c/app/yukon/14',
-    '/example*':                         'https://forum.opencyphal.org/t/libcanard-examples-starters-tutorials/935',
+    '*specification*':      '/specification',  # Old website, also non-existent PDF versions.
+    '/implementations*':    '/',
+    '/contact*':            '/',
+    '/uavcan*':             '/',
+    '/gui_tool*':           'https://github.com/OpenCyphal/yakut',
+    '/example*':            'https://github.com/OpenCyphal/demos',
 }
 
 
