@@ -12,10 +12,11 @@ from flask import send_file, redirect, abort
 
 _SPECIFICATION_DIRECTORY_PATH = os.path.join(app.root_path, '..', 'specification')
 
+_CYPHAL_SPECIFICATION_GLOB = 'Cyphal_Specification*.pdf'
 
 @app.route('/specification/')
 def _latest_specification():
-    entries = list(glob.glob(_SPECIFICATION_DIRECTORY_PATH + '/*.pdf'))
+    entries = list(glob.glob(os.path.join(_SPECIFICATION_DIRECTORY_PATH, _CYPHAL_SPECIFICATION_GLOB)))
     entries.sort(key=lambda t: [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', t)])   # Natural sorting
     newest_file = os.path.basename(entries[-1])
     app.logger.info('Sorted specifications: %r, newest: %r', entries, newest_file)
