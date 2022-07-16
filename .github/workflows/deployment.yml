@@ -1,0 +1,50 @@
+name: deployment
+
+on:
+  push:
+    branches:
+      - master
+      - uat
+
+jobs:
+  deploy:
+    name: Deploy website
+    runs-on: ubuntu-latest
+    env:
+      TARGET_DIR: "${{ contains(github.ref, '/master') && '/var/www/opencyphal.com' || '/var/www/uat.opencyphal.com' }}"
+
+    steps:
+    - name: Retrieve repository
+      uses: actions/checkout@v1
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/private.key
+        chmod 600 ~/.ssh/private.key
+        cat >>~/.ssh/config <<END
+        Host target
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/private.key
+          StrictHostKeyChecking no
+        END
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USER: ${{ secrets.SSH_USERNAME }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+    - name: Stop Apache2 web server
+      run: ssh target 'sudo systemctl stop apache2'
+    - name: Deploy code
+      run: |
+        ssh target "if [ -d $TARGET_DIR ]; then sudo rm -rf $TARGET_DIR; fi"
+        rsync -avztlp -e ssh --delete --exclude='.git' --exclude='.github' --exclude='.gitignore' ./ target:$TARGET_DIR
+        ssh target "chgrp -R www-data $TARGET_DIR"
+        ssh target "find $TARGET_DIR -type f -exec chmod 644 {} \;"
+        ssh target "find $TARGET_DIR -type d -exec chmod 775 {} \;"
+        ssh target "find $TARGET_DIR -type d -exec chmod g+s {} \;"
+        ssh target "chmod 775 $TARGET_DIR/website.wsgi"
+    - name: Start Apache2 web server
+      if: ${{ always() }}
+      run: ssh target 'sudo systemctl start apache2'
+
+
