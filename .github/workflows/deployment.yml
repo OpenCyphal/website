@@ -11,7 +11,7 @@ jobs:
     name: Deploy website
     runs-on: ubuntu-latest
     env:
-      TARGET_DIR: "${{ contains(github.ref, '/master') && '/var/www/opencyphal.com' || '/var/www/uat.opencyphal.com' }}"
+      TARGET_DIR: "${{ contains(github.ref, '/master') && '/var/www/opencyphal.org' || '/var/www/uat.opencyphal.org' }}"
 
     steps:
     - name: Retrieve repository
