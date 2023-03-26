@@ -94,13 +94,11 @@
   First, read the <a href="/guide" target="_blank">Guide</a>. To learn the technical details, read the
   <a href="/specification" target="_blank">Specification</a>. Familiarize yourself with the
   <a href="https://github.com/OpenCyphal/public_regulated_data_types">regulated DSDL repository</a>.
-  If you have questions or feedback, you can check out the
-  <a href="https://forum.opencyphal.org/t/1394">FAQ</a>
-  or bring them to the <a href="https://forum.opencyphal.org">forum</a>.
+  If you have questions or feedback, bring them to the <a href="https://forum.opencyphal.org">forum</a>.
 </p>
 <p>
   The OpenCyphal project provides MIT-licensed implementations of the Cyphal technology
-  (other implementations of the Cyphal are available from third parties):
+  (other implementations of the Cyphal stack are available from third parties):
 </p>
 <div class="table-responsive">
   <table class="table table-borderless table-sm w-unset table-nowrap">
@@ -119,14 +117,21 @@
         <td>Cyphal/CAN</td>
         <td>C</td>
         <td>Embedded</td>
-        <td>Released</td>
+        <td>Stable</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/OpenCyphal-Garage/libudpard">Libudpard</a></td>
+        <td>Cyphal/UDP (Ethernet)</td>
+        <td>C</td>
+        <td>Embedded</td>
+        <td>Work-in-progress</td>
       </tr>
       <tr>
         <td><a href="https://github.com/OpenCyphal/pycyphal">PyCyphal</a></td>
-        <td>Any</td>
+        <td>Cyphal/CAN, Cyphal/UDP, Cyphal/serial</td>
         <td>Python</td>
         <td>HMI, scripting</td>
-        <td>Released</td>
+        <td>Stable</td>
       </tr>
     </tbody>
   </table>
@@ -146,9 +151,8 @@
     a simple <abbr title="command-line interface">CLI</abbr> tool for diagnostic and management of Cyphal networks.
   </li>
   <li>
-    <a href="https://github.com/OpenCyphal-Garage/yukon">Yukon</a> <em>(work-in-progress)</em> &mdash;
-    a rich IDE for observing, debugging, and interacting with a Cyphal bus.
-    This product is currently under active development; ETA 2022Q4.
+    <a href="https://github.com/OpenCyphal/yukon">Yukon</a> &mdash;
+    a rich GUI tool for observing, debugging, and interacting with a Cyphal bus.
   </li>
 </ul>
 <p>
