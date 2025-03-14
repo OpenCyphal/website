@@ -1,3 +1,4 @@
 Flask~=1.0
+MarkupSafe~=1.0
 cachelib ~= 0.1
 sentry-sdk[flask]~=0.6.9
