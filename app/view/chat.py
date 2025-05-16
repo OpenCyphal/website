@@ -2,9 +2,9 @@ from .. import app
 from flask import redirect
 
 
-_CHAT_URL = r'https://matrix.to/#/%23opencyphal:matrix.org'
+_CHAT_URI = "https://forum.opencyphal.org/chat"
 
 
 @app.route('/chat/')
 def _chat():
-    return redirect(_CHAT_URL)
+    return redirect(_CHAT_URI)
