@@ -1,15 +1,14 @@
-#
-# Copyright (C) 2019 UAVCAN Development Team <info@zubax.com>.
+# Copyright (C) OpenCyphal <maintainers@opencyphal.com>.
 # Author: Pavel Kirienko <pavel.kirienko@zubax.com>
-#
-from urllib.parse import urljoin
 
-from .. import app
 from flask import redirect
+from .. import app
 
-_OPENCYPHAL_GH_PAGE = "https://opencyphal.github.io/"
-_SPECIFICATION_FILE = "Cyphal_Specification.pdf"
+_SPECIFICATION_URI = "https://opencyphal.github.io/specification/Cyphal_Specification.pdf"
 
-@app.route('/specification/')
-def _latest_specification():
-    return redirect(urljoin(_OPENCYPHAL_GH_PAGE, f'specification/{_SPECIFICATION_FILE}'), code=301)
+
+@app.route("/specification/", defaults={"subpath": ""})
+@app.route("/specification/<path:subpath>")
+def _latest_specification(subpath: str):
+    _ = subpath
+    return redirect(_SPECIFICATION_URI, code=301)
