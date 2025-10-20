@@ -5,7 +5,6 @@
 
 import json
 import datetime
-import urllib.request
 
 from .. import app
 from . import cache
@@ -65,8 +64,18 @@ class Entry:
             "reopened",
         ):
             target_url = d["payload"]["pull_request"]["url"]
-            req = urllib.request.Request(target_url)
-            response = urllib.request.urlopen(req).read()
+            response = (
+                cache.get(
+                    target_url,
+                    headers={"Accept": "application/vnd.github.v3+json"},
+                    background_update_interval=_UPDATE_INTERVAL,
+                    cache_expiration_timeout=_CACHE_LIFETIME,
+                )
+                or b"[]"
+            )
+            if not response:
+                return
+
             pr_data = json.loads(response)
             text = " ".join(
                 [
@@ -80,7 +89,6 @@ class Entry:
                     _render_url(d["repo"]["name"], d["repo"]["url"]),
                 ]
             )
-
         elif d["type"] == "IssuesEvent" and d["payload"]["action"] in (
             "opened",
             "closed",
