@@ -9,7 +9,7 @@ import typing
 from .. import app
 
 
-_ADOPTERS_DIRECTORY_PATH = os.path.join(app.root_path, '..', 'adopters')
+_ADOPTERS_DIRECTORY_PATH = os.path.join(app.root_path, "..", "adopters")
 
 
 class Adopter:
@@ -18,16 +18,18 @@ class Adopter:
         self.logo_file_name = str(logo_file_name)
 
         website = str(website)
-        if '://' in website:
+        if "://" in website:
             self.website_url = website
         else:
-            self.website_url = 'http://' + website
+            self.website_url = "http://" + website
 
 
 def get_list() -> typing.Iterable[Adopter]:
-    entries = list(sorted(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + '/*.png'))))
+    entries = list(
+        sorted(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + "/*.png")))
+    )
     for e in entries:
-        name, website = e.rsplit('.', 1)[0].rsplit(' ', 1)
+        name, website = e.rsplit(".", 1)[0].rsplit(" ", 1)
         yield Adopter(name, e, website)
 
 

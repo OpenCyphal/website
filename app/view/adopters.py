@@ -8,7 +8,7 @@ from .. import app
 from flask import send_file, abort
 
 
-@app.route('/adopters/logo/<path:logo_file_name>')
+@app.route("/adopters/logo/<path:logo_file_name>")
 def _adopters_logo(logo_file_name):
     try:
         return send_file(get_logo_file_path(logo_file_name))

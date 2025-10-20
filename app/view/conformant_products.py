@@ -8,7 +8,6 @@ from flask import render_template
 from .home import TITLE
 
 
-@app.route('/conformant-products')
+@app.route("/conformant-products")
 def conformant_products():
-    return render_template('conformant-products.html',
-                           title=TITLE)
+    return render_template("conformant-products.html", title=TITLE)
