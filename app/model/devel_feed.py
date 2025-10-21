@@ -211,9 +211,7 @@ class Entry:
             text = " ".join(
                 [
                     _render_url(d["actor"]["login"], d["actor"]["url"]),
-                    "pushed",
-                    str(len(d["payload"]["commits"])),
-                    "commits to",
+                    "pushed to",
                     _render_url(d["repo"]["name"], d["repo"]["url"]),
                 ]
             )
