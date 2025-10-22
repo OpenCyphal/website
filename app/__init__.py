@@ -31,6 +31,4 @@ from app import view
 @app.before_request
 def before_request():
     g.request_timestamp = time.time()
-    g.get_time_since_request_ms = lambda: int(
-        (time.time() - g.request_timestamp) * 1000 + 1
-    )
+    g.get_time_since_request_ms = lambda: int((time.time() - g.request_timestamp) * 1000 + 1)
