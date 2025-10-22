@@ -6,7 +6,7 @@
 from cachelib import FileSystemCache
 from .. import app
 
-_cache = FileSystemCache('/tmp/' + app.root_path)
+_cache = FileSystemCache("/tmp/" + app.root_path)
 
 
 def read(key):

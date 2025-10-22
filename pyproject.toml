@@ -1,0 +1,18 @@
+[project]
+name = "opencyphal_website"
+version = "1.0.0"
+dependencies = [
+    "flask           ~= 1.0",
+    "MarkupSafe      ~= 1.0",
+    "cachelib        ~= 0.1",
+    "sentry-sdk      ~= 0.6.9"
+]
+readme = "README.md"
+requires-python = ">= 3.10"
+
+[tool.black]
+line-length = 120
+target-version = ['py313']
+include = '''
+(app/.*\.pyi?$)
+'''

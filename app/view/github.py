@@ -7,9 +7,9 @@ from .. import app
 from flask import redirect
 
 
-_GITHUB_URL = 'https://github.com/OpenCyphal'
+_GITHUB_URL = "https://github.com/OpenCyphal"
 
 
-@app.route('/github/')
+@app.route("/github/")
 def _github():
     return redirect(_GITHUB_URL)
