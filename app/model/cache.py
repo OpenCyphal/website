@@ -18,21 +18,15 @@ def get(url, background_update_interval, cache_expiration_timeout, headers=None)
     otherwise, their actual values may vary unpredictably within the supplied ranges.
     """
     if background_update_interval >= cache_expiration_timeout:
-        raise ValueError(
-            "The background update interval must be lower than the data expiration timeout"
-        )
+        raise ValueError("The background update interval must be lower than the data expiration timeout")
 
     # First, decide if it is time to launch a background update yet.
     # Due to the race condition, we may accidentally start multiple updates concurrently, but this is fine.
     lock_key = "lock-" + url
     if not expiring_storage.read(lock_key):
-        expiring_storage.write(
-            lock_key, True, timeout=float(background_update_interval)
-        )
+        expiring_storage.write(lock_key, True, timeout=float(background_update_interval))
         threading.Thread(
-            target=lambda: _do_background_update(
-                url, headers, cache_expiration_timeout
-            ),
+            target=lambda: _do_background_update(url, headers, cache_expiration_timeout),
             daemon=False,
         ).start()
 
@@ -40,9 +34,7 @@ def get(url, background_update_interval, cache_expiration_timeout, headers=None)
 
 
 def _do_background_update(url, headers, cache_expiration_timeout):
-    app.logger.info(
-        "Initiating background update from %r with headers %r", url, headers
-    )
+    app.logger.info("Initiating background update from %r with headers %r", url, headers)
 
     started_at = time.monotonic()
     r = urllib.request.Request(url, headers=headers or {})

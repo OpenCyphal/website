@@ -25,9 +25,7 @@ class Adopter:
 
 
 def get_list() -> typing.Iterable[Adopter]:
-    entries = list(
-        sorted(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + "/*.png")))
-    )
+    entries = list(sorted(map(os.path.basename, glob.glob(_ADOPTERS_DIRECTORY_PATH + "/*.png"))))
     for e in entries:
         name, website = e.rsplit(".", 1)[0].rsplit(" ", 1)
         yield Adopter(name, e, website)

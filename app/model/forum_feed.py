@@ -48,9 +48,7 @@ class Entry:
             num_posts=topic["posts_count"],
             url=_FORUM_URL + "/t/" + str(topic["id"]),
             image_url=image_url,
-            timestamp=datetime.datetime.strptime(
-                topic["bumped_at"], "%Y-%m-%dT%H:%M:%S.%fZ"
-            ),
+            timestamp=datetime.datetime.strptime(topic["bumped_at"], "%Y-%m-%dT%H:%M:%S.%fZ"),
             pinned=(topic.get("pinned") or topic.get("pinned_globally"))
             and topic.get("category_id") != _3RD_PARTY_CATEGORY_ID,
         )

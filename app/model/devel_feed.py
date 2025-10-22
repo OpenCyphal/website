@@ -82,9 +82,7 @@ class Entry:
                     _render_url(d["actor"]["login"], d["actor"]["url"]),
                     d["payload"]["action"],
                     "a pull request",
-                    "&ldquo;"
-                    + _render_url(pr_data["title"], pr_data["html_url"])
-                    + "&rdquo;",
+                    "&ldquo;" + _render_url(pr_data["title"], pr_data["html_url"]) + "&rdquo;",
                     "at",
                     _render_url(d["repo"]["name"], d["repo"]["url"]),
                 ]
@@ -144,9 +142,7 @@ class Entry:
                     ]
                 )
             else:
-                raise ValueError(
-                    "Unexpected create event type: %r" % d["payload"]["ref_type"]
-                )
+                raise ValueError("Unexpected create event type: %r" % d["payload"]["ref_type"])
 
         elif d["type"] == "ReleaseEvent" and d["payload"]["action"] == "published":
             target_url = _prepare_url(d["payload"]["release"]["html_url"])
@@ -157,8 +153,7 @@ class Entry:
                     "released",
                     "&ldquo;"
                     + _render_url(
-                        d["payload"]["release"]["name"].strip()
-                        or d["payload"]["release"]["tag_name"],
+                        d["payload"]["release"]["name"].strip() or d["payload"]["release"]["tag_name"],
                         d["payload"]["release"]["html_url"],
                     )
                     + "&rdquo;",
@@ -167,10 +162,7 @@ class Entry:
                 ]
             )
 
-        elif (
-            d["type"] == "PullRequestReviewCommentEvent"
-            and d["payload"]["action"] == "created"
-        ):
+        elif d["type"] == "PullRequestReviewCommentEvent" and d["payload"]["action"] == "created":
             is_high_priority = False
             target_url = _prepare_url(d["payload"]["comment"]["html_url"])
             text = " ".join(
@@ -242,8 +234,7 @@ def get(max_items):
     for page_index in range(_NUM_PAGES_TO_POLL):
         response = (
             cache.get(
-                "https://api.github.com/orgs/OpenCyphal/events?page=%r"
-                % (page_index + 1),
+                "https://api.github.com/orgs/OpenCyphal/events?page=%r" % (page_index + 1),
                 headers={"Accept": "application/vnd.github.v3+json"},
                 background_update_interval=_UPDATE_INTERVAL,
                 cache_expiration_timeout=_CACHE_LIFETIME,
@@ -260,11 +251,7 @@ def get(max_items):
             try:
                 e = Entry.new(event)
                 # Do not add similar entries one after another
-                if (
-                    e
-                    and e.id not in known_ids
-                    and (len(entries) == 0 or e.text != entries[-1].text)
-                ):
+                if e and e.id not in known_ids and (len(entries) == 0 or e.text != entries[-1].text):
                     known_ids.add(e.id)
                     entries.append(e)
             except Exception:
