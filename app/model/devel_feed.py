@@ -60,14 +60,11 @@ class Entry:
 
         elif d["type"].startswith("PullRequest"):
             target_url = d["payload"]["pull_request"]["url"]
-            response = (
-                cache.get(
-                    target_url,
-                    headers={"Accept": "application/vnd.github.v3+json"},
-                    background_update_interval=_UPDATE_INTERVAL,
-                    cache_expiration_timeout=_CACHE_LIFETIME,
-                )
-                or b"[]"
+            response = cache.get(
+                target_url,
+                headers={"Accept": "application/vnd.github.v3+json"},
+                background_update_interval=_UPDATE_INTERVAL,
+                cache_expiration_timeout=_CACHE_LIFETIME,
             )
             if not response:
                 return
