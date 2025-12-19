@@ -58,11 +58,7 @@ class Entry:
                 ]
             )
 
-        elif d["type"] == "PullRequestEvent" and d["payload"]["action"] in (
-            "opened",
-            "closed",
-            "reopened",
-        ):
+        elif d["type"].startswith("PullRequest"):
             target_url = d["payload"]["pull_request"]["url"]
             response = (
                 cache.get(
@@ -77,15 +73,36 @@ class Entry:
                 return
 
             pr_data = json.loads(response)
-            text = " ".join(
-                [
-                    _render_url(d["actor"]["login"], d["actor"]["url"]),
-                    d["payload"]["action"],
-                    "a pull request",
-                    "at",
-                    _render_url(d["repo"]["name"], d["repo"]["url"]),
-                ]
-            )
+            if d["type"] == "PullRequestEvent" and d["payload"]["action"] in ("opened", "closed", "reopened"):
+                text = " ".join(
+                    [
+                        _render_url(d["actor"]["login"], d["actor"]["url"]),
+                        d["payload"]["action"],
+                        "a pull request",
+                        "&ldquo;" + _render_url(pr_data["title"], pr_data["url"]) + "&rdquo;",
+                        "at",
+                        _render_url(d["repo"]["name"], d["repo"]["url"]),
+                    ]
+                )
+            elif d["type"] == "PullRequestReviewCommentEvent" and d["payload"]["action"] == "created":
+                is_high_priority = False
+                target_url = _prepare_url(d["payload"]["comment"]["html_url"])
+                text = " ".join(
+                    [
+                        _render_url(d["actor"]["login"], d["actor"]["url"]),
+                        "commented on a pull request",
+                        "&ldquo;"
+                        + _render_url(
+                            pr_data["title"],
+                            pr_data["url"],
+                        )
+                        + "&rdquo;",
+                        "at",
+                        _render_url(d["repo"]["name"], d["repo"]["url"]),
+                    ]
+                )
+            else:
+                return
         elif d["type"] == "IssuesEvent" and d["payload"]["action"] in (
             "opened",
             "closed",
@@ -154,24 +171,6 @@ class Entry:
                     + _render_url(
                         d["payload"]["release"]["name"].strip() or d["payload"]["release"]["tag_name"],
                         d["payload"]["release"]["html_url"],
-                    )
-                    + "&rdquo;",
-                    "at",
-                    _render_url(d["repo"]["name"], d["repo"]["url"]),
-                ]
-            )
-
-        elif d["type"] == "PullRequestReviewCommentEvent" and d["payload"]["action"] == "created":
-            is_high_priority = False
-            target_url = _prepare_url(d["payload"]["comment"]["html_url"])
-            text = " ".join(
-                [
-                    _render_url(d["actor"]["login"], d["actor"]["url"]),
-                    "commented on a pull request",
-                    "&ldquo;"
-                    + _render_url(
-                        d["payload"]["pull_request"]["title"],
-                        d["payload"]["pull_request"]["html_url"],
                     )
                     + "&rdquo;",
                     "at",
