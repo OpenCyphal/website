@@ -79,7 +79,7 @@ class Entry:
                         _render_url(d["actor"]["login"], d["actor"]["url"]),
                         d["payload"]["action"],
                         "a pull request",
-                        "&ldquo;" + _render_url(pr_data["title"], pr_data["html_url"]) + "&rdquo;",
+                        "&ldquo;" + _render_url(pr_data["title"], pr_data["url"]) + "&rdquo;",
                         "at",
                         _render_url(d["repo"]["name"], d["repo"]["url"]),
                     ]
