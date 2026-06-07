@@ -8,13 +8,8 @@ from ..model import devel_feed, forum_feed, adopters
 from flask import render_template
 
 
-FEED_LENGTH = 20
-
-
-TITLE = (
-    "Open technology for real-time intravehicular distributed computing and communication "
-    "based on modern networking standards"
-)
+FEED_LENGTH = 6
+TITLE = "Simple real-time publish/subscribe for cyber-physical systems"
 
 
 # noinspection PyBroadException

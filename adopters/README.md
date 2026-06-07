@@ -1,5 +1,4 @@
-If you want your company to be listed on the front page,
-[apply to become a member of the UAVCAN Consortium](https://uavcan.org/consortium).
+If you want your company to be listed on the front page, [contact the OpenCyphal website maintainers](https://forum.opencyphal.org/).
 
 The image should have no margins -- they are controlled by the website design.
 The background should be transparent.
