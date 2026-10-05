@@ -24,7 +24,7 @@ def get(url, background_update_interval, cache_expiration_timeout, headers=None)
     # Due to the race condition, we may accidentally start multiple updates concurrently, but this is fine.
     lock_key = "lock-" + url
     if not expiring_storage.read(lock_key):
-        expiring_storage.write(lock_key, True, timeout=float(background_update_interval))
+        expiring_storage.write(lock_key, True, timeout=background_update_interval)
         threading.Thread(
             target=lambda: _do_background_update(url, headers, cache_expiration_timeout),
             daemon=False,
@@ -40,7 +40,7 @@ def _do_background_update(url, headers, cache_expiration_timeout):
     r = urllib.request.Request(url, headers=headers or {})
     data = urllib.request.urlopen(r).read()
 
-    expiring_storage.write(url, data, timeout=float(cache_expiration_timeout))
+    expiring_storage.write(url, data, timeout=cache_expiration_timeout)
 
     app.logger.info(
         "Background update OK: saved %.1f KiB from %r in %.3f seconds",

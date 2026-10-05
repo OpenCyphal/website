@@ -4,15 +4,14 @@ version = "1.0.0"
 dependencies = [
     "flask              ~= 3.1",
     "MarkupSafe         ~= 3.0",
-    "cachelib           ~= 0.14",
-    "sentry-sdk[flask]  ~= 2.61"
+    "cachelib           ~= 0.17",
+    "sentry-sdk[flask]  ~= 2.71"
 ]
 readme = "README.md"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 
 [tool.black]
 line-length = 120
-target-version = ['py313']
 include = '''
 (app/.*\.pyi?$)
 '''
