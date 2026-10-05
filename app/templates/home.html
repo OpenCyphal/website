@@ -2,15 +2,21 @@
 {% set active = 'home' %}
 
 {% block content %}
-<div class="row"> 
-  <div class="col-lg-2 d-none d-lg-block position-fixed sidebar">
-    {% include "home/sidebar.html" %}
-  </div>
-  <div class="col col-md-8 col-lg-7 ml-auto">
-    {% include "home/content-column.html" %}
-  </div>
-  <div class="col-md-4 col-lg-3">
-    {% include "home/cards-column.html" %}
+<div class="notepad">
+  <header class="masthead">
+    <a class="site-logo" href="/" aria-label="OpenCyphal home">
+      <img src="/static/images/logo.svg" alt="OpenCyphal">
+    </a>
+    <h1>Simple real-time pub/sub for cyber-physical systems</h1>
+  </header>
+
+  <div class="content-grid">
+    <div class="main-column">
+      {% include "home/content-column.html" %}
+    </div>
+    <aside class="feed-column">
+      {% include "home/cards-column.html" %}
+    </aside>
   </div>
 </div>
 {% endblock %}
